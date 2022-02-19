@@ -4,7 +4,7 @@ using CTA.BlazorWasm.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CTA.BlazorWasm.Server.Data
+namespace CTA.BlazorWasm.Shared.Context
 {
     public partial class CtaContext : DbContext
     {
