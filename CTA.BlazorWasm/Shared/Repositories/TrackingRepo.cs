@@ -5,8 +5,8 @@ using CTA.BlazorWasm.Shared.Interfaces;
 using CTA.BlazorWasm.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContractsTracker.Persistence.Repositories
-{
+namespace CTA.BlazorWasm.Shared.Repositories 
+{ 
     public class TrackingRepo : BaseRepository<Tracking>, ITrackingRepo
     {
         public TrackingRepo(IDbContextFactory<CtaContext> dbContext) : base(dbContext) { }

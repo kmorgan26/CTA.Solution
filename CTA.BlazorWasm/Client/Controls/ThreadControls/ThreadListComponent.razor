@@ -1,5 +1,4 @@
-﻿
-@inject IThreadRepo _threads
+﻿@inject HttpClient _http
 
 <Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
     <Icon Name="IconName.ListUl"></Icon>
@@ -47,7 +46,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _threads.GetTrackingThreads(ProjectId);
+        var items = await _http.GetFromJsonAsync<List<TrackingThread>>($"api/Thread/List/{ProjectId}");
         threadList = Mapping.Mapper.Map<List<GenericListVm>>(items);
     }
 
