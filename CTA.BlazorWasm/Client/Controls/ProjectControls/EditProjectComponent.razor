@@ -1,4 +1,4 @@
-﻿@inject IProjectRepo _projects
+﻿@inject HttpClient _http
 @inject NavigationManager _nav
 
 <div class="row">
@@ -27,13 +27,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var project = await _projects.GetByIdAsync(ProjectId);
+        var project = await _http.GetFromJsonAsync<Project>($"api/Project/{ProjectId}");
         ProjectVm = Mapping.Mapper.Map<ProjectListVm>(project);
     }
     protected async Task UpdateProject()
     {
         var project = Mapping.Mapper.Map<Project>(ProjectVm);
-        await _projects.UpdateAsync(project);
+        await _http.PutAsJsonAsync<Project>($"api/Project", project);
         _nav.NavigateTo("/projects");
     }
 

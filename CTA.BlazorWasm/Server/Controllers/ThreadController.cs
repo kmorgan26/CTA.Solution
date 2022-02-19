@@ -1,5 +1,6 @@
 ﻿using CTA.BlazorWasm.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using CTA.BlazorWasm.Shared.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,19 +17,23 @@ namespace CTA.BlazorWasm.Server.Controllers
             _threadRepo = threadRepo;
         }
 
-        // GET: api/<ThreadController>
-        [HttpGet("List/{id}")]
-        public async Task<ActionResult> GetAsync(int id)
+        //GET: api/<ThreadController>
+        [HttpGet("List")]
+        public async Task<ActionResult> GetAsync()
         {
-            var threads = await _threadRepo.GetTrackingThreads(id);
-            return Ok(threads);
+            throw new NotImplementedException();
         }
 
         // GET api/<ThreadController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var threads = await _threadRepo.GetTrackingThreads(id);
+            if (threads.Any())
+            {
+                return Ok(threads);
+            }
+            return BadRequest();
         }
 
         // POST api/<ThreadController>

@@ -46,7 +46,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _http.GetFromJsonAsync<List<TrackingThread>>($"api/Thread/List/{ProjectId}");
+        var items = await _http.GetFromJsonAsync<List<TrackingThread>>($"api/Thread/{ProjectId}");
         threadList = Mapping.Mapper.Map<List<GenericListVm>>(items);
     }
 

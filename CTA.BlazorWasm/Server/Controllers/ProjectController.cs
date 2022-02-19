@@ -32,9 +32,9 @@ namespace CTA.BlazorWasm.Server.Controllers
             var project = _projectRepo.GetByIdAsync(id).Result;
             if(project == null)
             {
-                return Ok(project);
-            }
-            return NotFound("Project Not Found");
+                return NotFound("Project Not Found");
+            }            
+            return Ok(project);
         }
 
         // POST api/<ProjectController>
@@ -44,9 +44,19 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // PUT api/<ProjectController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<IActionResult> Update(Project project)
         {
+            var oldProject = await _projectRepo.GetByIdAsync(project.Id);
+
+            if(oldProject is not null)
+            {
+                oldProject.Name = project.Name;
+                await _projectRepo.UpdateAsync(oldProject);
+
+                return Ok(oldProject);
+            }
+            return NotFound("No Project Found");
         }
 
         // DELETE api/<ProjectController>/5
