@@ -1,6 +1,6 @@
-﻿using ContractsTracker.DataAccess.Filters;
+﻿using CTA.BlazorWasm.Shared.Filters;
 
-namespace ContractsTracker.App.Services
+namespace CTA.BlazorWasm.Client.Services
 {
     public static class ReportService
     {
