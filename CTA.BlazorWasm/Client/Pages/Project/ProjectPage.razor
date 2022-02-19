@@ -1,0 +1,12 @@
+﻿@page "/project/{ProjectId:int}"
+
+@inject IThreadRepo _threads
+
+<ThreadListComponent ProjectId="@ProjectId"></ThreadListComponent>
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+    
+}

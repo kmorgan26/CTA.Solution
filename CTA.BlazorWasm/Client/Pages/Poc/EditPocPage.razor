@@ -1,0 +1,17 @@
+﻿@page "/poc/edit/{PocId:int}"
+
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <h3>
+            <Icon Name="IconName.User"></Icon>
+            Edit POC
+        </h3>
+    </div>
+</div>
+
+<EditPocComponent PocId="PocId"></EditPocComponent>
+
+@code{
+    [Parameter]
+    public int PocId { get; set; }
+}
