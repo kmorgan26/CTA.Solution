@@ -1,0 +1,14 @@
+﻿@page "/manage/threads/{ProjectId:int}"
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.Bars"></Icon>
+    Threads
+</Heading>
+
+<ThreadListComponent ProjectId="@ProjectId"></ThreadListComponent>
+
+@code {
+
+    public int ProjectId { get; set; }
+
+}

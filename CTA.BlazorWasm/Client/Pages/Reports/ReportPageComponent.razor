@@ -1,0 +1,15 @@
+﻿@page "/report/{EncodedString}"
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.ChartPie"></Icon>
+    <Text Padding="Padding.Is2">Report</Text> 
+</Heading>
+
+<TrackingReportComponent EncodedString="@EncodedString"></TrackingReportComponent>
+
+@code {
+
+    [Parameter]
+    public string EncodedString { get; set; } = string.Empty;
+    
+}

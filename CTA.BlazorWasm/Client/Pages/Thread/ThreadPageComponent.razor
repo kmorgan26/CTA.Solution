@@ -1,0 +1,15 @@
+﻿@page "/thread/{ThreadId:int}"
+
+<div class="row">
+    <div class="col col-md-8 col-sm-12">
+        <TrackingListComponent ThreadId="@ThreadId"></TrackingListComponent>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+    
+}

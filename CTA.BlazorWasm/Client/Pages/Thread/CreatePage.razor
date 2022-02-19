@@ -1,0 +1,18 @@
+﻿@page "/threads/create/{projectId:int}"
+
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <h3>
+            <Icon Name="IconName.PlusCircle"></Icon>
+            Create Thread for Project# @ProjectId
+        </h3>
+    </div>
+</div>
+
+<CreateThreadComponent ProjectId="ProjectId"></CreateThreadComponent>
+
+@code{
+
+    [Parameter]
+    public int ProjectId { get; set; }
+}

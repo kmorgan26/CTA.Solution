@@ -1,0 +1,19 @@
+﻿@page "/trackings/create/{ThreadId:int}"
+
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <h3>
+            <Icon Name="IconName.Fingerprint"></Icon>
+            Create Tracking
+        </h3>
+    </div>
+</div>
+<CreateTrackingComponent ThreadId="ThreadId" ></CreateTrackingComponent>
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+
+
+}

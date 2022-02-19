@@ -1,0 +1,40 @@
+﻿@page "/reports"
+@inject NavigationManager _navigation
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.ChartPie"></Icon>
+    <Text Padding="Padding.Is2">Reports</Text> 
+</Heading>
+
+<Row Margin="Margin.Is4">
+    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
+        <ListGroup Mode="ListGroupMode.Selectable" @bind-SelectedItem="_selectedReport">
+            <ListGroupItem Name="open_gov-cont">GDIT and Government Open Contract Letters</ListGroupItem>
+            <ListGroupItem Name="open_subs_cont">GDIT and Sub-Contractors Open Contract Letters</ListGroupItem>
+            <ListGroupItem Name="open_gov_rfp">GDIT and Government Open RFPs</ListGroupItem>
+            <ListGroupItem Name="open_subs_rfp">GDIT and Sub-Contractors Contract Open RFPs</ListGroupItem>
+        </ListGroup>
+    </Column>
+</Row>
+<Row Margin="Margin.Is4">
+    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
+        @if(_selectedReport != null)
+        {
+            <Button Color="Color.Primary" Clicked="GetReportAsync">SUBMIT</Button>
+        }
+    </Column>
+</Row>
+
+@code {
+
+    private string? _selectedReport;
+
+    public string SerializedParameter { get; set; } = string.Empty;
+
+    private async Task GetReportAsync()
+    {
+        var reportFilter = await ReportService.GetReportFilter(_selectedReport);
+        SerializedParameter = await SerializeAndEncode.ObjectToJsonAndEncode(reportFilter);
+        _navigation.NavigateTo("/report/" + SerializedParameter);
+    }
+}

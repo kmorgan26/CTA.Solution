@@ -1,0 +1,13 @@
+﻿@page "/tracking/{TrackingId:int}"
+
+<CascadingValue Name="TrackingId" Value="@TrackingId">
+    <TrackingDetailsComponent />
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public int TrackingId { get; set; }
+
+    private string TrackingString = "My String";
+}

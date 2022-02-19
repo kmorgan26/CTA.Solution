@@ -1,0 +1,19 @@
+﻿@page "/thread/edit/{threadId:int}"
+
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <h3>
+            <Icon Name="IconName.Pen"></Icon>
+            Edit Topic
+        </h3>
+    </div>
+</div>
+
+<EditThreadComponent ThreadId="ThreadId"></EditThreadComponent>
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+
+}
