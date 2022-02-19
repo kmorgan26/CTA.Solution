@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ContractsTracker.DataAccess.InterFaces
+namespace CTA.BlazorWasm.Shared.Interfaces
 {
     public interface IAsyncRepository<T> where T : class
     {
