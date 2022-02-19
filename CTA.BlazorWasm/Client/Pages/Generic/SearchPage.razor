@@ -1,0 +1,23 @@
+﻿@page "/search"
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.SearchPlus"></Icon>
+    Search
+</Heading>
+
+<SearchComponent OnValidSubmit="UpdateString"></SearchComponent>
+
+@if (_encodedString != string.Empty)
+{
+    <TrackingReportComponent EncodedString="@_encodedString"></TrackingReportComponent>
+}
+
+@code {
+
+    private string _encodedString { get; set; } = string.Empty;
+
+    private void UpdateString(string encodedString)
+    {
+        _encodedString = encodedString;
+    }
+}

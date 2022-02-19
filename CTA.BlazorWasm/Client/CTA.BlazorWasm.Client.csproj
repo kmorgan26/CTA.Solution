@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Shared\CTA.BlazorWasm.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Generic\" />
-  </ItemGroup>
-
 </Project>
