@@ -1,0 +1,30 @@
+﻿
+<div class="border border-primary m-3">
+
+    <p class="d-flex justify-content-center m-2">
+        <div class="border p-3 bg-light">@Name</div>
+    </p>
+
+    <div class="d-flex justify-content-center align-items-between">
+        <div class="p-1">
+            <a href="@PageName/@Id" class="badge badge-primary">DETAILS</a>
+        </div>
+        <div class="p-1">
+            <a href="manage/@PageName/@Id" class="badge badge-success">MANAGE</a>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string PageName { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public string? Name { get; set; }
+
+}
+

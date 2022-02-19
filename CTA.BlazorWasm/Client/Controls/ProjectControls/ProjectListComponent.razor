@@ -1,0 +1,45 @@
+﻿@inject IProjectRepo _database
+
+<div class="row mb-4">
+    <div class="col col-md-6 col-sm-12">
+        <a class="btn btn-success btn-sm" href="/projects/create" role="button">New</a>
+    </div>
+</div>
+
+<DataGrid TItem="ProjectListVm"
+    PageSize="10"
+    ShowPager
+    Data="projectList"
+    CommandMode="DataGridCommandMode.Default"
+    Class="col col-md-6 col-sm-12"
+    Responsive>
+    
+    <DataGridColumn TItem="ProjectListVm" Field="@nameof(ProjectListVm.Id)" Caption="Thread #" Sortable="true"/>
+    <DataGridColumn TItem="ProjectListVm" Field="@nameof(ProjectListVm.Name)" Caption="Topic" Sortable="true"/>
+    <DataGridColumn TItem="ProjectListVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-primary btn-sm" href="/project/@context.Id" role="button">Select</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn TItem="ProjectListVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-info btn-sm" href="/project/edit/@context.Id" role="button">Edit</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    
+</DataGrid>
+
+@code {
+    private List<ProjectListVm> projectList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var items = await _database.GetAllAsync();
+        projectList = Mapping.Mapper.Map<List<ProjectListVm>>(items);
+    }
+
+}

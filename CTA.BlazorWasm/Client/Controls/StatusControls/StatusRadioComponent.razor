@@ -1,0 +1,30 @@
+﻿
+Status:
+<RadioGroup Color="Color.Success" 
+            Size="Size.ExtraSmall" 
+            TValue="int" 
+            Name="status" 
+            Buttons="true" 
+            CheckedValue="@StatusValue"
+            CheckedValueChanged="@OnStatusValueChanged">
+    <Radio TValue="int" Value="@(-1)">All</Radio>
+    <Radio TValue="int" Value="@(0)">On Hold</Radio>
+    <Radio TValue="int" Value="@(1)">Open</Radio>
+    <Radio TValue="int" Value="@(2)">Closed</Radio>
+</RadioGroup>
+
+
+@code {
+
+    [Parameter]
+    public int StatusValue { get; set; }
+
+    [Parameter]
+    public EventCallback<int> StatusValueChanged { get; set; }
+    
+    public async Task OnStatusValueChanged()
+    {
+        await StatusValueChanged.InvokeAsync(StatusValue);
+    }
+
+}

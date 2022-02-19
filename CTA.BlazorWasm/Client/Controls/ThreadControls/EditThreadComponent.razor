@@ -1,0 +1,44 @@
+﻿@inject IThreadRepo _threads
+@inject NavigationManager _nav
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        @if (ThreadVm != null)
+        {
+            <EditForm Model="@ThreadVm" OnValidSubmit="@UpdateThread">
+                <FormFieldComponent LabelName="Topic">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="ThreadVm.Name" />
+                    </ControlToRender>
+                </FormFieldComponent>
+                <FormFieldComponent LabelName="Active?">
+                    <ControlToRender>
+                        <InputCheckbox @bind-Value="ThreadVm.IsActive"/>
+                    </ControlToRender>
+                </FormFieldComponent>
+                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                <a href=@($"/project/{ThreadVm.ProjectId}") class="btn btn-danger btn-sm">Cancel</a>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+    
+    public TrackingThreadUpdateVm ThreadVm { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var thread = await _threads.GetByIdAsync(ThreadId);
+        ThreadVm = Mapping.Mapper.Map<TrackingThreadUpdateVm>(thread);
+    }
+    protected async Task UpdateThread()
+    {
+        var thread = Mapping.Mapper.Map<TrackingThread>(ThreadVm);
+        await _threads.UpdateAsync(thread);
+        _nav.NavigateTo("/project/" + @thread.ProjectId);
+    }
+}

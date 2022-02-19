@@ -1,0 +1,61 @@
+﻿@inject IPocRepo _pocs
+@inject NavigationManager _nav
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        @if (PocVm != null)
+        {
+            <EditForm Model="@PocVm" OnValidSubmit="@UpdatePoc">
+
+                <FormFieldComponent LabelName="First">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="PocVm.FirstName" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <FormFieldComponent LabelName="Last">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="PocVm.LastName" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <FormFieldComponent LabelName="Initials">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="PocVm.Name" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <FormFieldComponent LabelName="Active?">
+                    <ControlToRender>
+                        <InputCheckbox @bind-Value="PocVm.IsActive"/>
+                    </ControlToRender>
+                </FormFieldComponent>
+
+
+                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                <a href="/pocs" class="btn btn-danger btn-sm">Cancel</a>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int PocId { get; set; }
+
+    public PocListVm PocVm { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var poc = await _pocs.GetByIdAsync(PocId);
+        PocVm = Mapping.Mapper.Map<PocListVm>(poc);
+    }
+    protected async Task UpdatePoc()
+    {
+        var poc = Mapping.Mapper.Map<Poc>(PocVm);
+        await _pocs.UpdateAsync(poc);
+        _nav.NavigateTo("/pocs");
+    }
+
+}

@@ -1,0 +1,35 @@
+﻿@inject ICorrTypeRepo _repo
+
+<FormFieldComponent LabelName="Correspondence Type">
+    <ControlToRender>
+        <select id="corrTypeSelect" name="corrTypeId" class="custom-select" @onchange="ChangeCorrType">
+            <option value="0">-----</option>
+            @foreach(var item in _corrTypeVms)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </ControlToRender>
+</FormFieldComponent>
+
+@code {
+
+    [Parameter]
+    public EventCallback<int?> CorrTypeIdChanged { get; set; }
+
+    private int? _selectedCorrTypeId { get; set; }
+
+    private List<GenericListVm> _corrTypeVms = new();
+
+    private async Task ChangeCorrType(ChangeEventArgs e)
+    {
+        _selectedCorrTypeId = Convert.ToInt32(e.Value);
+        await CorrTypeIdChanged.InvokeAsync(_selectedCorrTypeId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var corrTypes = await _repo.GetAllAsync();
+        _corrTypeVms = Mapping.Mapper.Map<List<GenericListVm>>(corrTypes);
+    }
+}

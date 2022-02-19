@@ -1,0 +1,35 @@
+﻿@inject IToFromRepo _repo
+
+<FormFieldComponent LabelName="To/From">
+    <ControlToRender>
+        <select id="tofromSelect" name="tofromId" class="custom-select" @onchange="ChangeTofrom">
+            <option value=0>-----</option>
+            @foreach(var item in _toFromVms)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </ControlToRender>
+</FormFieldComponent>
+
+@code {
+
+    [Parameter]
+    public EventCallback<int?> TofromIdChanged { get; set; }
+
+    private int? _selectedTofromId { get; set; }
+
+    private List<GenericListVm> _toFromVms = new();
+
+    private async Task ChangeTofrom(ChangeEventArgs e)
+    {
+        _selectedTofromId = Convert.ToInt32(e.Value);
+        await TofromIdChanged.InvokeAsync(_selectedTofromId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var toFroms = await _repo.GetAllAsync();
+        _toFromVms = Mapping.Mapper.Map<List<GenericListVm>>(toFroms);
+    }
+}

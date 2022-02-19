@@ -1,0 +1,18 @@
+﻿
+@inject IThreadRepo _threads
+
+@_threadName
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+
+    private string _threadName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var thread = await _threads.GetByIdAsync(ThreadId);
+        _threadName = thread.Name;
+    }
+}

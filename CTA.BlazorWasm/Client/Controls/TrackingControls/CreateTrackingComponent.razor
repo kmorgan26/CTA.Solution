@@ -1,0 +1,110 @@
+﻿@inject ITrackingRepo _trackings
+@inject NavigationManager _nav
+
+<EditForm Model="@AddTrackingVm" OnValidSubmit="@CreateTracking">
+    <DataAnnotationsValidator />
+    <Microsoft.AspNetCore.Components.Forms.ValidationSummary></Microsoft.AspNetCore.Components.Forms.ValidationSummary>
+
+
+    <div class="row">
+        <div class="col col-sm-12 col-md-4">
+            <FormFieldComponent LabelName="Subject">
+                <ControlToRender>
+                    <InputText class="form-control" @bind-Value="AddTrackingVm.Subject" />
+                </ControlToRender>
+            </FormFieldComponent>
+        </div>
+
+        <div class="col col-sm-12 col-md-2">
+            <ToFromSelectComponent TofromIdChanged="UpdateTofrom"></ToFromSelectComponent>
+        </div>
+
+        <div class="col col-sm-12 col-md-2">
+            <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType"></CorrTypeSelectComponent>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-sm-12 col-md-2">
+            <FormFieldComponent LabelName="Sent/Received">
+                <ControlToRender>
+                    <InputDate @bind-Value="AddTrackingVm.SentOrReceived" />
+                </ControlToRender>
+            </FormFieldComponent>
+        </div>
+
+        <div class="col col-sm-12 col-md-2">
+            <PocSelectComponent PocIdChanged="UpdatePoc"></PocSelectComponent>
+        </div>
+
+        <div class="col col-sm-12 col-md-2">
+            <StatusSelectComponent StatusIdChanged="UpdateStatus"></StatusSelectComponent>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col col-sm-12 col-md-8">
+            <FormFieldComponent LabelName="Comments">
+                <ControlToRender>
+                    <InputTextArea class="form-control" @bind-Value="AddTrackingVm.Comments" />
+                </ControlToRender>
+            </FormFieldComponent>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-sm-12 col-md-8">
+            <FormFieldComponent LabelName="Document Path">
+                <ControlToRender>
+                    <InputText class="form-control" @bind-Value="AddTrackingVm.DocumentPath" />
+                </ControlToRender>
+            </FormFieldComponent>
+        </div>
+
+        <input type="hidden" @bind-value="AddTrackingVm.ThreadId" />
+
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm">Add</button>
+
+    <a href=@($"/thread/{@ThreadId}") class="btn btn-sm btn-danger">Cancel</a>
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+
+    public AddTrackingVm AddTrackingVm { get; set; } = new();
+
+    void UpdateStatus(int? id)
+    {
+        AddTrackingVm.StatusId = Convert.ToInt32(id);
+    }
+    void UpdateCorrType(int? id)
+    {
+        AddTrackingVm.CorrespondenceTypeId = Convert.ToInt32(id);
+    }
+    void UpdatePoc(int? id)
+    {
+        AddTrackingVm.PocId = Convert.ToInt32(id);
+    }
+    void UpdateTofrom(int? id)
+    {
+        AddTrackingVm.ToFromId = Convert.ToInt32(id);
+    }
+    protected async Task CreateTracking()
+    {
+        var tracking = Mapping.Mapper.Map<Tracking>(AddTrackingVm);
+        await _trackings.AddAsync(tracking);
+        _nav.NavigateTo($"/thread/" + @ThreadId);
+    }
+    protected override Task OnInitializedAsync()
+    {
+        AddTrackingVm.ThreadId = this.ThreadId;
+        return Task.CompletedTask;
+    }
+}

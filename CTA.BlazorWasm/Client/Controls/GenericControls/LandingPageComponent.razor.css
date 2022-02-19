@@ -1,0 +1,16 @@
+﻿body, html {
+    height: 100%;
+}
+.background-image{
+    color: red;
+}
+.background-image .bg {
+    /* The image used */
+    background-image: url("../../wwwroot/img/contract_signing.jpg");
+    /* Full height */
+    height: 100%;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

@@ -1,0 +1,41 @@
+﻿@inject ITrackingRepo _trackingRepo
+
+<DataGrid TItem="TrackingReportVm"
+    Class="table table-sm table-hover"
+    PageSize="15"
+    ShowPager
+    Data="_trackingReportVms"
+    CommandMode="DataGridCommandMode.Default"
+    Responsive>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ThreadId)" Caption="Thread" Sortable="true"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Id)" Caption="Track#" Sortable="true"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Status)" Caption="Status" Sortable="false"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ToFromName)" Caption="To/From" Sortable="false"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ProjectName)" Caption="Project" Sortable="false"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.TopicName)" Caption="Topic" Sortable="false"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Subject)" Caption="Subject" Sortable="false"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.SentOrReceived)" Caption="Sent/Rec" Sortable="false" DisplayFormat="{0:MM/dd/yyyy}"/>
+    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.CorrespondenceType)" Caption="Type" Sortable="false"/>
+    
+</DataGrid>
+
+
+@code {
+
+    [Parameter]
+    public string EncodedString { get; set; } = string.Empty;
+
+    private List<TrackingReportVm> _trackingReportVms = new();
+
+    private TrackingFilter _filter = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var jsonString = await SerializeAndEncode.EncodedStringToJson(EncodedString);
+
+        _filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
+
+        var trackings = await _trackingRepo.GetFilteredTrackingsAsync(_filter);
+        _trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
+    }
+}

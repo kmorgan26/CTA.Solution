@@ -1,0 +1,128 @@
+﻿
+@inject ITrackingRepo _tracking
+
+@if (_hideControls)
+{
+    <div class="mb-0">
+        <span class="badge badge-success mb-3" @onclick="ToggleHideControls"><Icon Name="IconName.PlusCircle"></Icon>show</span>
+    </div>
+}
+else
+
+{
+    <span class="badge badge-danger" @onclick="ToggleHideControls"><Icon Name="IconName.MinusCircle"></Icon>hide</span>
+    <div class="border border-secondary mb-2 rounded p-3">
+
+        <EditForm Model="@_trackingFilter" OnValidSubmit="GetSearchResults">
+
+            <div class="row">
+
+                <div class="col-md-2">
+
+                    <FormFieldComponent LabelName="From (Sent/Received)">
+                        <ControlToRender>
+                            <InputDate @bind-Value="_trackingFilter.StartDate" />
+                        </ControlToRender>
+                    </FormFieldComponent>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <FormFieldComponent LabelName="To (Sent/Received)">
+                        <ControlToRender>
+                            <InputDate @bind-Value="_trackingFilter.EndDate" />
+                        </ControlToRender>
+                    </FormFieldComponent>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-2">
+                    <StatusSelectComponent StatusIdChanged="UpdateStatus"></StatusSelectComponent>
+                </div>
+
+                <div class="col-md-2">
+                    <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType"></CorrTypeSelectComponent>
+                </div>
+
+                <div class="col-md-2">
+                    <PocSelectComponent PocIdChanged="UpdatePoc"></PocSelectComponent>
+                </div>
+
+                <div class="col-md-2">
+                    <ToFromSelectComponent TofromIdChanged="UpdateTofrom"></ToFromSelectComponent>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <FormFieldComponent LabelName="Subject">
+                        <ControlToRender>
+                            <textarea class="form-control" id="subject" rows="3" @bind="@_trackingFilter.SubjectText"></textarea>
+                        </ControlToRender>
+                    </FormFieldComponent>
+                </div>
+                <div class="col-md-4">
+                    <FormFieldComponent LabelName="Comments">
+                        <ControlToRender>
+                            <textarea class="form-control" id="comments" rows="3" @bind="@_trackingFilter.CommentsText"></textarea>
+                        </ControlToRender>
+                    </FormFieldComponent>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+
+        </EditForm>
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnValidSubmit { get; set; }
+
+    private string? _encodedString { get; set; }
+
+    private async Task GetSearchResults()
+    {
+        _encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(_trackingFilter);
+
+        await OnValidSubmit.InvokeAsync(_encodedString);
+    }
+
+    private TrackingFilter _trackingFilter { get; set; } = new();
+
+    private bool _hideControls { get; set; }
+
+    void ToggleHideControls()
+    {
+        _hideControls = !_hideControls;
+    }
+    void UpdateStatus(int? id)
+    {
+        _trackingFilter.StatusId = id;
+    }
+    void UpdateCorrType(int? id)
+    {
+        _trackingFilter.CorrTypeId = id;
+    }
+    void UpdatePoc(int? id)
+    {
+        _trackingFilter.PocId = id;
+    }
+    void UpdateTofrom(int? id)
+    {
+        _trackingFilter.ToFromId = id;
+    }
+    
+
+}

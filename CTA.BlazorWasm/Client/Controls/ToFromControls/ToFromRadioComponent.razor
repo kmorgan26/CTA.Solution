@@ -1,0 +1,30 @@
+﻿
+To/From:
+<RadioGroup Color="Color.Warning" 
+            Size="Size.ExtraSmall" 
+            TValue="int" 
+            Name="tofrom" 
+            Buttons="true" 
+            CheckedValue="@ToFromValue"
+            CheckedValueChanged="@OnToFromValueChanged">
+    <Radio TValue="int" Value="@(0)">ALL</Radio>
+    <Radio TValue="int" Value="@(1)">FROM GOV</Radio>
+    <Radio TValue="int" Value="@(2)">TO GOV</Radio>
+    <Radio TValue="int" Value="@(3)">FROM SUBS</Radio>
+    <Radio TValue="int" Value="@(4)">TO SUBS</Radio>
+</RadioGroup>
+
+@code {
+
+    [Parameter]
+    public int ToFromValue { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ToFromValueChanged { get; set; }
+    
+    public async Task OnToFromValueChanged()
+    {
+        await ToFromValueChanged.InvokeAsync(ToFromValue);
+    }
+
+}

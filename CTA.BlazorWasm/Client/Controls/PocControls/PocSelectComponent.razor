@@ -1,0 +1,35 @@
+﻿@inject IPocRepo _repo
+
+<FormFieldComponent LabelName="POC">
+    <ControlToRender>
+        <select  id="pocSelect" name="pocId" class="custom-select" @onchange="ChangePoc">
+            <option value=0>-----</option>
+            @foreach(var item in _pocVms)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </ControlToRender>
+</FormFieldComponent>
+
+@code {
+
+    [Parameter]
+    public EventCallback<int?> PocIdChanged { get; set; }
+
+    private int? _selectedPocId { get; set; }
+
+    private List<GenericListVm> _pocVms = new();
+
+    private async Task ChangePoc(ChangeEventArgs e)
+    {
+        _selectedPocId = Convert.ToInt32(e.Value);
+        await PocIdChanged.InvokeAsync(_selectedPocId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pocs = await _repo.GetActiveAsync();
+        _pocVms = Mapping.Mapper.Map<List<GenericListVm>>(pocs);
+    }
+}

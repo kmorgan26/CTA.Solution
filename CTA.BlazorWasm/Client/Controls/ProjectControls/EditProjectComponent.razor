@@ -1,0 +1,40 @@
+﻿@inject IProjectRepo _projects
+@inject NavigationManager _nav
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        @if (ProjectVm != null)
+        {
+            <EditForm Model="@ProjectVm" OnValidSubmit="@UpdateProject">
+                <FormFieldComponent LabelName="Topic">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="ProjectVm.Name" />
+                    </ControlToRender>
+                </FormFieldComponent>
+                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                <a href="/projects" class="btn btn-danger btn-sm">Cancel</a>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    public ProjectListVm ProjectVm { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var project = await _projects.GetByIdAsync(ProjectId);
+        ProjectVm = Mapping.Mapper.Map<ProjectListVm>(project);
+    }
+    protected async Task UpdateProject()
+    {
+        var project = Mapping.Mapper.Map<Project>(ProjectVm);
+        await _projects.UpdateAsync(project);
+        _nav.NavigateTo("/projects");
+    }
+
+}

@@ -1,0 +1,19 @@
+﻿
+@inject IProjectRepo _projects
+
+@_projectName
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private string _projectName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var project = await _projects.GetByIdAsync(ProjectId);
+        _projectName = project.Name;
+    }
+
+}

@@ -1,0 +1,104 @@
+﻿@inject ITrackingRepo _trackings
+@inject NavigationManager _navigation
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4">
+    <Icon Name="IconName.Circle"></Icon>
+    Tracking # @_trackingVm.Id
+</Heading>
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title mb-4">@_trackingVm.Subject</h3>
+
+        <h4 class="card-subtitle mb-4">TOPIC: @_trackingVm.Topic</h4>
+        <div class="d-flex">
+            <div class="m-3">
+                <span class="badge badge-info">Correspondence Type: </span>
+                <span>@_trackingVm.CorrespondenceType</span>
+            </div>
+            <div class="m-3">
+                <span class="badge badge-info">POC: </span>
+                <span>@_trackingVm.Poc</span>
+            </div>
+            <div class="m-3">
+                <span class="badge badge-info">Status: </span>
+                <span>@_trackingVm.Status</span>
+            </div>
+            <div class="m-3">
+                <span class="badge badge-info">To/From: </span>
+                <span>@_trackingVm.ToFrom</span>
+            </div>
+        </div>
+
+        <div class="d-flex">
+            <div class="m-3">
+                <span class="badge badge-info">Sent/Received: </span>
+
+                <span>@_trackingVm.SentOrReceived.ToShortDateString()</span>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="m-3">
+                <span class="badge badge-info">Comments: </span>
+                <span class="card-text">@_trackingVm.Comments</span>
+            </div>
+        </div>
+        <hr />
+
+        <div class="d-flex">
+            <div class="p-2">
+                <span class="badge badge-info">Last Modified By: </span>
+                <span>@_trackingVm.LastModifiedBy</span>
+            </div>
+            <div class="p-2">
+                <span class="badge badge-info">Last Modified: </span>
+                <span>@_trackingVm.LastModifiedDate</span>
+            </div>
+            
+        </div>
+        <div class="d-flex">
+            <div class="p-2">
+                @if (_trackingVm.DocumentPath.StartsWith("http"))
+                {
+                    <a href="@_trackingVm.DocumentPath" target="_blank" class="card-link">
+                        <span class="badge badge-info">Document: </span>
+                        <Icon Name="IconName.Link" TextColor="TextColor.Success" IconSize="IconSize.Large"></Icon>
+                    </a>
+                }
+                else
+                {
+                    <a href="@_trackingVm.DocumentPath" class="card-link">
+                        <span class="badge badge-info">NO DOCUMENT: </span>
+                        <Icon Name="IconName.Link" TextColor="TextColor.Danger"></Icon>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter(Name = "TrackingId")]
+    private int TrackingId { get; set; }
+
+    private TrackingVm _trackingVm = new();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        var tracking = await _trackings.GetTracking(TrackingId);
+
+        if (tracking != null)
+        {
+            if(tracking.DocumentPath is null)
+            {
+                tracking.DocumentPath = "/notfound";
+            }
+            _trackingVm = Mapping.Mapper.Map<TrackingVm>(tracking);
+        }
+        else
+        {
+            _navigation.NavigateTo("/notfound");
+        }
+    }
+}

@@ -1,0 +1,54 @@
+﻿
+@inject IThreadRepo _threads
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.ListUl"></Icon>
+    Thread List for: <ProjectNameComponent ProjectId="@ProjectId"></ProjectNameComponent>
+</Heading>
+
+<div class="row mb-4">
+    <div class="col col-md-6 col-sm-12">
+        <a class="btn btn-success btn-sm" href=@($"threads/create/{ProjectId}") role="button">New</a>
+    </div>
+</div>
+
+<DataGrid TItem="GenericListVm"
+    PageSize="10"
+    ShowPager
+    Data="threadList"
+    CommandMode="DataGridCommandMode.Default"
+    Class="col col-md-6 col-sm-12"
+    Responsive>
+    
+    <DataGridColumn TItem="GenericListVm" Field="@nameof(GenericListVm.Id)" Caption="ID" Sortable="true"/>
+    <DataGridColumn TItem="GenericListVm" Field="@nameof(GenericListVm.Name)" Caption="Name" Sortable="true"/>
+    <DataGridColumn TItem="GenericListVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-primary btn-sm" href="/thread/@context.Id" role="button">Select</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn TItem="GenericListVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-info btn-sm" href="/thread/edit/@context.Id" role="button">Edit</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+</DataGrid>
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private List<GenericListVm> threadList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var items = await _threads.GetTrackingThreads(ProjectId);
+        threadList = Mapping.Mapper.Map<List<GenericListVm>>(items);
+    }
+
+}

@@ -1,0 +1,56 @@
+﻿
+@inject ITrackingRepo _trackings
+
+<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
+    <Icon Name="IconName.ListOl"></Icon>
+    Tracking List for: <TrackingNameComponent ThreadId="@ThreadId"></TrackingNameComponent>
+</Heading>
+
+<div class="row mb-4">
+    <div class="col col-md-6 col-sm-12">
+        <a class="btn btn-success btn-sm" href=@($"/trackings/create/{@ThreadId}") role="button">New</a>
+    </div>
+</div>
+
+<DataGrid TItem="TrackingRowVm"
+    PageSize="5"
+    ShowPager
+    Data="trackingList"
+    Class="table table-striped"
+    CommandMode="DataGridCommandMode.Default"
+    Responsive>
+    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Id)" Caption="ID" Sortable="true"/>
+    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Subject)" Caption="Subject" Sortable="false"/>
+    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Status)" Caption="Status" Sortable="false"/>
+    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.ToFrom)" Caption="To/From" Sortable="false"/>
+    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.SentOrReceived)" DisplayFormat="{0:d}" Caption="Sent/Received" Sortable="false"/>
+    <DataGridColumn TItem="TrackingRowVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-primary btn-sm" href="/tracking/@context.Id" role="button">Select</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn TItem="TrackingRowVm">
+        <DisplayTemplate>
+            @{
+                <a class="btn btn-info btn-sm" href="/tracking/edit/@context.Id" role="button">Edit</a>
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+</DataGrid>
+
+@code {
+
+    [Parameter]
+    public int ThreadId { get; set; }
+
+    private List<TrackingRowVm> trackingList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var items = await _trackings.GetTrackings(ThreadId);
+        trackingList = Mapping.Mapper.Map<List<TrackingRowVm>>(items);
+    }
+
+}
