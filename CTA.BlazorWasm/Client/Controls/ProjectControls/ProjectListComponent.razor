@@ -38,7 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _http.GetFromJsonAsync<List<Project>>($"api/Project/List");
+        var items = await _http.GetFromJsonAsync<List<Project>>($"api/project/List");
         projectList = Mapping.Mapper.Map<List<ProjectListVm>>(items);
     }
 

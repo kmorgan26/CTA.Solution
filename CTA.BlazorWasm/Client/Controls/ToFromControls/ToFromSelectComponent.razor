@@ -1,4 +1,4 @@
-﻿@inject IToFromRepo _repo
+﻿@inject HttpClient _httpClient
 
 <FormFieldComponent LabelName="To/From">
     <ControlToRender>
@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var toFroms = await _repo.GetAllAsync();
+        var toFroms = await _httpClient.GetFromJsonAsync<List<ToFrom>>($"api/tofrom/List");
         _toFromVms = Mapping.Mapper.Map<List<GenericListVm>>(toFroms);
     }
 }

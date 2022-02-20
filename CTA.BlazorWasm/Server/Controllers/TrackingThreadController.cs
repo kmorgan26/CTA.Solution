@@ -8,11 +8,11 @@ namespace CTA.BlazorWasm.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ThreadController : ControllerBase
+    public class TrackingThreadController : ControllerBase
     {
         private readonly IThreadRepo _threadRepo;
 
-        public ThreadController(IThreadRepo threadRepo)
+        public TrackingThreadController(IThreadRepo threadRepo)
         {
             _threadRepo = threadRepo;
         }
@@ -23,6 +23,19 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             var threads = await _threadRepo.GetAllAsync();
             return Ok(threads);
+        }
+
+        //GET: api/project/5
+        [HttpGet("threads/{id}")]
+        public async Task<ActionResult> GetTrackingThreadsByProjectIdAsync(int id)
+        {
+            var threads = await _threadRepo.GetTrackingThreadsByProjectIdAsync(id);
+            
+            if (threads.Any())
+            {
+                return Ok(threads);
+            }
+            return NotFound();
         }
 
         // GET api/<ThreadController>/5

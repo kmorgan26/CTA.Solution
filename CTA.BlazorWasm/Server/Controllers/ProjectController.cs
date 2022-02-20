@@ -26,8 +26,6 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // GET api/<ProjectController>/5
-        [ProducesResponseType(StatusCodes.Status200OK , Type = typeof(Project))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {

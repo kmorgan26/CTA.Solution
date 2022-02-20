@@ -1,4 +1,4 @@
-﻿@inject ITrackingRepo _trackingRepo
+﻿@inject HttpClient _httpClient
 
 <DataGrid TItem="TrackingReportVm"
     Class="table table-sm table-hover"
@@ -35,7 +35,7 @@
 
         _filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
-        var trackings = await _trackingRepo.GetFilteredTrackingsAsync(_filter);
+        var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
         _trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }
