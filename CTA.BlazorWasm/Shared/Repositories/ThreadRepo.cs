@@ -10,7 +10,7 @@ namespace CTA.BlazorWasm.Shared.Repositories
     {
         public ThreadRepo(IDbContextFactory<CtaContext> dbContext) : base(dbContext) { }
 
-        public async Task<IEnumerable<TrackingThread>> GetTrackingThreads(int id)
+        public async Task<IEnumerable<TrackingThread>> GetTrackingThreadsByProjectIdAsync(int id)
         {
             using(var _dbContext = _dbContextFactory.CreateDbContext())
             {
