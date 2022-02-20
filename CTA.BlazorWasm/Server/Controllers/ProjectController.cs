@@ -19,13 +19,15 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: api/<ProjectController>
         [HttpGet("List")]
-        public async Task<ActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             var projects = await _projectRepo.GetAllAsync();
             return Ok(projects);
         }
 
         // GET api/<ProjectController>/5
+        [ProducesResponseType(StatusCodes.Status200OK , Type = typeof(Project))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -39,30 +41,39 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST api/<ProjectController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> PostAsync([FromBody] Project project)
         {
+            var result = await _projectRepo.AddAsync(project);
+            return Created($"/project/{project.Id}", result);
         }
 
         // PUT api/<ProjectController>/5
         [HttpPut]
         public async Task<IActionResult> Update(Project project)
         {
-            var oldProject = await _projectRepo.GetByIdAsync(project.Id);
+            var projectToUpdate = await _projectRepo.GetByIdAsync(project.Id);
 
-            if(oldProject is not null)
+            if(projectToUpdate is not null)
             {
-                oldProject.Name = project.Name;
-                await _projectRepo.UpdateAsync(oldProject);
+                projectToUpdate.Name = project.Name;
+                await _projectRepo.UpdateAsync(projectToUpdate);
 
-                return Ok(oldProject);
+                return Ok(projectToUpdate);
             }
             return NotFound("No Project Found");
         }
 
         // DELETE api/<ProjectController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
+            var projectToDelete = await _projectRepo.GetByIdAsync(id);
+            if(projectToDelete == null)
+            {
+                return NotFound();
+            }
+            await _projectRepo.DeleteAsync(projectToDelete);
+            return NoContent();
         }
     }
 }

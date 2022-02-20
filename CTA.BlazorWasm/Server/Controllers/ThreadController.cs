@@ -21,37 +21,59 @@ namespace CTA.BlazorWasm.Server.Controllers
         [HttpGet("List")]
         public async Task<ActionResult> GetAsync()
         {
-            throw new NotImplementedException();
+            var threads = await _threadRepo.GetAllAsync();
+            return Ok(threads);
         }
 
         // GET api/<ThreadController>/5
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrackingThread))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var threads = await _threadRepo.GetTrackingThreads(id);
-            if (threads.Any())
+            var thread = await _threadRepo.GetByIdAsync(id);
+            if (thread == null)
             {
-                return Ok(threads);
+                return NotFound("Thread Not Found");
             }
-            return BadRequest();
+            return Ok(thread);
         }
 
         // POST api/<ThreadController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> PostAsync([FromBody] TrackingThread trackingThread)
         {
+            var result = await _threadRepo.AddAsync(trackingThread);
+            return Created($"/project/{result.Id}", result);
         }
 
         // PUT api/<ThreadController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(TrackingThread trackingThread)
         {
+            var threadToUpdate = await _threadRepo.GetByIdAsync(trackingThread.Id);
+
+            if(threadToUpdate is not null)
+            {
+                threadToUpdate.Name = trackingThread.Name;
+                await _threadRepo.UpdateAsync(threadToUpdate);
+                return Ok(threadToUpdate);
+            }
+            return NotFound("No Thread Found");
         }
 
         // DELETE api/<ThreadController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
         {
+            var threadToDelete = await _threadRepo.GetByIdAsync(id);
+            if (threadToDelete == null)
+            {
+                return NotFound();
+            }
+            await _threadRepo.DeleteAsync(threadToDelete);
+            return NoContent();
         }
     }
 }
