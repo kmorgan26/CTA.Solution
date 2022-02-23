@@ -73,33 +73,33 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-        // GET <TrackingController>/filterString
-        //[HttpGet("filter")]
-        //public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(TrackingFilter filter)
-        //{
-        //    try
-        //    {
-        //        var result = await _trackingManager
-        //            .dbSet
-        //            .Include(i => i.CorrespondenceType)
-        //                .ThenInclude(j => j.CorrespondenceSubType)
-        //            .Include(i => i.Thread)
-        //            .ThenInclude(j => j.Project)
-        //            .Include(i => i.Status)
-        //            .Include(i => i.Poc)
-        //            .Include(i => i.ToFrom)
-        //            .AsNoTracking();
-                
-        //        if(filter.StatusId != null)
-        //            result = result.Where(i => i.StatusId == filter.StatusId);
+        // GET<TrackingController>/filterString
+        [HttpGet("filter")]
+        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(TrackingFilter filter)
+        {
+            try
+            {
+                var result = await _trackingManager.
+                    //.dbSet
+                    //.Include(i => i.CorrespondenceType)
+                    //    .ThenInclude(j => j.CorrespondenceSubType)
+                    //.Include(i => i.Thread)
+                    //.ThenInclude(j => j.Project)
+                    //.Include(i => i.Status)
+                    //.Include(i => i.Poc)
+                    //.Include(i => i.ToFrom)
+                    //.AsNoTracking();
 
-        //    }
-        //    catch (Exception)
-        //    {
+                if (filter.StatusId != null)
+                    result = result.Where(i => i.StatusId == filter.StatusId);
 
-        //        throw;
-        //    }
-        //}
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         // POST <TrackingController>
         [HttpPost]
