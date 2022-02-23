@@ -46,7 +46,7 @@
 
         //TODO: Fix Filter
         //var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
-        var trackings = await trackingManager.GetAllAsync();
+        var trackings = await trackingManager.GetTrackingsFiltered(filter);
         trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }

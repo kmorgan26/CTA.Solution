@@ -11,33 +11,31 @@
     </div>
 </div>
 
-<MudDataGrid Items="@trackingList"
-    PageSize="5"
-    ShowPager
-    Data="trackingList"
-    Class="table table-striped"
-    CommandMode="DataGridCommandMode.Default"
-    Responsive>
-    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Id)" Caption="ID" Sortable="true"/>
-    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Subject)" Caption="Subject" Sortable="false"/>
-    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Status)" Caption="Status" Sortable="false"/>
-    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.ToFrom)" Caption="To/From" Sortable="false"/>
-    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.SentOrReceived)" DisplayFormat="{0:d}" Caption="Sent/Received" Sortable="false"/>
-    <Column T="TrackingRowVm">
-        @*<DisplayTemplate>
-            @{
-                <a class="btn btn-primary btn-sm" href="/tracking/@context.Id" role="button">Select</a>
-            }
-        </DisplayTemplate>*@
-    </Column>
-    <Column T="TrackingRowVm">
-        @*<DisplayTemplate>
-            @{
-                <a class="btn btn-info btn-sm" href="/tracking/edit/@context.Id" role="button">Edit</a>
-            }
-        </DisplayTemplate>*@
-    </Column>
-</MudDataGrid>
+<MudTable Items="@trackingList" Hover="true" Striped="true" Dense="true">
+    <HeaderContent>
+        <MudTh>Tracking #</MudTh>
+        <MudTh>Subject</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>To/From</MudTh>
+        <MudTh>Sent/Rec</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Topic">@context.Subject</MudTd>
+        <MudTd DataLabel="Topic">@context.Status</MudTd>
+        <MudTd DataLabel="Topic">@context.ToFrom</MudTd>
+        <MudTd DataLabel="Topic">@context.SentOrReceived</MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/tracking/@context.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+            </a>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
 
@@ -48,8 +46,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //TODO Fix this for the THread parameter
-        var items = await trackingManager.GetByIdAsync(ThreadId);
+        var items = await trackingManager.GetTrackingsByThreadId(ThreadId);
         trackingList = Mapping.Mapper.Map<List<TrackingRowVm>>(items);
     }
 

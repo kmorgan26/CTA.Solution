@@ -1,6 +1,10 @@
 ﻿@page "/project/{ProjectId:int}"
 
-<ThreadListComponent ProjectId="@ProjectId"></ThreadListComponent>
+<div class="row">
+    <div class="col col-md-8 col-sm-12">
+        <ThreadListComponent ProjectId="@ProjectId"></ThreadListComponent>
+    </div>
+</div>
 
 @code {
 

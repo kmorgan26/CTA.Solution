@@ -36,6 +36,39 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
+        // GET <TrackingController>/project/5
+        [HttpGet("project/{id}")]
+        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetByProjectId(int id)
+        {
+            try
+            {
+                var result = (await _trackingThreadManager.GetAsync(x => x.ProjectId == id));
+
+                if (result != null)
+                {
+                    return Ok(new ApiListOfEntityResponse<TrackingThread>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiListOfEntityResponse<Tracking>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Threads Not Found" },
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
+        }
+
         // GET api/<TrackingThreadController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetByTrackingThreadId(int id)

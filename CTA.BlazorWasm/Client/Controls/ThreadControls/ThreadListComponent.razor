@@ -12,31 +12,31 @@
     </div>
 </div>
 
-<MudDataGrid Items="@threadList"
-    PageSize="10"
-    ShowPager
-    Data="threadList"
-    CommandMode="DataGridCommandMode.Default"
-    Class="col col-md-6 col-sm-12"
-    Responsive>
-    
-    <Column T="GenericListVm" Field="@nameof(GenericListVm.Id)" Caption="ID" Sortable="true"/>
-    <Column T="GenericListVm" Field="@nameof(GenericListVm.Name)" Caption="Name" Sortable="true"/>
-    <Column T="GenericListVm">
-        @*<DisplayTemplate>
-            @{
-                <a class="btn btn-primary btn-sm" href="/thread/@context.Id" role="button">Select</a>
-            }
-        </DisplayTemplate>*@
-    </Column>
-    <Column T="GenericListVm">
-        @*<DisplayTemplate>
-            @{
-                <a class="btn btn-info btn-sm" href="/thread/edit/@context.Id" role="button">Edit</a>
-            }
-        </DisplayTemplate>*@
-    </Column>
-</MudDataGrid>
+<MudTable Items="@threadList" Hover="true" Striped="true" Dense="true">
+    <HeaderContent>
+        <MudTh>Thread #</MudTh>
+        <MudTh>Topic</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Topic">@context.Name</MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/thread/@context.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+            </a>
+        </MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/thread/edit/@context.Id" role="button">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>    
+            </a>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
 
@@ -48,7 +48,7 @@
     protected override async Task OnInitializedAsync()
     {
         var id = ProjectId;
-        var items = await trackingThreadManager.GetByIdAsync(ProjectId);
+        var items = await trackingThreadManager.GetThreadsByProjectId(id);
         threadList = Mapping.Mapper.Map<List<GenericListVm>>(items);
     }
 
