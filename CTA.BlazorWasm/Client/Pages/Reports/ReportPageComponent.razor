@@ -1,9 +1,9 @@
 ﻿@page "/report/{EncodedString}"
 
-<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
-    <Icon Name="IconName.ChartPie"></Icon>
-    <Text Padding="Padding.Is2">Report</Text> 
-</Heading>
+<h3>
+    <MudIcon Icon="@Icons.Material.Filled.List" Size="Size.Large" Class="m-3" />
+    Report
+</h3>
 
 <TrackingReportComponent EncodedString="@EncodedString"></TrackingReportComponent>
 

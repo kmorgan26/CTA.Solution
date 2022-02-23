@@ -1,4 +1,4 @@
-﻿@inject IPocRepo _pocs
+﻿@inject PocManager pocManager
 @inject NavigationManager _nav
 
 <div class="row">
@@ -45,7 +45,7 @@
     protected async Task CreatePoc()
     {
         var poc = Mapping.Mapper.Map<Poc>(PocListVm);
-        await _pocs.AddAsync(poc);
+        await pocManager.AddAsync(poc);
         _nav.NavigateTo("/pocs");
     }
 }

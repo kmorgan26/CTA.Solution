@@ -1,5 +1,5 @@
 ﻿
-@inject IThreadRepo _threads
+@inject TrackingThreadManager trackingThreadManager
 @inject NavigationManager _nav
 
 <div class="row">
@@ -34,7 +34,7 @@
     protected async Task CreateThread()
     {
         var thread = Mapping.Mapper.Map<TrackingThread>(ThreadVm);
-        await _threads.AddAsync(thread);
+        await trackingThreadManager.AddAsync(thread);
         _nav.NavigateTo("/project/" + @thread.ProjectId);
     }
     protected override void OnInitialized()

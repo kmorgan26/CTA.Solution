@@ -1,4 +1,4 @@
-﻿using CTA.BlazorWasm.Shared.Context;
+﻿using CTA.BlazorWasm.Shared.Data;
 using CTA.BlazorWasm.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CTA.BlazorWasm.Shared.Repositories
 {
-    public class BaseRepository<T> : IAsyncRepository<T> where T : class
+    public class BaseRepository<TEntity> : IAsyncRepository<TEntity> where TEntity : class
     {
         protected readonly IDbContextFactory<CtaContext> _dbContextFactory;
 
@@ -17,47 +17,47 @@ namespace CTA.BlazorWasm.Shared.Repositories
             _dbContextFactory = dbContextFactory;
         }
 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<TEntity> GetByIdAsync(int id)
         {
             using(var context = _dbContextFactory.CreateDbContext())
             {
-                return await context.Set<T>().FindAsync(id);
+                return await context.Set<TEntity>().FindAsync(id);
             }
         }
 
-        public async Task<IReadOnlyList<T>> ListAllAsync()
+        public async Task<IReadOnlyList<TEntity>> ListAllAsync()
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                return await context.Set<T>().ToListAsync();
+                return await context.Set<TEntity>().ToListAsync();
             }
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                return await context.Set<T>().ToListAsync();
+                return await context.Set<TEntity>().ToListAsync();
             }
         }
-        public async virtual Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
+        public async virtual Task<IReadOnlyList<TEntity>> GetPagedReponseAsync(int page, int size)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                return await context.Set<T>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
+                return await context.Set<TEntity>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
             }
         }
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                await context.Set<T>().AddAsync(entity);
+                await context.Set<TEntity>().AddAsync(entity);
                 await context.SaveChangesAsync();
                 return entity;
             }
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
@@ -66,13 +66,26 @@ namespace CTA.BlazorWasm.Shared.Repositories
             }                
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(TEntity entity)
         {
-            using (var context = _dbContextFactory.CreateDbContext())
-            {
-                context.Set<T>().Remove(entity);
-                await context.SaveChangesAsync();
-            }
+            throw new NotImplementedException();
+        }
+
+        
+
+        public Task<bool> DeleteAsync(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TEntity> GetByIdAsync(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<TEntity> IAsyncRepository<TEntity>.UpdateAsync(TEntity entityToUpdate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CTA.BlazorWasm.Shared.Entities
+namespace CTA.BlazorWasm.Shared.Models
 {
-    public partial class ToFrom
+    public partial class Status
     {
-        public ToFrom()
+        public Status()
         {
             Trackings = new HashSet<Tracking>();
         }

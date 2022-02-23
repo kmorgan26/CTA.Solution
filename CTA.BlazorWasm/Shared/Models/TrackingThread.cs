@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CTA.BlazorWasm.Shared.Entities
+namespace CTA.BlazorWasm.Shared.Models
 {
-    public partial class CorrespondenceType
+    public partial class TrackingThread
     {
-        public CorrespondenceType()
+        public TrackingThread()
         {
             Trackings = new HashSet<Tracking>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public int CorrespondenceSubTypeId { get; set; }
+        public int ProjectId { get; set; }
+        public bool? IsActive { get; set; }
 
-        public virtual CorrespondenceSubType CorrespondenceSubType { get; set; } = null!;
+        public virtual Project Project { get; set; } = null!;
         public virtual ICollection<Tracking> Trackings { get; set; }
     }
 }

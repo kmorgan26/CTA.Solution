@@ -1,4 +1,4 @@
-﻿@inject IProjectRepo _threads
+﻿@inject ProjectManager projectManager
 @inject NavigationManager _nav
 
 
@@ -12,10 +12,8 @@
                 </ControlToRender>
             </FormFieldComponent>
                            
-            <button type="submit" class="btn btn-primary btn-sm">Update</button>
-
-            <a href="/projects" class="btn btn-sm btn-danger">Cancel</a>
-
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Create</MudButton>
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" Link="/projects">Cancel</MudButton>
         </EditForm>
     </div>
 </div>
@@ -26,7 +24,7 @@
     protected async Task CreateProject()
     {
         var project = Mapping.Mapper.Map<Project>(ProjectListVm);
-        await _threads.AddAsync(project);
+        await projectManager.AddAsync(project);
         _nav.NavigateTo("/projects");
     }
 }

@@ -1,68 +1,52 @@
 ﻿<PageTitle>CTA Home</PageTitle>
 
-<Div Class="background-image">
-    <Row Margin="Margin.Is3.FromBottom">
-        <Column ColumnSize="ColumnSize.Is12">
-            <Heading Size="HeadingSize.Is1">
-                <Icon Name="IconName.Bookmark" IconSize="IconSize.Large" TextColor="TextColor.Info" IconStyle="IconStyle.Regular"></Icon> FSXXI Contracts Tracker Application
-            </Heading>
-        </Column>
-    </Row>
-    <Divider></Divider>
-    <Row Margin="Margin.Is3">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is8.OnDesktop">
-            <Paragraph>
-                Welcome to the Contract Actions and Log Tracker, a system for centralization of FSXXI contract correspondence.
-                GDIT records correspondence into this database to manage contractual issues and suspense dates associated with contract correspondence
-                with the Government and Sub-Contractors.
-            </Paragraph>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is3">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
-            <Text TextWeight="TextWeight.Bold">
-                Users of this system have the following Responsibilities:
-            </Text>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is3.FromStart.Is3.FromBottom">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
-            <Text>
-                Protect Confidentiality of Information and Data contained in this system
-                Refrain from entering information or links to documents containing information relating to any of the following:
-            </Text>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is5.FromStart">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is8.OnDesktop">
-            <Text>
-                <Icon Name="IconName.DotCircle" IconSize="IconSize.ExtraSmall"></Icon>
-                Performance Based Payments
-            </Text>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is5.FromStart">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is8.OnDesktop">
-            <Text>
-                <Icon Name="IconName.DotCircle" IconSize="IconSize.ExtraSmall"></Icon>
-                Cost or Pricing data
-            </Text>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is5.FromStart">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is8.OnDesktop">
-            <Text>
-                <Icon Name="IconName.DotCircle" IconSize="IconSize.ExtraSmall"></Icon>
-                Invoices
-            </Text>
-        </Column>
-    </Row>
-    <Row Margin="Margin.Is5.FromStart">
-        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is8.OnDesktop">
-            <Text>
-                <Icon Name="IconName.DotCircle" IconSize="IconSize.ExtraSmall"></Icon>
-                Classified Data
-            </Text>
-        </Column>
-    </Row>
-</Div>
+<div class="mb-5">
+    <MudText Typo="Typo.h3">
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Bookmark" /> FSXXI Contracts Tracker Application
+    </MudText>
+</div>
+<hr />
+
+<div class="mb-5">
+    <MudText Typo="Typo.h5">
+        Welcome to the Contract Actions and Log Tracker, a system for centralization of FSXXI contract correspondence.
+        GDIT records correspondence into this database to manage contractual issues and suspense dates associated with contract correspondence
+        with the Government and Sub-Contractors.
+    </MudText>
+</div>
+
+<MudPaper Class="pa-4">
+
+    <MudText Typo="Typo.h6" Class="mb-5">
+        Users of this system have the following Responsibilities:
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="ml-5 pb-5">
+        Protect Confidentiality of Information and Data contained in this system
+        
+    </MudText>
+    <MudText Typo="Typo.body2" Class="ml-5 mb-3">
+        Refrain from entering information or links to documents containing information relating to any of the following:
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="ml-5 p-2">
+        <MudIcon Icon="@Icons.Material.Filled.Lens" Size="Size.Small" />
+            Performance Based Payments
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="ml-5 p-2">
+        <MudIcon Icon="@Icons.Material.Filled.Lens" Size="Size.Small" />
+            Cost or Pricing data
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="ml-5 p-2">
+        <MudIcon Icon="@Icons.Material.Filled.Lens" Size="Size.Small" />
+            Invoices
+    </MudText>
+
+    <MudText Typo="Typo.body2" Class="ml-5 p-2">
+        <MudIcon Icon="@Icons.Material.Filled.Lens" Size="Size.Small" />
+            Classified Data
+    </MudText>
+
+</MudPaper>

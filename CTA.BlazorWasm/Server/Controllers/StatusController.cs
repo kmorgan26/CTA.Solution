@@ -1,64 +1,167 @@
-﻿using CTA.BlazorWasm.Shared.Entities;
-using CTA.BlazorWasm.Shared.Interfaces;
+﻿using CTA.BlazorWasm.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using CTA.BlazorWasm.Server.Data;
+using CTA.BlazorWasm.Shared.Data;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private readonly IStatusRepo _statusRepo;
+        RepositoryEF<Status, CtaContext> _statusManager;
 
-        public StatusController(IStatusRepo statusRepo)
+        public StatusController(RepositoryEF<Status, CtaContext> statusManager)
         {
-            _statusRepo = statusRepo;
+            _statusManager = statusManager;
         }
 
         // GET: api/<StatusController>
-        [HttpGet("List")]
-        public async Task<IActionResult> GetAsync()
+        [HttpGet]
+        public async Task<ActionResult<ApiListOfEntityResponse<Status>>> GetAsync()
         {
-            var statuses = await _statusRepo.GetAllAsync();
-            return Ok(statuses);
+            try
+            {
+                var result = await _statusManager.GetAllAsync();
+                return Ok(new ApiListOfEntityResponse<Status>()
+                {
+                    Success = true,
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log Exception
+                return StatusCode(500);
+            }
         }
 
         // GET api/<StatusController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult<ApiListOfEntityResponse<Status>>> GetByStatusId(int id)
         {
-            var status = _statusRepo.GetByIdAsync(id).Result;
-            if (status == null)
+            try
             {
-                return NotFound("Status Not Found");
+                var result = (await _statusManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Status Not Found" },
+                        Data = null
+                    });
+                }
             }
-            return Ok(status);
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
+
 
         // POST api/<StatusController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] Status status)
+        public async Task<ActionResult<ApiEntityResponse<Status>>> PostAsync([FromBody] Status status)
         {
-            var result = await _statusRepo.AddAsync(status);
-            return Created($"/status/{status.Id}", result);
+            try
+            {
+                await _statusManager.AddAsync(status);
+                var result = (await _statusManager.GetAsync(i => i.Id == status.Id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the Status After Adding it. " },
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
         // PUT api/<StatusController>/5
         [HttpPut]
-        public async Task<IActionResult> Update(Status status)
+        public async Task<ActionResult<ApiEntityResponse<Status>>> Update([FromBody] Status status)
         {
-            var statusToUpdate = await _statusRepo.GetByIdAsync(status.Id);
-
-            if (statusToUpdate is not null)
+            try
             {
-                statusToUpdate.Name = status.Name;
-                await _statusRepo.UpdateAsync(statusToUpdate);
-
-                return Ok(statusToUpdate);
+                await _statusManager.UpdateAsync(status);
+                var result = (await _statusManager.GetAsync(i => i.Id == status.Id)).FirstOrDefault();
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Status>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the Status after updating it" },
+                        Data = null
+                    });
+                }
             }
-            return NotFound("No Project Found");
+            catch (Exception ex)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+            }
+        }
+
+        // DELETE api/<StatusController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            try
+            {
+                var statusList = await _statusManager.GetAsync(i => i.Id == id);
+                if (statusList != null)
+                {
+                    var status = statusList.First();
+                    var success = await _statusManager.DeleteAsync(status);
+                    if (success)
+                        return NoContent();
+                    else
+                        return StatusCode(500);
+                }
+                else
+                    return StatusCode(500);
+            }
+            catch (Exception)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+                throw;
+            }
         }
     }
 }

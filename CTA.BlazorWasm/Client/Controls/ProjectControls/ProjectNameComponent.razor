@@ -1,5 +1,4 @@
-﻿@inject HttpClient _http
-
+﻿@inject ProjectManager projectManager
 @_projectName
 
 @code {
@@ -11,7 +10,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var project = await _http.GetFromJsonAsync<Project>($"api/Project/{ProjectId}");
+        var project = await projectManager.GetByIdAsync(ProjectId);
         _projectName = project.Name;
     }
 }

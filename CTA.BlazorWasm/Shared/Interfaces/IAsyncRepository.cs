@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace CTA.BlazorWasm.Shared.Interfaces
 {
-    public interface IAsyncRepository<T> where T : class
+    public interface IAsyncRepository<TEntity> where TEntity : class
     {
-        Task<T> GetByIdAsync(int id);
-        Task<IReadOnlyList<T>> ListAllAsync();
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
-        Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size);
+        Task<bool> DeleteAsync(TEntity entityToDelete);
+        Task<bool> DeleteAsync(object id);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<TEntity> GetByIdAsync(object id);
+        Task<TEntity> AddAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entityToUpdate);
+        Task<IReadOnlyList<TEntity>> ListAllAsync();
+        Task<IReadOnlyList<TEntity>> GetPagedReponseAsync(int page, int size);
     }
 }

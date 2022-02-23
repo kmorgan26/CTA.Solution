@@ -1,5 +1,4 @@
-﻿
-@inject IThreadRepo _threads
+﻿@inject TrackingThreadManager trackingThreadManager
 
 @_threadName
 
@@ -12,7 +11,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var thread = await _threads.GetByIdAsync(ThreadId);
+        var thread = await trackingThreadManager.GetByIdAsync(ThreadId);
         _threadName = thread.Name;
     }
 }

@@ -1,10 +1,9 @@
-﻿
-@inject ITrackingRepo _trackings
+﻿@inject TrackingManager trackingManager
 
-<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
-    <Icon Name="IconName.ListOl"></Icon>
+<h3>
+    <span>icon</span>
     Tracking List for: <TrackingNameComponent ThreadId="@ThreadId"></TrackingNameComponent>
-</Heading>
+</h3>
 
 <div class="row mb-4">
     <div class="col col-md-6 col-sm-12">
@@ -12,33 +11,33 @@
     </div>
 </div>
 
-<DataGrid TItem="TrackingRowVm"
+<MudDataGrid Items="@trackingList"
     PageSize="5"
     ShowPager
     Data="trackingList"
     Class="table table-striped"
     CommandMode="DataGridCommandMode.Default"
     Responsive>
-    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Id)" Caption="ID" Sortable="true"/>
-    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Subject)" Caption="Subject" Sortable="false"/>
-    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.Status)" Caption="Status" Sortable="false"/>
-    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.ToFrom)" Caption="To/From" Sortable="false"/>
-    <DataGridColumn TItem="TrackingRowVm" Field="@nameof(TrackingRowVm.SentOrReceived)" DisplayFormat="{0:d}" Caption="Sent/Received" Sortable="false"/>
-    <DataGridColumn TItem="TrackingRowVm">
-        <DisplayTemplate>
+    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Id)" Caption="ID" Sortable="true"/>
+    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Subject)" Caption="Subject" Sortable="false"/>
+    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.Status)" Caption="Status" Sortable="false"/>
+    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.ToFrom)" Caption="To/From" Sortable="false"/>
+    <Column T="TrackingRowVm" Field="@nameof(TrackingRowVm.SentOrReceived)" DisplayFormat="{0:d}" Caption="Sent/Received" Sortable="false"/>
+    <Column T="TrackingRowVm">
+        @*<DisplayTemplate>
             @{
                 <a class="btn btn-primary btn-sm" href="/tracking/@context.Id" role="button">Select</a>
             }
-        </DisplayTemplate>
-    </DataGridColumn>
-    <DataGridColumn TItem="TrackingRowVm">
-        <DisplayTemplate>
+        </DisplayTemplate>*@
+    </Column>
+    <Column T="TrackingRowVm">
+        @*<DisplayTemplate>
             @{
                 <a class="btn btn-info btn-sm" href="/tracking/edit/@context.Id" role="button">Edit</a>
             }
-        </DisplayTemplate>
-    </DataGridColumn>
-</DataGrid>
+        </DisplayTemplate>*@
+    </Column>
+</MudDataGrid>
 
 @code {
 
@@ -49,7 +48,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _trackings.GetTrackings(ThreadId);
+        //TODO Fix this for the THread parameter
+        var items = await trackingManager.GetByIdAsync(ThreadId);
         trackingList = Mapping.Mapper.Map<List<TrackingRowVm>>(items);
     }
 

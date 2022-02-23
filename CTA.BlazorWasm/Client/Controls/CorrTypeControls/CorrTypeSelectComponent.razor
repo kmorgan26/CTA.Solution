@@ -1,4 +1,4 @@
-﻿@inject HttpClient _httpClient
+﻿@inject CorrespondenceTypeManager manager
 
 <FormFieldComponent LabelName="Correspondence Type">
     <ControlToRender>
@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var corrTypes = await _httpClient.GetFromJsonAsync<List<CorrespondenceType>>($"api/CorrespondenceType/List");
+        var corrTypes = await manager.GetAllAsync();
         _corrTypeVms = Mapping.Mapper.Map<List<GenericListVm>>(corrTypes);
     }
 }

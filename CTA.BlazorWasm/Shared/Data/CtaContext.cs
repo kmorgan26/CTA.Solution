@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using CTA.BlazorWasm.Shared.Entities;
+using CTA.BlazorWasm.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CTA.BlazorWasm.Shared.Context
+namespace CTA.BlazorWasm.Shared.Data
 {
     public partial class CtaContext : DbContext
     {

@@ -1,45 +1,43 @@
-﻿@inject HttpClient _http
+﻿@inject ProjectManager projectManager
 
 <div class="row mb-4">
     <div class="col col-md-6 col-sm-12">
-        <a class="btn btn-success btn-sm" href="/projects/create" role="button">New</a>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" Link="/projects/create">New</MudButton>
     </div>
 </div>
 
-<DataGrid TItem="ProjectListVm"
-    PageSize="10"
-    ShowPager
-    Data="projectList"
-    CommandMode="DataGridCommandMode.Default"
-    Class="col col-md-6 col-sm-12"
-    Responsive>
-    
-    <DataGridColumn TItem="ProjectListVm" Field="@nameof(ProjectListVm.Id)" Caption="Thread #" Sortable="true"/>
-    <DataGridColumn TItem="ProjectListVm" Field="@nameof(ProjectListVm.Name)" Caption="Topic" Sortable="true"/>
-    <DataGridColumn TItem="ProjectListVm">
-        <DisplayTemplate>
-            @{
-                <a class="btn btn-primary btn-sm" href="/project/@context.Id" role="button">Select</a>
-            }
-        </DisplayTemplate>
-    </DataGridColumn>
-    <DataGridColumn TItem="ProjectListVm">
-        <DisplayTemplate>
-            @{
-                <a class="btn btn-info btn-sm" href="/project/edit/@context.Id" role="button">Edit</a>
-            }
-        </DisplayTemplate>
-    </DataGridColumn>
-    
-</DataGrid>
+<MudTable Items="@projectList" Hover="true" Striped="true" Dense="true">
+    <HeaderContent>
+        <MudTh>Thread #</MudTh>
+        <MudTh>Topic</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Thread">@context.Id</MudTd>
+        <MudTd DataLabel="Thread">@context.Name</MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/project/@context.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+            </a>
+        </MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/project/edit/@context.Id" role="button">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>    
+            </a>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
     private List<ProjectListVm> projectList = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _http.GetFromJsonAsync<List<Project>>($"api/project/List");
+        var items = await projectManager.GetAllAsync();
         projectList = Mapping.Mapper.Map<List<ProjectListVm>>(items);
     }
-
 }

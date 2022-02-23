@@ -1,31 +1,33 @@
 ﻿@page "/reports"
 @inject NavigationManager _navigation
 
-<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
-    <Icon Name="IconName.ChartPie"></Icon>
-    <Text Padding="Padding.Is2">Reports</Text> 
-</Heading>
+<h3>
+    <MudIcon Icon="@Icons.Material.Filled.List" Size="Size.Large" Class="m-3" />
+    Reports
+</h3>
 
-<Row Margin="Margin.Is4">
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
-        <ListGroup Mode="ListGroupMode.Selectable" @bind-SelectedItem="_selectedReport">
-            <ListGroupItem Name="open_gov-cont">GDIT and Government Open Contract Letters</ListGroupItem>
-            <ListGroupItem Name="open_subs_cont">GDIT and Sub-Contractors Open Contract Letters</ListGroupItem>
-            <ListGroupItem Name="open_gov_rfp">GDIT and Government Open RFPs</ListGroupItem>
-            <ListGroupItem Name="open_subs_rfp">GDIT and Sub-Contractors Contract Open RFPs</ListGroupItem>
-        </ListGroup>
-    </Column>
-</Row>
-<Row Margin="Margin.Is4">
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop">
-        @if(_selectedReport != null)
+    <MudPaper Width="600px" Class="mb-4">
+        <MudList Clickable="true" @bind-SelectedItem="selectedItem" @bind-SelectedValue="selectedValue">
+            <MudListSubheader>
+            </MudListSubheader>
+            <MudListItem Text="GDIT and Government Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="1" />
+            <MudListItem Text="GDIT and Sub-Contractors Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="2" />
+            <MudDivider />
+            <MudListItem Text="GDIT and Government Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="3" />
+            <MudListItem Text="GDIT and Sub-Contractors Contract Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="4" />
+        </MudList>
+    </MudPaper>
+
+    <div class="col">
+        @if (selectedValue != null)
         {
-            <Button Color="Color.Primary" Clicked="GetReportAsync">SUBMIT</Button>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GetReportAsync">SUBMIT</MudButton>
         }
-    </Column>
-</Row>
+    </div>
 
 @code {
+    MudListItem selectedItem;
+    object selectedValue;
 
     private string? _selectedReport;
 
@@ -33,7 +35,7 @@
 
     private async Task GetReportAsync()
     {
-        var reportFilter = await ReportService.GetReportFilter(_selectedReport);
+        var reportFilter = await ReportService.GetReportFilter(selectedValue.ToString());
         SerializedParameter = await SerializeAndEncode.ObjectToJsonAndEncode(reportFilter);
         _navigation.NavigateTo("/report/" + SerializedParameter);
     }

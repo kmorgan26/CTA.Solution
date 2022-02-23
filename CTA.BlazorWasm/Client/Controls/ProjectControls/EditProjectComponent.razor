@@ -1,4 +1,4 @@
-﻿@inject HttpClient _http
+﻿@inject ProjectManager projectManager
 @inject NavigationManager _nav
 
 <div class="row">
@@ -11,8 +11,8 @@
                         <InputText class="form-control" @bind-Value="ProjectVm.Name" />
                     </ControlToRender>
                 </FormFieldComponent>
-                <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                <a href="/projects" class="btn btn-danger btn-sm">Cancel</a>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Update</MudButton>
+                <MudButton Link="/projects" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small">Cancel</MudButton>
             </EditForm>
         }
     </div>
@@ -27,13 +27,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var project = await _http.GetFromJsonAsync<Project>($"api/Project/{ProjectId}");
+        var project = await projectManager.GetByIdAsync(ProjectId);
         ProjectVm = Mapping.Mapper.Map<ProjectListVm>(project);
     }
     protected async Task UpdateProject()
     {
         var project = Mapping.Mapper.Map<Project>(ProjectVm);
-        await _http.PutAsJsonAsync<Project>($"api/Project", project);
+        await projectManager.UpdateAsync(project);
         _nav.NavigateTo("/projects");
     }
 

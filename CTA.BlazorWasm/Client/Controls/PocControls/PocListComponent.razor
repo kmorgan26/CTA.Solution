@@ -1,42 +1,44 @@
-﻿@inject IPocRepo _pocs
+﻿@inject PocManager pocManager
 
 <div class="row mb-4">
     <div class="col col-md-6 col-sm-12">
-        <a class="btn btn-success btn-sm" href="/pocs/create" role="button">New</a>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" Link="/pocs/create">New</MudButton>
     </div>
 </div>
 
-<DataGrid TItem="PocListVm"
-    PageSize="10"
-    ShowPager
-    Data="pocList"
-    CommandMode="DataGridCommandMode.Default"
-    Class="col col-md-6 col-sm-12"
-    Responsive>
-    
-    <DataGridColumn TItem="PocListVm" Field="@nameof(PocListVm.Id)" Caption="ID" Sortable="false"/>
-    <DataGridColumn TItem="PocListVm" Field="@nameof(PocListVm.Name)" Caption="Initials" Sortable="false"/>
-    <DataGridColumn TItem="PocListVm" Field="@nameof(PocListVm.FirstName)" Caption="First Name" Sortable="false"/>
-    <DataGridColumn TItem="PocListVm" Field="@nameof(PocListVm.LastName)" Caption="Last Name" Sortable="true"/>
-    <DataGridColumn TItem="PocListVm" Field="@nameof(PocListVm.IsActive)" Caption="Active?" Sortable="false"/>
-    
-    <DataGridColumn TItem="PocListVm">
-        <DisplayTemplate>
-            @{
-                <a class="btn btn-info btn-sm" href="/poc/edit/@context.Id" role="button">Edit</a>
-            }
-        </DisplayTemplate>
-    </DataGridColumn>
-    
-</DataGrid>
+
+<MudTable Items="@pocList" Hover="true" Striped="true" Dense="true">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Initials</MudTh>
+        <MudTh>First Name</MudTh>
+        <MudTh>Last Name</MudTh>
+        <MudTh>Active?</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Thread">@context.Id</MudTd>
+        <MudTd DataLabel="Thread">@context.Name</MudTd>
+        <MudTd DataLabel="Thread">@context.FirstName</MudTd>
+        <MudTd DataLabel="Thread">@context.LastName</MudTd>
+        <MudTd DataLabel="Thread">@context.IsActive</MudTd>
+        <MudTd DataLable="SELECT">
+            <a href="/poc/edit/@context.Id" role="button">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>    
+            </a>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
     private List<PocListVm> pocList = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await _pocs.GetAllAsync();
+        var items = await pocManager.GetAllAsync();
         pocList = Mapping.Mapper.Map<List<PocListVm>>(items);
     }
-
 }

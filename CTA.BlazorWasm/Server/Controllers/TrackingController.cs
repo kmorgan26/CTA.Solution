@@ -1,96 +1,198 @@
-﻿using CTA.BlazorWasm.Shared.Entities;
-using CTA.BlazorWasm.Shared.Filters;
-using CTA.BlazorWasm.Shared.Interfaces;
+﻿using CTA.BlazorWasm.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using CTA.BlazorWasm.Server.Data;
+using CTA.BlazorWasm.Shared.Data;
+using CTA.BlazorWasm.Shared.Filters;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TrackingController : ControllerBase
     {
-        private readonly ITrackingRepo _trackingRepo;
+        RepositoryEF<Tracking, CtaContext> _trackingManager;
 
-        public TrackingController(ITrackingRepo trackingRepo)
+        public TrackingController(RepositoryEF<Tracking, CtaContext> trackingManager)
         {
-            _trackingRepo = trackingRepo;
+            _trackingManager = trackingManager;
         }
 
-        // GET: api/<TrackingController>
-        [HttpGet("List")]
-        public async Task<IActionResult> GetAsync()
+        // GET: <TrackingController>
+        [HttpGet]
+        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetAsync()
         {
-            var trackings = await _trackingRepo.GetAllAsync();
-            return Ok(trackings);
+            try
+            {
+                var result = await _trackingManager.GetAllAsync();
+                return Ok(new ApiListOfEntityResponse<Tracking>()
+                {
+                    Success = true,
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log Exception
+                return StatusCode(500);
+            }
         }
 
-        // GET: api/<TrackingController>/filtered
-        [Route("Filtered/{filter}")]
-        [HttpGet("Filtered/{filter}")]
-        public async Task<IActionResult> GetAsync(TrackingFilter _filter)
-        {
-            var trackings = await _trackingRepo.GetFilteredTrackingsAsync(_filter);
-            return Ok(trackings);
-        }
-
-        // GET api/<TrackingController>/5
+        // GET <TrackingController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetByTrackingId(int id)
         {
-            var tracking = _trackingRepo.GetByIdAsync(id).Result;
-            if (tracking == null)
+            try
             {
-                return NotFound("Tracking Not Found");
+                var result = (await _trackingManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+
+                if(result != null)
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Tracking Not Found" },
+                        Data = null
+                    });
+                }
             }
-            return Ok(tracking);
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
-        // POST api/<TrackingController>
+        // GET <TrackingController>/filterString
+        //[HttpGet("filter")]
+        //public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(TrackingFilter filter)
+        //{
+        //    try
+        //    {
+        //        var result = await _trackingManager
+        //            .dbSet
+        //            .Include(i => i.CorrespondenceType)
+        //                .ThenInclude(j => j.CorrespondenceSubType)
+        //            .Include(i => i.Thread)
+        //            .ThenInclude(j => j.Project)
+        //            .Include(i => i.Status)
+        //            .Include(i => i.Poc)
+        //            .Include(i => i.ToFrom)
+        //            .AsNoTracking();
+                
+        //        if(filter.StatusId != null)
+        //            result = result.Where(i => i.StatusId == filter.StatusId);
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+        // POST <TrackingController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] Tracking tracking)
+        public async Task<ActionResult<ApiEntityResponse<Tracking>>> PostAsync([FromBody] Tracking tracking)
         {
-            var result = await _trackingRepo.AddAsync(tracking);
-            return Created($"/tracking/{tracking.Id}", result);
+            try
+            {
+                await _trackingManager.AddAsync(tracking);
+                var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
+                
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the Tracking After Adding it. " },
+                        Data = null
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
-        // PUT api/<TrackingController>/5
+        // PUT <TrackingController>/5
         [HttpPut]
-        public async Task<IActionResult> Update(Tracking tracking)
+        public async Task<ActionResult<ApiEntityResponse<Tracking>>> Update([FromBody] Tracking tracking)
         {
-            var trackingToUpdate = await _trackingRepo.GetByIdAsync(tracking.Id);
-
-            if (trackingToUpdate is not null)
+            try
             {
-                trackingToUpdate.Subject = tracking.Subject;
-                trackingToUpdate.Comments = tracking.Comments;
-                trackingToUpdate.CorrespondenceTypeId = tracking.CorrespondenceTypeId;
-                trackingToUpdate.PocId = tracking.PocId;
-                trackingToUpdate.ToFromId = tracking.ToFromId;
-                trackingToUpdate.StatusId = tracking.StatusId;
-                trackingToUpdate.ThreadId = tracking.ThreadId;
-                trackingToUpdate.DocumentPath = tracking.DocumentPath;
-                trackingToUpdate.SentOrReceived = tracking.SentOrReceived;
-
-                await _trackingRepo.UpdateAsync(trackingToUpdate);
-
-                return Ok(trackingToUpdate);
+                await _trackingManager.UpdateAsync(tracking);
+                var result = ( await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
+                if(result != null)
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<Tracking>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the Tracking after updating it" },
+                        Data = null
+                    });
+                }
             }
-            return NotFound("No Tracking Found");
+            catch (Exception ex)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+            }
         }
 
-        // DELETE api/<TrackingController>/5
+        // DELETE <TrackingController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var trackingToDelete = await _trackingRepo.GetByIdAsync(id);
-            if (trackingToDelete == null)
+            try
             {
-                return NotFound();
+                var trackingList = await _trackingManager.GetAsync(i => i.Id == id);
+                if (trackingList != null)
+                {
+                    var tracking = trackingList.First();
+                    var success = await _trackingManager.DeleteAsync(tracking);
+                    if (success)
+                        return NoContent();
+                    else
+                        return StatusCode(500);
+                }
+                else
+                    return StatusCode(500);
             }
-            await _trackingRepo.DeleteAsync(trackingToDelete);
-            return NoContent();
+            catch (Exception)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+                throw;
+            }
         }
     }
 }

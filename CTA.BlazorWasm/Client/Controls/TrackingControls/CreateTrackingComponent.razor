@@ -1,4 +1,4 @@
-﻿@inject ITrackingRepo _trackings
+﻿@inject TrackingManager trackingManager
 @inject NavigationManager _nav
 
 <EditForm Model="@AddTrackingVm" OnValidSubmit="@CreateTracking">
@@ -99,7 +99,7 @@
     protected async Task CreateTracking()
     {
         var tracking = Mapping.Mapper.Map<Tracking>(AddTrackingVm);
-        await _trackings.AddAsync(tracking);
+        await trackingManager.AddAsync(tracking);
         _nav.NavigateTo($"/thread/" + @ThreadId);
     }
     protected override Task OnInitializedAsync()

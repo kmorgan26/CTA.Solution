@@ -1,35 +1,35 @@
-﻿@inject ITrackingRepo _trackingRepo
+﻿@inject TrackingManager trackingManager
 
-
-<Row Margin="Margin.Is3.FromBottom">
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is4.OnDesktop" TextAlignment="TextAlignment.Center">
+<row>
+    <div class="col" TextAlignment="TextAlignment.Center">
         <StatusRadioComponent @bind-StatusValue="_statusValue"></StatusRadioComponent>
-    </Column>
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is4.OnDesktop" TextAlignment="TextAlignment.Center">
+    </div>
+    <div class="col" TextAlignment="TextAlignment.Center">
         <ToFromRadioComponent @bind-ToFromValue="_toFromValue"></ToFromRadioComponent>
-    </Column>
-</Row>
-<Row Margin="Margin.Is3.FromBottom">
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is1.OnDesktop" TextAlignment="TextAlignment.End">
+    </div>
+</row>
+<row>
+    <div class="col" TextAlignment="TextAlignment.End">
         Subject: 
-    </Column>
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop" TextAlignment="TextAlignment.Start">
-        <TextEdit Placeholder= "Enter Subject to Search" @bind-Text="_subjectText"></TextEdit>
-    </Column>
-</Row>
-<Row Margin="Margin.Is3.FromBottom">
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is1.OnDesktop" TextAlignment="TextAlignment.End">
+    </div>
+    <div class="col" TextAlignment="TextAlignment.Start">
+        @*<TextEdit Placeholder= "Enter Subject to Search" @bind-value="_subjectText"></TextEdit>*@
+    </div>
+</row>
+<row>
+    <div class="col" TextAlignment="TextAlignment.End">
         Comments: 
-    </Column>
-    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is6.OnDesktop" TextAlignment="TextAlignment.Start">
-        <TextEdit Placeholder= "Enter Comments to Search" @bind-Text="_commentsText"></TextEdit>
-    </Column>
-</Row>
-<Row>
-    <Column>
-        <Button Clicked="OnSearchButtonClicked" Color="Color.Primary">SEARCH</Button>
-    </Column>
-</Row>
+    </div>
+    <div class="col" TextAlignment="TextAlignment.Start">
+        @*<TextEdit Placeholder= "Enter Comments to Search" @bind-Text="_commentsText"></TextEdit>*@
+    </div>
+</row>
+<row>
+    <div class="col">
+        <button @onclick="OnSearchbuttonClicked" >SEARCH</button>
+        
+    </div>
+</row>
 
 @code {
     private int _toFromValue = 0;
@@ -42,7 +42,7 @@
     [Parameter]
     public EventCallback<string> FilterValuesChanged { get; set; }
 
-    public async Task OnSearchButtonClicked()
+    public async Task OnSearchbuttonClicked()
     {
         await SetTrackingFilterValues();
         var encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(_trackingFilter);
@@ -51,7 +51,7 @@
 
     private Task SetTrackingFilterValues()
     {
-        //_trackingFilter = new();
+        _trackingFilter = new();
         _trackingFilter.CommentsText =  _commentsText;
         _trackingFilter.SubjectText = _subjectText;
         _trackingFilter.ToFromIds = new int[] { _toFromValue };

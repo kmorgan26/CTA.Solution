@@ -1,16 +1,16 @@
-﻿@inject ITrackingRepo _trackings
+﻿@*@inject ITrackingRepo _trackings*@
 @inject NavigationManager _navigation
 
-<Span Padding="Padding.Is2">Tracking # </Span>
-<TextEdit Width="Width.Is25" MaskType="MaskType.Numeric" @bind-Text="@TrackingId" Padding="Padding.Is2"></TextEdit>
-<Button Color="Color.Primary" Clicked="@OnButtonClicked">SEARCH</Button>
+<span class="p2">Tracking # </span>
+<div>@TrackingId</div>
+<button @onclick="OnbuttonClicked">SEARCH</button>
 
 
 @code {
 
     public string? TrackingId { get; set; }
 
-    private async void OnButtonClicked()
+    private async void OnbuttonClicked()
     {
         var lookup = TrackingId;
         TrackingId = "";

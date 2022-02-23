@@ -1,23 +1,27 @@
 ﻿@inject HttpClient _httpClient
 
-<DataGrid TItem="TrackingReportVm"
-    Class="table table-sm table-hover"
-    PageSize="15"
-    ShowPager
-    Data="_trackingReportVms"
-    CommandMode="DataGridCommandMode.Default"
-    Responsive>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ThreadId)" Caption="Thread" Sortable="true"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Id)" Caption="Track#" Sortable="true"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Status)" Caption="Status" Sortable="false"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ToFromName)" Caption="To/From" Sortable="false"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.ProjectName)" Caption="Project" Sortable="false"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.TopicName)" Caption="Topic" Sortable="false"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.Subject)" Caption="Subject" Sortable="false"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.SentOrReceived)" Caption="Sent/Rec" Sortable="false" DisplayFormat="{0:MM/dd/yyyy}"/>
-    <DataGridColumn TItem="TrackingReportVm" Field="@nameof(TrackingReportVm.CorrespondenceType)" Caption="Type" Sortable="false"/>
-    
-</DataGrid>
+<MudDataGrid Items="@_trackingReportVms"
+             Class="table table-sm table-hover"
+             PageSize="15"
+             ShowPager
+             Data="_trackingReportVms"
+             CommandMode="DataGridCommandMode.Default"
+             Responsive>
+
+    <Columns>
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ThreadId)" Caption="Thread" Sortable="true" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Id)" Caption="Track#" Sortable="true" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Status)" Caption="Status" Sortable="false" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ToFromName)" Caption="To/From" Sortable="false" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ProjectName)" Caption="Project" Sortable="false" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.TopicName)" Caption="Topic" Sortable="false" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Subject)" Caption="Subject" Sortable="false" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.SentOrReceived)" Caption="Sent/Rec" Sortable="false" DisplayFormat="{0:MM/dd/yyyy}" />
+        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.CorrespondenceType)" Caption="Type" Sortable="false" />
+    </Columns>
+
+
+</MudDataGrid>
 
 
 @code {
@@ -35,7 +39,8 @@
 
         _filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
-        var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
-        _trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
+    //TODO: Fix Filter
+        //var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
+       //_trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }

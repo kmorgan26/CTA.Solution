@@ -10,16 +10,16 @@ namespace CTA.BlazorWasm.Client.Services
 
             switch(reportId)
             {
-                case "open_gov-cont":
+                case "1":
                     filter = await Task.Run(() => filter = new() { ToFromIds = new int[] { 1, 2 }, StatusIds = new int[] { 2 }, TypeIds = new int[] { 2 } });
                     break;
-                case "open_subs_cont":
+                case "2":
                     filter =  await Task.Run(() => filter = new() { ToFromIds = new int[] { 3, 4 }, StatusIds = new int[] { 2 }, TypeIds = new int[] { 2 } });
                     break;
-                case "open_gov_rfp":
+                case "3":
                     filter = await Task.Run(() => filter = new() { ToFromIds = new int[] { 1, 2 }, StatusIds = new int[] { 2 }, TypeIds = new int[] { 1 } });
                     break;
-                case "open_subs_rfp":
+                case "4":
                     filter = await Task.Run(() => filter = new() { ToFromIds = new int[] { 3, 4 }, StatusIds = new int[] { 2 }, TypeIds = new int[] { 1 } });
                     break;
             }

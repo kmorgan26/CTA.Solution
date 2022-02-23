@@ -1,92 +1,167 @@
-﻿using CTA.BlazorWasm.Shared.Interfaces;
+﻿using CTA.BlazorWasm.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using CTA.BlazorWasm.Shared.Entities;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using CTA.BlazorWasm.Server.Data;
+using CTA.BlazorWasm.Shared.Data;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TrackingThreadController : ControllerBase
     {
-        private readonly IThreadRepo _threadRepo;
+        RepositoryEF<TrackingThread, CtaContext> _trackingThreadManager;
 
-        public TrackingThreadController(IThreadRepo threadRepo)
+        public TrackingThreadController(RepositoryEF<TrackingThread, CtaContext> trackingThreadManager)
         {
-            _threadRepo = threadRepo;
+            _trackingThreadManager = trackingThreadManager;
         }
 
-        //GET: api/<ThreadController>
-        [HttpGet("List")]
-        public async Task<ActionResult> GetAsync()
+        // GET: api/<TrackingThreadController>
+        [HttpGet]
+        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetAsync()
         {
-            var threads = await _threadRepo.GetAllAsync();
-            return Ok(threads);
-        }
-
-        //GET: api/project/5
-        [HttpGet("threads/{id}")]
-        public async Task<ActionResult> GetTrackingThreadsByProjectIdAsync(int id)
-        {
-            var threads = await _threadRepo.GetTrackingThreadsByProjectIdAsync(id);
-            
-            if (threads.Any())
+            try
             {
-                return Ok(threads);
+                var result = await _trackingThreadManager.GetAllAsync();
+                return Ok(new ApiListOfEntityResponse<TrackingThread>()
+                {
+                    Success = true,
+                    Data = result
+                });
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                //TODO: Log Exception
+                return StatusCode(500);
+            }
         }
 
-        // GET api/<ThreadController>/5
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrackingThread))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // GET api/<TrackingThreadController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetByTrackingThreadId(int id)
         {
-            var thread = await _threadRepo.GetByIdAsync(id);
-            if (thread == null)
+            try
             {
-                return NotFound("Thread Not Found");
+                var result = (await _trackingThreadManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "TrackingThread Not Found" },
+                        Data = null
+                    });
+                }
             }
-            return Ok(thread);
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
-        // POST api/<ThreadController>
+
+        // POST api/<TrackingThreadController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] TrackingThread trackingThread)
+        public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> PostAsync([FromBody] TrackingThread trackingThread)
         {
-            var result = await _threadRepo.AddAsync(trackingThread);
-            return Created($"/project/{result.Id}", result);
+            try
+            {
+                await _trackingThreadManager.AddAsync(trackingThread);
+                var result = (await _trackingThreadManager.GetAsync(i => i.Id == trackingThread.Id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the TrackingThread After Adding it. " },
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
-        // PUT api/<ThreadController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(TrackingThread trackingThread)
+        // PUT api/<TrackingThreadController>/5
+        [HttpPut]
+        public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> Update([FromBody] TrackingThread trackingThread)
         {
-            var threadToUpdate = await _threadRepo.GetByIdAsync(trackingThread.Id);
-
-            if(threadToUpdate is not null)
+            try
             {
-                threadToUpdate.Name = trackingThread.Name;
-                await _threadRepo.UpdateAsync(threadToUpdate);
-                return Ok(threadToUpdate);
+                await _trackingThreadManager.UpdateAsync(trackingThread);
+                var result = (await _trackingThreadManager.GetAsync(i => i.Id == trackingThread.Id)).FirstOrDefault();
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the TrackingThread after updating it" },
+                        Data = null
+                    });
+                }
             }
-            return NotFound("No Thread Found");
+            catch (Exception ex)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+            }
         }
 
-        // DELETE api/<ThreadController>/5
+        // DELETE api/<TrackingThreadController>/5
         [HttpDelete("{id}")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var threadToDelete = await _threadRepo.GetByIdAsync(id);
-            if (threadToDelete == null)
+            try
             {
-                return NotFound();
+                var trackingThreadList = await _trackingThreadManager.GetAsync(i => i.Id == id);
+                if (trackingThreadList != null)
+                {
+                    var trackingThread = trackingThreadList.First();
+                    var success = await _trackingThreadManager.DeleteAsync(trackingThread);
+                    if (success)
+                        return NoContent();
+                    else
+                        return StatusCode(500);
+                }
+                else
+                    return StatusCode(500);
             }
-            await _threadRepo.DeleteAsync(threadToDelete);
-            return NoContent();
+            catch (Exception)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+                throw;
+            }
         }
     }
 }

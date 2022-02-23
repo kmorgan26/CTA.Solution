@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CTA.BlazorWasm.Shared.Entities
+namespace CTA.BlazorWasm.Shared.Models
 {
     public partial class CorrespondenceSubType
     {

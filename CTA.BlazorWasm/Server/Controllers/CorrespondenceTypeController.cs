@@ -1,78 +1,167 @@
-﻿using CTA.BlazorWasm.Shared.Entities;
-using CTA.BlazorWasm.Shared.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using CTA.BlazorWasm.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using CTA.BlazorWasm.Server.Data;
+using CTA.BlazorWasm.Shared.Data;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CorrespondenceTypeController : ControllerBase
     {
-        private readonly ICorrTypeRepo _corrTypeRepo;
+        RepositoryEF<CorrespondenceType, CtaContext> _correspondenceTypeManager;
 
-        public CorrespondenceTypeController(ICorrTypeRepo corrTypeRepo)
+        public CorrespondenceTypeController(RepositoryEF<CorrespondenceType, CtaContext> correspondenceTypeManager)
         {
-            _corrTypeRepo = corrTypeRepo;
+            _correspondenceTypeManager = correspondenceTypeManager;
         }
 
         // GET: api/<CorrespondenceTypeController>
-        [HttpGet("List")]
-        public async Task<IActionResult> GetAsync()
+        [HttpGet]
+        public async Task<ActionResult<ApiListOfEntityResponse<CorrespondenceType>>> GetAsync()
         {
-            var corrTypes = await _corrTypeRepo.GetAllAsync();
-            return Ok(corrTypes);
+            try
+            {
+                var result = await _correspondenceTypeManager.GetAllAsync();
+                return Ok(new ApiListOfEntityResponse<CorrespondenceType>()
+                {
+                    Success = true,
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log Exception
+                return StatusCode(500);
+            }
         }
 
         // GET api/<CorrespondenceTypeController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult<ApiListOfEntityResponse<CorrespondenceType>>> GetByCorrespondenceTypeId(int id)
         {
-            var correspondenceType = _corrTypeRepo.GetByIdAsync(id).Result;
-            if (correspondenceType == null)
+            try
             {
-                return NotFound("CorrespondenceType Not Found");
+                var result = (await _correspondenceTypeManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "CorrespondenceType Not Found" },
+                        Data = null
+                    });
+                }
             }
-            return Ok(correspondenceType);
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
+
 
         // POST api/<CorrespondenceTypeController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] CorrespondenceType correspondenceType)
+        public async Task<ActionResult<ApiEntityResponse<CorrespondenceType>>> PostAsync([FromBody] CorrespondenceType correspondenceType)
         {
-            var result = await _corrTypeRepo.AddAsync(correspondenceType);
-            return Created($"/correspondenceType/{correspondenceType.Id}", result);
+            try
+            {
+                await _correspondenceTypeManager.AddAsync(correspondenceType);
+                var result = (await _correspondenceTypeManager.GetAsync(i => i.Id == correspondenceType.Id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the CorrespondenceType After Adding it. " },
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
         // PUT api/<CorrespondenceTypeController>/5
         [HttpPut]
-        public async Task<IActionResult> Update(CorrespondenceType correspondenceType)
+        public async Task<ActionResult<ApiEntityResponse<CorrespondenceType>>> Update([FromBody] CorrespondenceType correspondenceType)
         {
-            var corrTypeToUpdate = await _corrTypeRepo.GetByIdAsync(correspondenceType.Id);
-
-            if (corrTypeToUpdate is not null)
+            try
             {
-                corrTypeToUpdate.Name = correspondenceType.Name;
-                corrTypeToUpdate.CorrespondenceSubTypeId = corrTypeToUpdate.CorrespondenceSubTypeId;
-
-                await _corrTypeRepo.UpdateAsync(corrTypeToUpdate);
-
-                return Ok(corrTypeToUpdate);
+                await _correspondenceTypeManager.UpdateAsync(correspondenceType);
+                var result = (await _correspondenceTypeManager.GetAsync(i => i.Id == correspondenceType.Id)).FirstOrDefault();
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the CorrespondenceType after updating it" },
+                        Data = null
+                    });
+                }
             }
-            return NotFound("No CorrespondenceType Found");
+            catch (Exception ex)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+            }
         }
 
         // DELETE api/<CorrespondenceTypeController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var corrTypeToDelete = await _corrTypeRepo.GetByIdAsync(id);
-            if (corrTypeToDelete == null)
+            try
             {
-                return NotFound();
+                var correspondenceTypeList = await _correspondenceTypeManager.GetAsync(i => i.Id == id);
+                if (correspondenceTypeList != null)
+                {
+                    var correspondenceType = correspondenceTypeList.First();
+                    var success = await _correspondenceTypeManager.DeleteAsync(correspondenceType);
+                    if (success)
+                        return NoContent();
+                    else
+                        return StatusCode(500);
+                }
+                else
+                    return StatusCode(500);
             }
-            await _corrTypeRepo.DeleteAsync(corrTypeToDelete);
-            return NoContent();
+            catch (Exception)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+                throw;
+            }
         }
     }
 }

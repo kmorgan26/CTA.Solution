@@ -1,10 +1,7 @@
 using CTA.BlazorWasm.Client;
+using CTA.BlazorWasm.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
-// other usings
-using Blazorise;
-using Blazorise.Bootstrap;
-using Blazorise.Icons.FontAwesome;
+using MudBlazor.Services;
 
 public class Program
 {
@@ -12,13 +9,7 @@ public class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-        builder.Services
-          .AddBlazorise(options =>
-          {
-              options.ChangeTextOnKeyPress = true;
-          })
-          .AddBootstrapProviders()
-          .AddFontAwesomeIcons();
+        builder.Services.AddMudServices();
 
         builder.Services.AddSingleton(new HttpClient
         {
@@ -26,6 +17,13 @@ public class Program
         });
 
         builder.RootComponents.Add<App>("#app");
+        builder.Services.AddScoped<PocManager>();
+        builder.Services.AddScoped<ProjectManager>();
+        builder.Services.AddScoped<CorrespondenceTypeManager>();
+        builder.Services.AddScoped<StatusManager>();
+        builder.Services.AddScoped<ToFromManager>();
+        builder.Services.AddScoped<TrackingManager>();
+        builder.Services.AddScoped<TrackingThreadManager>();
 
         var host = builder.Build();
 

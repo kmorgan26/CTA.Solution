@@ -1,10 +1,10 @@
 ﻿@using System.Text.Json
-@inject HttpClient _http
+@inject TrackingThreadManager trackingThreadManager
 
-<Heading Size="HeadingSize.Is3" Margin="Margin.Is4.FromBottom">
-    <Icon Name="IconName.ListUl"></Icon>
+<h3>
+    <span>icon</span>
     Thread List for: <ProjectNameComponent ProjectId="@ProjectId"></ProjectNameComponent>
-</Heading>
+</h3>
 
 <div class="row mb-4">
     <div class="col col-md-6 col-sm-12">
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<DataGrid TItem="GenericListVm"
+<MudDataGrid Items="@threadList"
     PageSize="10"
     ShowPager
     Data="threadList"
@@ -20,23 +20,23 @@
     Class="col col-md-6 col-sm-12"
     Responsive>
     
-    <DataGridColumn TItem="GenericListVm" Field="@nameof(GenericListVm.Id)" Caption="ID" Sortable="true"/>
-    <DataGridColumn TItem="GenericListVm" Field="@nameof(GenericListVm.Name)" Caption="Name" Sortable="true"/>
-    <DataGridColumn TItem="GenericListVm">
-        <DisplayTemplate>
+    <Column T="GenericListVm" Field="@nameof(GenericListVm.Id)" Caption="ID" Sortable="true"/>
+    <Column T="GenericListVm" Field="@nameof(GenericListVm.Name)" Caption="Name" Sortable="true"/>
+    <Column T="GenericListVm">
+        @*<DisplayTemplate>
             @{
                 <a class="btn btn-primary btn-sm" href="/thread/@context.Id" role="button">Select</a>
             }
-        </DisplayTemplate>
-    </DataGridColumn>
-    <DataGridColumn TItem="GenericListVm">
-        <DisplayTemplate>
+        </DisplayTemplate>*@
+    </Column>
+    <Column T="GenericListVm">
+        @*<DisplayTemplate>
             @{
                 <a class="btn btn-info btn-sm" href="/thread/edit/@context.Id" role="button">Edit</a>
             }
-        </DisplayTemplate>
-    </DataGridColumn>
-</DataGrid>
+        </DisplayTemplate>*@
+    </Column>
+</MudDataGrid>
 
 @code {
 
@@ -48,8 +48,7 @@
     protected override async Task OnInitializedAsync()
     {
         var id = ProjectId;
-        var items = await _http.GetFromJsonAsync<List<TrackingThread>>($"api/thread/threads/{id}");
-
+        var items = await trackingThreadManager.GetByIdAsync(ProjectId);
         threadList = Mapping.Mapper.Map<List<GenericListVm>>(items);
     }
 

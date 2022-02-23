@@ -1,77 +1,167 @@
-﻿using CTA.BlazorWasm.Shared.Entities;
-using CTA.BlazorWasm.Shared.Interfaces;
+﻿using CTA.BlazorWasm.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using CTA.BlazorWasm.Server.Data;
+using CTA.BlazorWasm.Shared.Data;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ToFromController : ControllerBase
     {
-        private readonly IToFromRepo _toFromRepo;
+        RepositoryEF<ToFrom, CtaContext> _toFromManager;
 
-        public ToFromController(IToFromRepo toFromRepo)
+        public ToFromController(RepositoryEF<ToFrom, CtaContext> toFromManager)
         {
-            _toFromRepo = toFromRepo;
+            _toFromManager = toFromManager;
         }
 
         // GET: api/<ToFromController>
-        [HttpGet("List")]
-        public async Task<IActionResult> GetAsync()
+        [HttpGet]
+        public async Task<ActionResult<ApiListOfEntityResponse<ToFrom>>> GetAsync()
         {
-            var toFroms = await _toFromRepo.GetAllAsync();
-            return Ok(toFroms);
+            try
+            {
+                var result = await _toFromManager.GetAllAsync();
+                return Ok(new ApiListOfEntityResponse<ToFrom>()
+                {
+                    Success = true,
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log Exception
+                return StatusCode(500);
+            }
         }
 
         // GET api/<ToFromController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult<ApiListOfEntityResponse<ToFrom>>> GetByToFromId(int id)
         {
-            var toFrom = _toFromRepo.GetByIdAsync(id).Result;
-            if (toFrom == null)
+            try
             {
-                return NotFound("ToFrom Not Found");
+                var result = (await _toFromManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "ToFrom Not Found" },
+                        Data = null
+                    });
+                }
             }
-            return Ok(toFrom);
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
+
 
         // POST api/<ToFromController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] ToFrom toFrom)
+        public async Task<ActionResult<ApiEntityResponse<ToFrom>>> PostAsync([FromBody] ToFrom toFrom)
         {
-            var result = await _toFromRepo.AddAsync(toFrom);
-            return Created($"/toFrom/{toFrom.Id}", result);
+            try
+            {
+                await _toFromManager.AddAsync(toFrom);
+                var result = (await _toFromManager.GetAsync(i => i.Id == toFrom.Id)).FirstOrDefault();
+
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the ToFrom After Adding it. " },
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log the exception
+                return StatusCode(500);
+            }
         }
 
         // PUT api/<ToFromController>/5
         [HttpPut]
-        public async Task<IActionResult> Update(ToFrom toFrom)
+        public async Task<ActionResult<ApiEntityResponse<ToFrom>>> Update([FromBody] ToFrom toFrom)
         {
-            var toFromToUpdate = await _toFromRepo.GetByIdAsync(toFrom.Id);
-
-            if (toFromToUpdate is not null)
+            try
             {
-                toFromToUpdate.Name = toFrom.Name;
-                await _toFromRepo.UpdateAsync(toFromToUpdate);
-
-                return Ok(toFromToUpdate);
+                await _toFromManager.UpdateAsync(toFrom);
+                var result = (await _toFromManager.GetAsync(i => i.Id == toFrom.Id)).FirstOrDefault();
+                if (result != null)
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = true,
+                        Data = result
+                    });
+                }
+                else
+                {
+                    return Ok(new ApiEntityResponse<ToFrom>()
+                    {
+                        Success = false,
+                        ErrorMessage = new List<string>() { "Could not find the ToFrom after updating it" },
+                        Data = null
+                    });
+                }
             }
-            return NotFound("No ToFrom Found");
+            catch (Exception ex)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+            }
         }
 
         // DELETE api/<ToFromController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            var toFromToDelete = await _toFromRepo.GetByIdAsync(id);
-            if (toFromToDelete == null)
+            try
             {
-                return NotFound();
+                var toFromList = await _toFromManager.GetAsync(i => i.Id == id);
+                if (toFromList != null)
+                {
+                    var toFrom = toFromList.First();
+                    var success = await _toFromManager.DeleteAsync(toFrom);
+                    if (success)
+                        return NoContent();
+                    else
+                        return StatusCode(500);
+                }
+                else
+                    return StatusCode(500);
             }
-            await _toFromRepo.DeleteAsync(toFromToDelete);
-            return NoContent();
+            catch (Exception)
+            {
+                // TODO: Log it
+                return StatusCode(500);
+                throw;
+            }
         }
     }
 }

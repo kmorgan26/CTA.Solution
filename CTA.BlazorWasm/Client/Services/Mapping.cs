@@ -4,7 +4,7 @@ using CTA.BlazorWasm.Client.ViewModels.Poc;
 using CTA.BlazorWasm.Client.ViewModels.Project;
 using CTA.BlazorWasm.Client.ViewModels.Tracking;
 using CTA.BlazorWasm.Client.ViewModels.Threads;
-using CTA.BlazorWasm.Shared.Entities;
+using CTA.BlazorWasm.Shared.Models;
 
 
 namespace CTA.BlazorWasm.Client.Services

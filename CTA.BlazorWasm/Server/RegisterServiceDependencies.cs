@@ -1,10 +1,8 @@
-﻿using CTA.BlazorWasm.Shared.Context;
+﻿using CTA.BlazorWasm.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using CTA.BlazorWasm.Shared.Interfaces;
-using CTA.BlazorWasm.Shared.Repositories;
-using Blazorise;
-using Blazorise.Bootstrap;
-using Blazorise.Icons.FontAwesome;
+using CTA.BlazorWasm.Shared.Models;
+using CTA.BlazorWasm.Server.Data;
 
 namespace CTA.BlazorWasm.Server
 {
@@ -16,28 +14,19 @@ namespace CTA.BlazorWasm.Server
                 options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("CTAConnectionString")));
 
-            builder.Services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
-            builder.Services.AddScoped<ICorrTypeRepo, CorrTypeRepo>();
-            builder.Services.AddScoped<ISubTypeRepo, SubTypeRepo>();
-            builder.Services.AddScoped<IPocRepo, PocRepo>();
-            builder.Services.AddScoped<IProjectRepo, ProjectRepo>();
-            builder.Services.AddScoped<IStatusRepo, StatusRepo>();
-            builder.Services.AddScoped<IToFromRepo, ToFromRepo>();
-            builder.Services.AddScoped<ITrackingRepo, TrackingRepo>();
-            builder.Services.AddScoped<IThreadRepo, ThreadRepo>();
+            builder.Services.AddTransient<RepositoryEF<CorrespondenceType, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<CorrespondenceSubType, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<Poc, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<Project, CtaContext>>();
 
-            builder.Services.AddBlazorise(options =>
-            {
-                options.ChangeTextOnKeyPress = true;
-            })
-                .AddBootstrapProviders()
-                .AddFontAwesomeIcons();
+            builder.Services.AddTransient<RepositoryEF<Status, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<ToFrom, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<Tracking, CtaContext>>();
+            builder.Services.AddTransient<RepositoryEF<TrackingThread, CtaContext>>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
-            //builder.Services.AddControllers();
-            //builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
 
             return builder;

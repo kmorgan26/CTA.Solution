@@ -1,16 +1,14 @@
 ﻿
-@inject HttpClient _http
-
 @if (_hideControls)
 {
     <div class="mb-0">
-        <span class="badge badge-success mb-3" @onclick="ToggleHideControls"><Icon Name="IconName.PlusCircle"></Icon>show</span>
+        <span class="badge badge-success mb-3" @onclick="ToggleHideControls">show</span>
     </div>
 }
 else
 
 {
-    <span class="badge badge-danger" @onclick="ToggleHideControls"><Icon Name="IconName.MinusCircle"></Icon>hide</span>
+    <span class="badge badge-danger" @onclick="ToggleHideControls">hide</span>
     <div class="border border-secondary mb-2 rounded p-3">
 
         <EditForm Model="@_trackingFilter" OnValidSubmit="GetSearchResults">
@@ -123,6 +121,4 @@ else
     {
         _trackingFilter.ToFromId = id;
     }
-    
-
 }

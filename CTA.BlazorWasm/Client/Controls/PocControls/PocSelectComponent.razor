@@ -1,4 +1,4 @@
-﻿@inject HttpClient _httpClient
+﻿@inject PocManager pocManager
 
 <FormFieldComponent LabelName="POC">
     <ControlToRender>
@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var pocs = await _httpClient.GetFromJsonAsync<List<Poc>>($"api/Poc/List");
+        var pocs = await pocManager.GetAllAsync();
         _pocVms = Mapping.Mapper.Map<List<GenericListVm>>(pocs);
     }
 }

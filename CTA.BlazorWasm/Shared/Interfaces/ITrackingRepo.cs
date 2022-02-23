@@ -1,4 +1,4 @@
-﻿using CTA.BlazorWasm.Shared.Entities;
+﻿using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Shared.Filters;
 
 namespace CTA.BlazorWasm.Shared.Interfaces

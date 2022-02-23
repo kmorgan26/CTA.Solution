@@ -1,4 +1,4 @@
-﻿@inject HttpClient _httpClient
+﻿@inject StatusManager statusManager
 
 <FormFieldComponent LabelName="Status">
     <ControlToRender>
@@ -28,7 +28,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        var statuss = await _httpClient.GetFromJsonAsync<List<Status>>($"api/status/List");
+        var statuss = await statusManager.GetAllAsync();
         _statusVms = Mapping.Mapper.Map<List<GenericListVm>>(statuss);
     }
 }
