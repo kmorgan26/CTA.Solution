@@ -2,7 +2,7 @@
 @inject NavigationManager _navigation
 
 <h3>
-    <span>icon</span>
+    <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
     Tracking # @_trackingVm.Id
 </h3>
 
@@ -62,14 +62,14 @@
                 {
                     <a href="@_trackingVm.DocumentPath" target="_blank" class="card-link">
                         <span class="badge badge-info">Document: </span>
-                        <span>icon</span>
+                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
                     </a>
                 }
                 else
                 {
                     <a href="@_trackingVm.DocumentPath" class="card-link">
                         <span class="badge badge-info">NO DOCUMENT: </span>
-                        <span>icon</span>
+                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
                     </a>
                 }
             </div>

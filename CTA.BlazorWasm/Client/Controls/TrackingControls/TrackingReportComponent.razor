@@ -1,46 +1,52 @@
-﻿@inject HttpClient _httpClient
+﻿@inject TrackingManager trackingManager
 
-<MudDataGrid Items="@_trackingReportVms"
-             Class="table table-sm table-hover"
-             PageSize="15"
-             ShowPager
-             Data="_trackingReportVms"
-             CommandMode="DataGridCommandMode.Default"
-             Responsive>
-
-    <Columns>
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ThreadId)" Caption="Thread" Sortable="true" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Id)" Caption="Track#" Sortable="true" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Status)" Caption="Status" Sortable="false" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ToFromName)" Caption="To/From" Sortable="false" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.ProjectName)" Caption="Project" Sortable="false" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.TopicName)" Caption="Topic" Sortable="false" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.Subject)" Caption="Subject" Sortable="false" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.SentOrReceived)" Caption="Sent/Rec" Sortable="false" DisplayFormat="{0:MM/dd/yyyy}" />
-        <Column T="TrackingReportVm" Field="@nameof(TrackingReportVm.CorrespondenceType)" Caption="Type" Sortable="false" />
-    </Columns>
-
-
-</MudDataGrid>
-
+<MudTable Items="@trackingReportVms" Hover="true" Striped="true" Dense="true">
+    <HeaderContent>
+        <MudTh>Thread</MudTh>
+        <MudTh>Tracking #</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>To/From</MudTh>
+        <MudTh>Project</MudTh>
+        <MudTh>Topic</MudTh>
+        <MudTh>Subject</MudTh>
+        <MudTh>Sent/Rec</MudTh>
+        <MudTh>Type</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Thread">@context.ThreadId</MudTd>
+        <MudTd DataLabel="Thread">@context.Id</MudTd>
+        <MudTd DataLabel="Thread">@context.Status</MudTd>
+        <MudTd DataLabel="Thread">@context.ToFromName</MudTd>
+        <MudTd DataLabel="Thread">@context.ProjectName</MudTd>
+        <MudTd DataLabel="Thread">@context.TopicName</MudTd>
+        <MudTd DataLabel="Thread">@context.Subject</MudTd>
+        <MudTd DataLabel="Thread">@context.SentOrReceived</MudTd>
+        <MudTd DataLabel="Thread">@context.CorrespondenceType</MudTd>
+        
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
 
     [Parameter]
     public string EncodedString { get; set; } = string.Empty;
 
-    private List<TrackingReportVm> _trackingReportVms = new();
+    private List<TrackingReportVm> trackingReportVms = new();
 
-    private TrackingFilter _filter = new();
+    private TrackingFilter filter = new();
 
     protected override async Task OnParametersSetAsync()
     {
         var jsonString = await SerializeAndEncode.EncodedStringToJson(EncodedString);
 
-        _filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
+        filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
-    //TODO: Fix Filter
+        //TODO: Fix Filter
         //var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
-       //_trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
+        var trackings = await trackingManager.GetAllAsync();
+        trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }
