@@ -25,7 +25,7 @@
         <MudTd DataLabel="Topic">@context.Subject</MudTd>
         <MudTd DataLabel="Topic">@context.Status</MudTd>
         <MudTd DataLabel="Topic">@context.ToFrom</MudTd>
-        <MudTd DataLabel="Topic">@context.SentOrReceived</MudTd>
+        <MudTd DataLabel="Topic">@context.SentOrReceived.ToShortDateString()</MudTd>
         <MudTd DataLable="SELECT">
             <a href="/tracking/@context.Id">
                 <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
