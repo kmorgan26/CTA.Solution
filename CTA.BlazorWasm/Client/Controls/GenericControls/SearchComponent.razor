@@ -88,13 +88,13 @@ else
     [Parameter]
     public EventCallback<string> OnValidSubmit { get; set; }
 
-    private string? _encodedString { get; set; }
+    private string? encodedString { get; set; }
 
     private async Task GetSearchResults()
     {
-        _encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(_trackingFilter);
+        encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(_trackingFilter);
 
-        await OnValidSubmit.InvokeAsync(_encodedString);
+        await OnValidSubmit.InvokeAsync(encodedString);
     }
 
     private TrackingFilter _trackingFilter { get; set; } = new();

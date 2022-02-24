@@ -40,13 +40,14 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var jsonString = await SerializeAndEncode.EncodedStringToJson(EncodedString);
+        var encodedFilter = await SerializeAndEncode.ObjectToJsonAndEncode(EncodedString);
+        //var encodedFilter = await SerializeAndEncode.EncodedStringToJson(EncodedString);
+        
+        //var trackingFilter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(encodedFilter);
+        //filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
-        filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
-        //TODO: Fix Filter
-        //var trackings = await _httpClient.GetFromJsonAsync<List<Tracking>>($"api/tracking/filtered/{_filter}");
-        var trackings = await trackingManager.GetTrackingsFiltered(filter);
+        var trackings = await trackingManager.GetTrackingsFiltered(encodedFilter);
         trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }

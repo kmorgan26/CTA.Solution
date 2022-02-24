@@ -5,6 +5,8 @@ using CTA.BlazorWasm.Shared.Data;
 using CTA.BlazorWasm.Shared.Filters;
 using Microsoft.EntityFrameworkCore;
 using LinqKit;
+using Newtonsoft.Json;
+using CTA.BlazorWasm.Shared.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -113,11 +115,13 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // GET<TrackingController>/filter
-        [HttpGet("filtered/{filter}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(TrackingFilter filter)
+        [HttpGet("filter/{id}")]
+        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(string id)
         {
             try
             {
+                var filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(id);
+
                 var result = _trackingManager.dbSet
                     .Include(i => i.CorrespondenceType)
                         .ThenInclude(j => j.CorrespondenceSubType)

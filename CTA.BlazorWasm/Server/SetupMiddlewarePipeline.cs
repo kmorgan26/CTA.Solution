@@ -19,21 +19,7 @@
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
             app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-
-                endpoints.MapControllerRoute(
-                    name: "custom",
-                    pattern: "{controller=Home}/{action=Index}/{filter?}");
-                endpoints.MapRazorPages();
-            });
-
-            //app.MapRazorPages();
+            app.MapRazorPages();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
 

@@ -36,14 +36,23 @@ namespace CTA.BlazorWasm.Client.Services
             }
         }
 
-        public async Task<ApiListOfEntityResponse<Tracking>> GetTrackingsFiltered(object filter)
+        public async Task<IEnumerable<Tracking>> GetTrackingsFiltered(string encodedFilter)
         {
             try
             {
-                var id = 9;
-                return await http.GetFromJsonAsync<ApiListOfEntityResponse<Tracking>>($"tracking/{id}");
+                //var testId = "myid";
+                var arg = WebUtility.HtmlEncode(encodedFilter.ToString());
+                var url = $"tracking/filter/{arg}";
+                var result = await http.GetAsync(url);
+                result.EnsureSuccessStatusCode();
+                string responseBody = await result.Content.ReadAsStringAsync();
+                var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<Tracking>>(responseBody);
+                if (response!.Success)
+                    return response.Data;
+                else
+                    return new List<Tracking>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //var message = ex.Message;
                 return null;

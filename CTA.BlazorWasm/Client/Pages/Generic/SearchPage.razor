@@ -7,17 +7,17 @@
 
 <SearchComponent OnValidSubmit="UpdateString"></SearchComponent>
 
-@if (_encodedString != string.Empty)
+@if (encodedString != string.Empty)
 {
-    <TrackingReportComponent EncodedString="@_encodedString"></TrackingReportComponent>
+    <TrackingReportComponent EncodedString="@encodedString"></TrackingReportComponent>
 }
 
 @code {
 
-    private string _encodedString { get; set; } = string.Empty;
+    private string encodedString { get; set; } = string.Empty;
 
-    private void UpdateString(string encodedString)
+    private void UpdateString(string _encodedString)
     {
-        _encodedString = encodedString;
+        encodedString = _encodedString;
     }
 }
