@@ -20,7 +20,7 @@
         <MudTd DataLabel="Thread">@context.ProjectName</MudTd>
         <MudTd DataLabel="Thread">@context.TopicName</MudTd>
         <MudTd DataLabel="Thread">@context.Subject</MudTd>
-        <MudTd DataLabel="Thread">@context.SentOrReceived</MudTd>
+        <MudTd DataLabel="Thread">@context.SentOrReceived.ToShortDateString()</MudTd>
         <MudTd DataLabel="Thread">@context.CorrespondenceType</MudTd>
         
     </RowTemplate>
@@ -40,14 +40,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var encodedFilter = await SerializeAndEncode.ObjectToJsonAndEncode(EncodedString);
-        //var encodedFilter = await SerializeAndEncode.EncodedStringToJson(EncodedString);
-        
-        //var trackingFilter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(encodedFilter);
-        //filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
-
-
-        var trackings = await trackingManager.GetTrackingsFiltered(encodedFilter);
+        var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
         trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
     }
 }

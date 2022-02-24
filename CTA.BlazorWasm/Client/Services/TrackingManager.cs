@@ -40,7 +40,6 @@ namespace CTA.BlazorWasm.Client.Services
         {
             try
             {
-                //var testId = "myid";
                 var arg = WebUtility.HtmlEncode(encodedFilter.ToString());
                 var url = $"tracking/filter/{arg}";
                 var result = await http.GetAsync(url);

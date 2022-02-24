@@ -120,7 +120,9 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(id);
+                var jsonString = await SerializeAndEncode.EncodedStringToJson(id);
+
+                var filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
                 var result = _trackingManager.dbSet
                     .Include(i => i.CorrespondenceType)
