@@ -15,6 +15,27 @@ namespace CTA.BlazorWasm.Client.Services
             http = _http;
         }
 
+        public async Task<IEnumerable<Tracking>> GetTrackingsByThreadId(object id)
+        {
+            try
+            {
+                var arg = WebUtility.HtmlEncode(id.ToString());
+                var url = $"tracking/thread/{arg}";
+                var result = await http.GetAsync(url);
+                result.EnsureSuccessStatusCode();
+                string responseBody = await result.Content.ReadAsStringAsync();
+                var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<Tracking>>(responseBody);
+                if (response!.Success)
+                    return response.Data;
+                else
+                    return new List<Tracking>();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public async Task<ApiListOfEntityResponse<Tracking>> GetTrackingsFiltered(object filter)
         {
             try
@@ -22,32 +43,12 @@ namespace CTA.BlazorWasm.Client.Services
                 var id = 9;
                 return await http.GetFromJsonAsync<ApiListOfEntityResponse<Tracking>>($"tracking/{id}");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var message = ex.Message;
+                //var message = ex.Message;
                 return null;
             }
         }
 
-        public async Task<IEnumerable<Tracking>> GetTrackingsByThreadId(object id)
-        {
-            try
-            {
-                var arg = WebUtility.HtmlEncode(id.ToString());
-                var url = "tracking" + "/thread/" + arg;
-                var result = await http.GetAsync(url);
-                result.EnsureSuccessStatusCode();
-                string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<Tracking>>(responseBody);
-                if (response.Success)
-                    return response.Data;
-                else
-                    return null;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
     }
 }

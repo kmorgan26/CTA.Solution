@@ -34,7 +34,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     Data = result
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log Exception
                 return StatusCode(500);
@@ -49,7 +49,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 var result = (await _trackingManager.GetAsync(x => x.Id == id)).FirstOrDefault();
 
-                if(result != null)
+                if (result != null)
                 {
                     return Ok(new ApiEntityResponse<Tracking>()
                     {
@@ -63,11 +63,11 @@ namespace CTA.BlazorWasm.Server.Controllers
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Tracking Not Found" },
-                        Data = null
+                        Data = new Tracking()
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log the exception
                 return StatusCode(500);
@@ -80,14 +80,12 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var result = _trackingManager.dbSet
+                var result = await _trackingManager.dbSet
+                    .Include(i => i.ToFrom)
+                    .Include(i => i.Status)
                     .AsNoTracking()
-                    .AsExpandable();
-
-
-                result = result.Where(i => i.ThreadId == id);
-
-                var data = await Task.Run(() => result.OrderBy(i => i.ThreadId));
+                    .Where(i => i.ThreadId == id)
+                    .ToListAsync();
 
                 if (result != null)
                 {
@@ -103,11 +101,11 @@ namespace CTA.BlazorWasm.Server.Controllers
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Trackings Not Found" },
-                        Data = null
+                        Data = new List<Tracking>()
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log the exception
                 return StatusCode(500);
@@ -165,10 +163,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                     result = result.Where(i => i.Subject.Contains(filter.SubjectText));
 
                 if (filter.CommentsText != null)
-                    result = result.Where(i => i.Comments.Contains(filter.CommentsText));
+                    result = result.Where(i => i.Comments!.Contains(filter.CommentsText));
 
-                var data = await Task.Run(() =>  result.OrderBy(i => i.ThreadId));
-                
+                var data = await Task.Run(() => result.OrderBy(i => i.ThreadId));
+
                 return Ok(new ApiListOfEntityResponse<Tracking>()
                 {
                     Success = true,
@@ -189,7 +187,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 await _trackingManager.AddAsync(tracking);
                 var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
-                
+
                 if (result != null)
                 {
                     return Ok(new ApiEntityResponse<Tracking>()
@@ -204,11 +202,11 @@ namespace CTA.BlazorWasm.Server.Controllers
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Tracking After Adding it. " },
-                        Data = null
+                        Data = new Tracking()
                     });
                 }
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 //TODO: Log the exception
                 return StatusCode(500);
@@ -222,8 +220,8 @@ namespace CTA.BlazorWasm.Server.Controllers
             try
             {
                 await _trackingManager.UpdateAsync(tracking);
-                var result = ( await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
-                if(result != null)
+                var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
+                if (result != null)
                 {
                     return Ok(new ApiEntityResponse<Tracking>()
                     {
@@ -237,11 +235,11 @@ namespace CTA.BlazorWasm.Server.Controllers
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Tracking after updating it" },
-                        Data = null
+                        Data = new Tracking()
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // TODO: Log it
                 return StatusCode(500);

@@ -13,7 +13,7 @@ namespace CTA.BlazorWasm.Client.ViewModels.Tracking
         public int ToFromId { get; set; }
 
         [Required]
-        public string Subject { get; set; }
+        public string Subject { get; set; }  = string.Empty;
 
         [Required]
         [Range(1, 100, ErrorMessage = "Please Select a Correspondence Type")]

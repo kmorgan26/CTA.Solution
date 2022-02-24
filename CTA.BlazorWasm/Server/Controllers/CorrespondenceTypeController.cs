@@ -29,7 +29,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     Data = result
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log Exception
                 return StatusCode(500);
@@ -62,7 +62,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log the exception
                 return StatusCode(500);
@@ -97,7 +97,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: Log the exception
                 return StatusCode(500);
@@ -130,7 +130,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // TODO: Log it
                 return StatusCode(500);

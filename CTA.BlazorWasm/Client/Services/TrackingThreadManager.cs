@@ -24,12 +24,12 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<TrackingThread>>(responseBody);
-                if (response.Success)
+                if (response!.Success)
                     return response.Data;
                 else
                     return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

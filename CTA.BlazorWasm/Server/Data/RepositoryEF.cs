@@ -14,6 +14,7 @@ namespace CTA.BlazorWasm.Server.Data
         public RepositoryEF(TDataContext dataContext)
         {
             context = dataContext;
+            context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             dbSet = context.Set<TEntity>();
         }
 

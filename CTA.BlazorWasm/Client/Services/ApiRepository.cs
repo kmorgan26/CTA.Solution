@@ -27,14 +27,14 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<TEntity>>(responseBody);
-                if (response.Success)
+                if (response!.Success)
                     return response.Data;
                 else
                     return new List<TEntity>();
             }
             catch (Exception)
             {
-                return null;
+                return new List<TEntity>();
             }
             
         }
@@ -49,7 +49,7 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<ApiEntityResponse<TEntity>>(responseBody);
-                if (response.Success)
+                if (response!.Success)
                     return response.Data;
                 else
                     return null;
@@ -68,7 +68,7 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<ApiEntityResponse<TEntity>>(responseBody);
-                if (response.Success)
+                if (response!.Success)
                     return response.Data;
                 else
                     return null;

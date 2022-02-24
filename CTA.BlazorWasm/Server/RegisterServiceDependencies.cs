@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CTA.BlazorWasm.Shared.Interfaces;
 using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Server.Data;
+using System.Text.Json.Serialization;
 
 namespace CTA.BlazorWasm.Server
 {
@@ -25,7 +26,8 @@ namespace CTA.BlazorWasm.Server
             builder.Services.AddTransient<RepositoryEF<TrackingThread, CtaContext>>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers()
+                .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
 
