@@ -1,25 +1,28 @@
-﻿
-@inject TrackingThreadManager trackingThreadManager
+﻿@inject TrackingThreadManager trackingThreadManager
 @inject NavigationManager _nav
 
 <div class="row">
     <div class="col col-sm-12 col-md-6">
         <EditForm Model="@ThreadVm" OnValidSubmit="@CreateThread">
-            
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <MudHidden @bind-Value="@ProjectId" />
+
             <FormFieldComponent LabelName="Thread">
                 <ControlToRender>
                     <InputText class="form-control" @bind-Value="ThreadVm.Name" />
                 </ControlToRender>
             </FormFieldComponent>
-            
+
             <FormFieldComponent LabelName="Active?">
                 <ControlToRender>
                     <InputCheckbox @bind-Value="ThreadVm.IsActive"/>
                 </ControlToRender>
             </FormFieldComponent>
-                           
-            <button type="submit" class="btn btn-primary btn-sm">Create</button>
-            <a href="@($"/project/{ProjectId}")" class="btn btn-sm btn-danger">Cancel</a>
+
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Create</MudButton>
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" Link="@($"/project/{ProjectId}")">Cancel</MudButton>
+            
         </EditForm>
     </div>
 </div>

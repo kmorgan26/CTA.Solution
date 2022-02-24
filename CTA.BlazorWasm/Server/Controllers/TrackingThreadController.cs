@@ -102,7 +102,6 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-
         // POST api/<TrackingThreadController>
         [HttpPost]
         public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> PostAsync([FromBody] TrackingThread trackingThread)

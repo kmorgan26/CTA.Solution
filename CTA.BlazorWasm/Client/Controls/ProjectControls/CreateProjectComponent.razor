@@ -21,6 +21,7 @@
 </div>
 
 @code {
+
     public ProjectListVm ProjectListVm { get; set; } = new();
 
     protected async Task CreateProject()
@@ -29,4 +30,5 @@
         await projectManager.AddAsync(project);
         _nav.NavigateTo("/projects");
     }
+
 }
