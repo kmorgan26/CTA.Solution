@@ -35,7 +35,7 @@
 
     private async Task GetReportAsync()
     {
-        var reportFilter = await ReportService.GetReportFilter(selectedValue.ToString());
+        var reportFilter = await ReportService.GetReportFilter(selectedValue!.ToString()!);
         SerializedParameter = await SerializeAndEncode.ObjectToJsonAndEncode(reportFilter);
         _navigation.NavigateTo("/report/" + SerializedParameter);
     }

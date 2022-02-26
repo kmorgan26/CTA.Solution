@@ -15,15 +15,6 @@
     <Compile Remove="Interfaces\IThreadRepo.cs" />
     <Compile Remove="Interfaces\IToFromRepo.cs" />
     <Compile Remove="Interfaces\ITrackingRepo.cs" />
-    <Compile Remove="Repositories\BaseRepository.cs" />
-    <Compile Remove="Repositories\CorrTypeRepo.cs" />
-    <Compile Remove="Repositories\PocRepo.cs" />
-    <Compile Remove="Repositories\ProjectRepo.cs" />
-    <Compile Remove="Repositories\StatusRepo.cs" />
-    <Compile Remove="Repositories\SubTypeRepo.cs" />
-    <Compile Remove="Repositories\ThreadRepo.cs" />
-    <Compile Remove="Repositories\ToFromRepo.cs" />
-    <Compile Remove="Repositories\TrackingRepo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +25,5 @@
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ namespace CTA.BlazorWasm.Client.Services
             }
             catch (Exception)
             {
-                return null;
+                return new List<Tracking>();
             }
         }
 
@@ -51,9 +51,8 @@ namespace CTA.BlazorWasm.Client.Services
                 else
                     return new List<Tracking>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //var message = ex.Message;
                 return null;
             }
         }

@@ -27,7 +27,7 @@ namespace CTA.BlazorWasm.Client.Services
                 if (response!.Success)
                     return response.Data;
                 else
-                    return null;
+                    return new List<TrackingThread>();
             }
             catch (Exception)
             {
