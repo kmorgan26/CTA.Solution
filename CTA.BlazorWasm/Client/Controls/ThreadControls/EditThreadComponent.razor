@@ -16,8 +16,10 @@
                         <InputCheckbox @bind-Value="ThreadVm.IsActive"/>
                     </ControlToRender>
                 </FormFieldComponent>
-                <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                <a href=@($"/project/{ThreadVm.ProjectId}") class="btn btn-danger btn-sm">Cancel</a>
+
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Update</MudButton>
+                <MudButton Link=@($"/project/{ThreadVm.ProjectId}") Variant="Variant.Filled" Color="Color.Error" Size="Size.Small">Cancel</MudButton>
+            
             </EditForm>
         }
     </div>
