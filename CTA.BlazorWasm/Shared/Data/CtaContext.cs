@@ -112,12 +112,6 @@ namespace CTA.BlazorWasm.Shared.Data
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LastModifiedBy)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
                 entity.Property(e => e.SentOrReceived).HasColumnType("datetime");
 
                 entity.Property(e => e.Subject)

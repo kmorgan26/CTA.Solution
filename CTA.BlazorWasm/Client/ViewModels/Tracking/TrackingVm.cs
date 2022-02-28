@@ -20,11 +20,6 @@ namespace CTA.BlazorWasm.Client.ViewModels.Tracking
 
         public string Comments { get; set; } = string.Empty;
         public string DocumentPath { get; set; } = string.Empty;
-        public string LastModifiedBy { get; set; } = string.Empty;
-
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime? LastModifiedDate { get; set; }
-
 
     }
 }
