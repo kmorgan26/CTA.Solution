@@ -31,7 +31,6 @@ namespace CTA.BlazorWasm.Client.ViewModels.Tracking
         [Range(1, 100, ErrorMessage = "Please Select a Status")]
         public int StatusId { get; set; }
 
-
         public string? Comments { get; set; }
 
         public string? DocumentPath { get; set; }
