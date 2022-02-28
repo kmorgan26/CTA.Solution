@@ -2,13 +2,13 @@
 
 <FormFieldComponent LabelName="Correspondence Type">
     <ControlToRender>
-        <select id="corrTypeSelect" name="corrTypeId" class="custom-select" @onchange="ChangeCorrType">
+        <InputSelect id="corrTypeSelect" class="form-control" @onchange="ChangeCorrType" @bind-Value="SelectedCorrTypeId">
             <option value="0">-----</option>
             @foreach(var item in _corrTypeVms)
             {
                 <option value="@item.Id">@item.Name</option>
             }
-        </select>
+        </InputSelect>
     </ControlToRender>
 </FormFieldComponent>
 
@@ -17,14 +17,15 @@
     [Parameter]
     public EventCallback<int?> CorrTypeIdChanged { get; set; }
 
-    private int? _selectedCorrTypeId { get; set; }
+    [Parameter]
+    public int? SelectedCorrTypeId { get; set; }
 
     private List<GenericListVm> _corrTypeVms = new();
 
     private async Task ChangeCorrType(ChangeEventArgs e)
     {
-        _selectedCorrTypeId = Convert.ToInt32(e.Value);
-        await CorrTypeIdChanged.InvokeAsync(_selectedCorrTypeId);
+        SelectedCorrTypeId = Convert.ToInt32(e.Value);
+        await CorrTypeIdChanged.InvokeAsync(SelectedCorrTypeId);
     }
 
     protected override async Task OnInitializedAsync()
