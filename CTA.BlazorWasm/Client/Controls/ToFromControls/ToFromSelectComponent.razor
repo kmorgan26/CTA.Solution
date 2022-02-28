@@ -17,14 +17,15 @@
     [Parameter]
     public EventCallback<int?> TofromIdChanged { get; set; }
 
-    private int? _selectedTofromId { get; set; }
+    [Parameter]
+    public int? SelectedTofromId { get; set; }
 
     private List<GenericListVm> _toFromVms = new();
 
     private async Task ChangeTofrom(ChangeEventArgs e)
     {
-        _selectedTofromId = Convert.ToInt32(e.Value);
-        await TofromIdChanged.InvokeAsync(_selectedTofromId);
+        SelectedTofromId = Convert.ToInt32(e.Value);
+        await TofromIdChanged.InvokeAsync(SelectedTofromId);
     }
 
     protected override async Task OnInitializedAsync()

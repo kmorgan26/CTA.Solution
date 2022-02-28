@@ -1,0 +1,17 @@
+﻿@page "/tracking/edit/{TrackingId:int}"
+
+<div class="row mb-3">
+    <div class="col-lg-9">
+        <h3>
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Large" Class="m-3" Color="Color.Warning" />
+            Edit Project
+        </h3>
+    </div>
+</div>
+
+<EditTrackingComponent TrackingId="TrackingId"></EditTrackingComponent>
+
+@code{
+    [Parameter]
+    public int TrackingId { get; set; }
+}

@@ -1,0 +1,99 @@
+﻿@inject TrackingManager trackingManager
+@inject NavigationManager _nav
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        @if (TrackingVm != null)
+        {
+            <EditForm Model="@TrackingVm" OnValidSubmit="@UpdateTracking">
+
+                <div class="col col-sm-12 col-md-2">
+                    <ToFromSelectComponent TofromIdChanged="UpdateTofrom" @bind-SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
+                </div>
+
+                <div class="col col-sm-12 col-md-2">
+                    <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType"></CorrTypeSelectComponent>
+                </div>
+
+                <div class="col col-sm-12 col-md-2">
+                    <PocSelectComponent PocIdChanged="UpdatePoc"></PocSelectComponent>
+                </div>
+
+                <div class="col col-sm-12 col-md-2">
+                    <StatusSelectComponent StatusIdChanged="UpdateStatus"></StatusSelectComponent>
+                </div>
+
+                <div class="col col-sm-12 col-md-2">
+                    <FormFieldComponent LabelName="Sent/Received">
+                        <ControlToRender>
+                            <InputDate @bind-Value="TrackingVm.SentOrReceived" />
+                        </ControlToRender>
+                    </FormFieldComponent>
+                </div>
+
+                <FormFieldComponent LabelName="Subject">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="TrackingVm.Subject" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <FormFieldComponent LabelName="Comments">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="TrackingVm.Comments" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <FormFieldComponent LabelName="Document Path">
+                    <ControlToRender>
+                        <InputText class="form-control" @bind-Value="TrackingVm.DocumentPath" />
+                    </ControlToRender>
+                </FormFieldComponent>
+
+                <input type="hidden" @bind-value="TrackingVm.ThreadId" />
+
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Update</MudButton>
+                <MudButton Link=@($"/tracking/{TrackingId}") Variant="Variant.Filled" Color="Color.Error" Size="Size.Small">Cancel</MudButton>
+
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int TrackingId { get; set; }
+
+    public EditTrackingVm TrackingVm { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var tracking = await trackingManager.GetByIdAsync(TrackingId);
+        TrackingVm = Mapping.Mapper.Map<EditTrackingVm>(tracking);
+    }
+    protected async Task UpdateTracking()
+    {
+        var tracking = Mapping.Mapper.Map<Tracking>(TrackingVm);
+        await trackingManager.UpdateAsync(tracking);
+        _nav.NavigateTo("/tracking/" + @TrackingId.ToString());
+    }
+
+    void UpdateStatus(int? id)
+    {
+        TrackingVm.StatusId = Convert.ToInt32(id);
+    }
+    void UpdateCorrType(int? id)
+    {
+        TrackingVm.CorrespondenceTypeId = Convert.ToInt32(id);
+    }
+    void UpdatePoc(int? id)
+    {
+        TrackingVm.PocId = Convert.ToInt32(id);
+    }
+    void UpdateTofrom(int? id)
+    {
+        TrackingVm.ToFromId = Convert.ToInt32(id);
+    }
+
+
+}

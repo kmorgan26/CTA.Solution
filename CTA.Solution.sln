@@ -5,11 +5,11 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FAD2778D-1372-4FA7-9FE4-15C3264157D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTA.BlazorWasm.Server", "CTA.BlazorWasm\Server\CTA.BlazorWasm.Server.csproj", "{3164C3DD-8BC5-4AB5-B0DC-13E55A3F7E29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTA.BlazorWasm.Server", "CTA.BlazorWasm\Server\CTA.BlazorWasm.Server.csproj", "{3164C3DD-8BC5-4AB5-B0DC-13E55A3F7E29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTA.BlazorWasm.Client", "CTA.BlazorWasm\Client\CTA.BlazorWasm.Client.csproj", "{16BC7551-DDDE-47D0-8E87-759E5337ACE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTA.BlazorWasm.Client", "CTA.BlazorWasm\Client\CTA.BlazorWasm.Client.csproj", "{16BC7551-DDDE-47D0-8E87-759E5337ACE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTA.BlazorWasm.Shared", "CTA.BlazorWasm\Shared\CTA.BlazorWasm.Shared.csproj", "{0DBFC8EF-658F-43F0-8F1D-060C8F94895D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTA.BlazorWasm.Shared", "CTA.BlazorWasm\Shared\CTA.BlazorWasm.Shared.csproj", "{0DBFC8EF-658F-43F0-8F1D-060C8F94895D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

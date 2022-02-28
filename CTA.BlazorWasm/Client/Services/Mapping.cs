@@ -48,7 +48,7 @@ namespace CTA.BlazorWasm.Client.Services
                 .ForMember(dest => dest.ProjectName,
                     opts => opts.MapFrom(src => src.Project.Name));
 
-            //CreateMap<TrackingSearchVm, Tracking>().ReverseMap();
+            CreateMap<EditTrackingVm, Tracking>().ReverseMap();
             CreateMap<Tracking, GenericListVm>().ReverseMap();
             CreateMap<Tracking, AddTrackingVm>().ReverseMap();
 
