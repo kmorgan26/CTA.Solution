@@ -93,8 +93,9 @@ namespace CTA.BlazorWasm.Client.Services
                 else
                     return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
         }

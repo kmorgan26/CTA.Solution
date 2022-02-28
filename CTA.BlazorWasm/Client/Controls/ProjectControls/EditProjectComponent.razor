@@ -6,11 +6,13 @@
         @if (ProjectVm != null)
         {
             <EditForm Model="@ProjectVm" OnValidSubmit="@UpdateProject">
+
                 <FormFieldComponent LabelName="Topic">
                     <ControlToRender>
                         <InputText class="form-control" @bind-Value="ProjectVm.Name" />
                     </ControlToRender>
                 </FormFieldComponent>
+
                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Update</MudButton>
                 <MudButton Link="/projects" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small">Cancel</MudButton>
             </EditForm>

@@ -6,11 +6,13 @@
         @if (ThreadVm != null)
         {
             <EditForm Model="@ThreadVm" OnValidSubmit="@UpdateThread">
+
                 <FormFieldComponent LabelName="Topic">
                     <ControlToRender>
                         <InputText class="form-control" @bind-Value="ThreadVm.Name" />
                     </ControlToRender>
                 </FormFieldComponent>
+
                 <FormFieldComponent LabelName="Active?">
                     <ControlToRender>
                         <InputCheckbox @bind-Value="ThreadVm.IsActive"/>
