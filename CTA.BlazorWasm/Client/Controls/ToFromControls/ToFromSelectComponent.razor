@@ -2,15 +2,16 @@
 
 <FormFieldComponent LabelName="To/From">
     <ControlToRender>
-        <select id="tofromSelect" name="tofromId" class="custom-select" @onchange="ChangeTofrom">
+        <InputSelect id="tofrom" @bind-Value="SelectedTofromId" class="form-control">
             <option value=0>-----</option>
-            @foreach(var item in _toFromVms)
+            @foreach (var item in _toFromVms)
             {
                 <option value="@item.Id">@item.Name</option>
             }
-        </select>
+        </InputSelect>
     </ControlToRender>
 </FormFieldComponent>
+
 
 @code {
 

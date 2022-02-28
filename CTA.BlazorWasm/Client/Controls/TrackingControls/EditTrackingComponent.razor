@@ -7,19 +7,19 @@
         {
             <EditForm Model="@TrackingVm" OnValidSubmit="@UpdateTracking">
 
-                <div class="col col-sm-12 col-md-2">
-                    <ToFromSelectComponent TofromIdChanged="UpdateTofrom" @bind-SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
+                <div class="col col-sm-12 col-md-6">
+                    <ToFromSelectComponent TofromIdChanged="UpdateTofrom" SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
                 </div>
 
-                <div class="col col-sm-12 col-md-2">
+                <div class="col col-sm-12 col-md-6">
                     <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType"></CorrTypeSelectComponent>
                 </div>
 
-                <div class="col col-sm-12 col-md-2">
+                <div class="col col-sm-12 col-md-6">
                     <PocSelectComponent PocIdChanged="UpdatePoc"></PocSelectComponent>
                 </div>
 
-                <div class="col col-sm-12 col-md-2">
+                <div class="col col-sm-12 col-md-6">
                     <StatusSelectComponent StatusIdChanged="UpdateStatus"></StatusSelectComponent>
                 </div>
 
