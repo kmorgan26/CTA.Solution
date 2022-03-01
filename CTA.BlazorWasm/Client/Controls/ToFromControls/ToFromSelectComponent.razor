@@ -2,7 +2,8 @@
 
 <FormFieldComponent LabelName="To/From">
     <ControlToRender>
-        <InputSelect id="tofrom" @bind-Value="SelectedTofromId" class="form-control" @onchange="ChangeTofrom">
+        <InputSelect ValueExpression="@(()=> SelectedTofromId)" id="tofromSelect" DisplayName="To/From" class="form-control" Value="SelectedTofromId"
+            ValueChanged="@((int? value) => ChangeTofrom(value))">
             <option value=0>-----</option>
             @foreach (var item in _toFromVms)
             {
@@ -22,9 +23,9 @@
 
     private List<GenericListVm> _toFromVms = new();
 
-    private async Task ChangeTofrom(ChangeEventArgs e)
+    private async Task ChangeTofrom(int? value)
     {
-        SelectedTofromId = Convert.ToInt32(e.Value);
+        SelectedTofromId = Convert.ToInt32(value);
         await TofromIdChanged.InvokeAsync(SelectedTofromId);
     }
 

@@ -2,7 +2,8 @@
 
 <FormFieldComponent LabelName="POC">
     <ControlToRender>
-        <InputSelect id="poc" @bind-Value="SelectedPocId" class="form-control" @onchange="ChangePoc">
+        <InputSelect ValueExpression="@(()=> SelectedPocId)" id="pocSelect" DisplayName="POC" class="form-control" Value="SelectedPocId"
+            ValueChanged="@((int? value) => ChangePoc(value))">
             <option value=0>-----</option>
             @foreach (var item in _pocVms)
             {
@@ -22,9 +23,9 @@
 
     private List<GenericListVm> _pocVms = new();
 
-    private async Task ChangePoc(ChangeEventArgs e)
+    private async Task ChangePoc(int? value)
     {
-        SelectedPocId = Convert.ToInt32(e.Value);
+        SelectedPocId = Convert.ToInt32(value);
         await PocIdChanged.InvokeAsync(SelectedPocId);
     }
 

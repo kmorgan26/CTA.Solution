@@ -2,7 +2,8 @@
 
 <FormFieldComponent LabelName="Correspondence Type">
     <ControlToRender>
-        <InputSelect id="corrTypeSelect" class="form-control" @onchange="ChangeCorrType" @bind-Value="SelectedCorrTypeId">
+        <InputSelect ValueExpression="@(()=> SelectedCorrTypeId)" id="corrSelect" DisplayName="Correspondence Type" class="form-control" Value="SelectedCorrTypeId"
+            ValueChanged="@((int? value) => ChangeCorrType(value))">
             <option value="0">-----</option>
             @foreach(var item in _corrTypeVms)
             {
@@ -22,9 +23,9 @@
 
     private List<GenericListVm> _corrTypeVms = new();
 
-    private async Task ChangeCorrType(ChangeEventArgs e)
+    private async Task ChangeCorrType(int? value)
     {
-        SelectedCorrTypeId = Convert.ToInt32(e.Value);
+        SelectedCorrTypeId = Convert.ToInt32(value);
         await CorrTypeIdChanged.InvokeAsync(SelectedCorrTypeId);
     }
 

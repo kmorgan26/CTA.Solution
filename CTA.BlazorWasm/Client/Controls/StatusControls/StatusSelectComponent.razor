@@ -2,7 +2,8 @@
 
 <FormFieldComponent LabelName="Status">
     <ControlToRender>
-        <InputSelect id="statusSelect" class="form-control" @onchange="ChangeStatus" @bind-Value="SelectedStatusId">
+        <InputSelect ValueExpression="@(()=> SelectedStatusId)" id="statusSelect" DisplayName="Status" class="form-control" Value="SelectedStatusId"
+            ValueChanged="@((int? value) => ChangeStatus(value))">
             <option value="0">-----</option>
             @foreach (var item in _statusVms)
             {
@@ -22,9 +23,9 @@
 
     private List<GenericListVm> _statusVms = new();
 
-    private async Task ChangeStatus(ChangeEventArgs e)
+    private async Task ChangeStatus(int? value)
     {
-        SelectedStatusId = Convert.ToInt32(e.Value);
+        SelectedStatusId = Convert.ToInt32(value);
         await StatusIdChanged.InvokeAsync(SelectedStatusId);
     }
     protected override async Task OnInitializedAsync()
