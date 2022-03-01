@@ -6,67 +6,58 @@
     Tracking # @_trackingVm.Id
 </h3>
 
-<div class="card">
-    <div class="card-body">
-        <h3 class="card-title mb-4">@_trackingVm.Subject</h3>
 
-        <h4 class="card-subtitle mb-4">TOPIC: @_trackingVm.Topic</h4>
-        <div class="d-flex">
-            <div class="m-3">
-                <span class="badge badge-info">Correspondence Type: </span>
-                <span>@_trackingVm.CorrespondenceType</span>
-            </div>
-            <div class="m-3">
-                <span class="badge badge-info">POC: </span>
-                <span>@_trackingVm.Poc</span>
-            </div>
-            <div class="m-3">
-                <span class="badge badge-info">Status: </span>
-                <span>@_trackingVm.Status</span>
-            </div>
-            <div class="m-3">
-                <span class="badge badge-info">To/From: </span>
-                <span>@_trackingVm.ToFrom</span>
-            </div>
-        </div>
-
-        <div class="d-flex">
-            <div class="m-3">
-                <span class="badge badge-info">Sent/Received: </span>
-
-                <span>@_trackingVm.SentOrReceived.ToShortDateString()</span>
-            </div>
-        </div>
-        <div class="d-flex">
-            <div class="m-3">
-                <span class="badge badge-info">Comments: </span>
-                <span class="card-text">@_trackingVm.Comments</span>
-            </div>
-        </div>
-        <hr />
-        
-        <div class="d-flex">
-            <div class="p-2">
-                @if (_trackingVm.DocumentPath.StartsWith("http"))
-                {
-                    <a href="@_trackingVm.DocumentPath" target="_blank" class="card-link">
-                        <span class="badge badge-info">Document: </span>
-                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
-                    </a>
-                }
-                else
-                {
-                    <a href="@_trackingVm.DocumentPath" class="card-link">
-                        <span class="badge badge-info">NO DOCUMENT: </span>
-                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
-                    </a>
-                }
-            </div>
-        </div>
+<div class="row mb-4">
+    <div class="col col-sm-12 col-md-9">
+        <MudField Label="Subject" Variant="Variant.Outlined">@_trackingVm.Subject</MudField>
     </div>
 </div>
 
-<a href="/tracking/edit/@TrackingId" >EDIT</a>
+<div class="row mb-4">
+    <div class="col col-sm-12 col-md-3">
+        <MudField Label="To/From" Variant="Variant.Outlined">@_trackingVm.ToFrom</MudField>
+    </div>
+    <div class="col col-sm-12 col-md-3">
+        <MudField Label="Corr. Type" Variant="Variant.Outlined">@_trackingVm.CorrespondenceType</MudField>
+    </div>
+    <div class="col col-sm-12 col-md-3">
+        <MudField Label="POC" Variant="Variant.Outlined">@_trackingVm.Poc</MudField>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col col-sm-12 col-md-2">
+        <MudField Label="Sent/Received" Variant="Variant.Outlined">@_trackingVm.SentOrReceived.ToShortDateString()</MudField>
+    </div>
+
+    <div class="col col-sm-12 col-md-2">
+        <MudField Label="Status" Variant="Variant.Outlined">@_trackingVm.Status</MudField>
+    </div>
+    <div class="row mb-4">
+        @if (_trackingVm.DocumentPath.StartsWith("http"))
+        {
+            <div class="col col-sm-12 col-md-2">
+                <MudField Variant="Variant.Filled">
+                    <a href="@_trackingVm.DocumentPath" target="_blank" class="card-link">
+                        <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Large" Color="Color.Success" />
+                    </a>
+                </MudField>
+            </div>
+        }
+        else
+        {
+            <div class="col col-sm-12 col-md-2">
+                <MudField Variant="Variant.Text">
+                    <a href="/notfound" class="card-link">
+                        <MudIcon Icon="@Icons.Material.Filled.LinkOff" Size="Size.Large" Color="Color.Dark"/>
+                    </a>
+                </MudField>
+            </div>
+        }
+    </div>
+</div>
+
+<MudButton Link=@($"/tracking/edit/{TrackingId}") Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Edit</MudButton>
 
 @code {
 
@@ -81,7 +72,7 @@
 
         if (tracking != null)
         {
-            if(tracking.DocumentPath is null)
+            if (tracking.DocumentPath is null)
             {
                 tracking.DocumentPath = "/notfound";
             }
