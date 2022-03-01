@@ -33,28 +33,36 @@
     <div class="col col-sm-12 col-md-2">
         <MudField Label="Status" Variant="Variant.Outlined">@_trackingVm.Status</MudField>
     </div>
-    <div class="row mb-4">
-        @if (_trackingVm.DocumentPath.StartsWith("http"))
-        {
-            <div class="col col-sm-12 col-md-2">
-                <MudField Variant="Variant.Filled">
-                    <a href="@_trackingVm.DocumentPath" target="_blank" class="card-link">
-                        <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Large" Color="Color.Success" />
-                    </a>
-                </MudField>
-            </div>
-        }
-        else
-        {
-            <div class="col col-sm-12 col-md-2">
-                <MudField Variant="Variant.Text">
-                    <a href="/notfound" class="card-link">
-                        <MudIcon Icon="@Icons.Material.Filled.LinkOff" Size="Size.Large" Color="Color.Dark"/>
-                    </a>
-                </MudField>
-            </div>
-        }
+
+</div>
+
+<div class="row mb-4">
+    <div class="col col-sm-12 col-md-9">
+        <MudField Label="Comments" Variant="Variant.Outlined">@_trackingVm.Comments</MudField>
     </div>
+</div>
+
+<div class="row mb-4">
+    @if (_trackingVm.DocumentPath.StartsWith("http"))
+    {
+        <div class="col col-sm-12 col-md-2">
+            <MudField Label="Document Link" Variant="Variant.Outlined">
+                <a href="@_trackingVm.DocumentPath" target="_blank">
+                    <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Large" Color="Color.Success" />
+                </a>
+            </MudField>
+        </div>
+    }
+    else
+    {
+        <div class="col col-sm-12 col-md-1">
+            <MudField Label="Link" Variant="Variant.Outlined">
+                <a href="/notfound">
+                    <MudIcon Icon="@Icons.Material.Filled.LinkOff" Size="Size.Large" Color="Color.Dark" />
+                </a>
+            </MudField>
+        </div>
+    }
 </div>
 
 <MudButton Link=@($"/tracking/edit/{TrackingId}") Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small">Edit</MudButton>

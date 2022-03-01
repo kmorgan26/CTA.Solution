@@ -9,7 +9,7 @@
 
                 <FormFieldComponent LabelName="Subject">
                     <ControlToRender>
-                        <MudTextField Value="@TrackingVm.Subject" Variant="Variant.Outlined" Lines="2"></MudTextField>
+                        <MudTextField @bind-Value="@TrackingVm.Subject" Variant="Variant.Outlined" Lines="2"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 
@@ -21,7 +21,7 @@
                         <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType" SelectedCorrTypeId="@TrackingVm.CorrespondenceTypeId"></CorrTypeSelectComponent>
                     </div>
                     <div class="col col-sm-12 col-md-4">
-                        <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@TrackingVm.ToFromId"></PocSelectComponent>
+                        <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@TrackingVm.PocId"></PocSelectComponent>
                     </div>
                 </div>
 
@@ -40,7 +40,7 @@
 
                 <FormFieldComponent LabelName="Comments">
                     <ControlToRender>
-                        <MudTextField Value="@TrackingVm.Comments" Variant="Variant.Outlined" Lines="4"></MudTextField>
+                        <MudTextField @bind-Value="@TrackingVm.Comments" Variant="Variant.Outlined" Lines="4"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 
