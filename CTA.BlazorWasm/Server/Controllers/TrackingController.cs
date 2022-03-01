@@ -49,7 +49,14 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var result = (await _trackingManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+                var result = await _trackingManager.dbSet
+                    .Include(i => i.ToFrom)
+                    .Include(i => i.Status)
+                    .Include(i => i.Poc)
+                    .Include(I => I.CorrespondenceType)
+                    .AsNoTracking()
+                    .Where(i => i.Id == id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {

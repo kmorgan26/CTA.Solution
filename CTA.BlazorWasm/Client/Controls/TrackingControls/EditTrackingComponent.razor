@@ -7,39 +7,42 @@
         {
             <EditForm Model="@TrackingVm" OnValidSubmit="@UpdateTracking">
 
-                <div class="col col-sm-12 col-md-6">
-                    <ToFromSelectComponent TofromIdChanged="UpdateTofrom" SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
-                </div>
-
-                <div class="col col-sm-12 col-md-6">
-                    <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType" SelectedCorrTypeId="@TrackingVm.CorrespondenceTypeId"></CorrTypeSelectComponent>
-                </div>
-
-                <div class="col col-sm-12 col-md-6">
-                    <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@TrackingVm.ToFromId"></PocSelectComponent>
-                </div>
-
-                <div class="col col-sm-12 col-md-6">
-                    <StatusSelectComponent StatusIdChanged="UpdateStatus" SelectedStatusId="@TrackingVm.StatusId"></StatusSelectComponent>
-                </div>
-
-                <div class="col col-sm-12 col-md-2">
-                    <FormFieldComponent LabelName="Sent/Received">
-                        <ControlToRender>
-                            <InputDate @bind-Value="TrackingVm.SentOrReceived" />
-                        </ControlToRender>
-                    </FormFieldComponent>
-                </div>
-
                 <FormFieldComponent LabelName="Subject">
                     <ControlToRender>
-                        <InputText class="form-control" @bind-Value="TrackingVm.Subject" />
+                        <MudTextField Value="@TrackingVm.Subject" Variant="Variant.Outlined" Lines="2"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 
+                <div class="row">
+                    <div class="col col-sm-12 col-md-4">
+                        <ToFromSelectComponent TofromIdChanged="UpdateTofrom" SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
+                    </div>
+                    <div class="col col-sm-12 col-md-4">
+                        <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType" SelectedCorrTypeId="@TrackingVm.CorrespondenceTypeId"></CorrTypeSelectComponent>
+                    </div>
+                    <div class="col col-sm-12 col-md-4">
+                        <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@TrackingVm.ToFromId"></PocSelectComponent>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-sm-12 col-md-4">
+                        <FormFieldComponent LabelName="Sent/Received">
+                            <ControlToRender>
+                                <InputDate @bind-Value="TrackingVm.SentOrReceived" />
+                            </ControlToRender>
+                        </FormFieldComponent>
+                    </div>
+                    <div class="col col-sm-12 col-md-4">
+                        <StatusSelectComponent StatusIdChanged="UpdateStatus" SelectedStatusId="@TrackingVm.StatusId"></StatusSelectComponent>
+                    </div>
+                </div>
+
+                
+
                 <FormFieldComponent LabelName="Comments">
                     <ControlToRender>
-                        <InputText class="form-control" @bind-Value="TrackingVm.Comments" />
+                        <MudTextField Value="@TrackingVm.Comments" Variant="Variant.Outlined" Lines="4"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 

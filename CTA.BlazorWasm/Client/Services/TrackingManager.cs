@@ -14,6 +14,21 @@ namespace CTA.BlazorWasm.Client.Services
         {
             http = _http;
         }
+        //public override async Task<IEnumerable<Tracking>> GetByIdAsync(object id)
+        //{
+        //    try
+        //    {
+        //        var arg = WebUtility.HtmlEncode(id.ToString());
+        //        var url = $"tracking/thread/{arg}";
+        //        var result = await http.GetAsync(url);
+        //        result.EnsureSuccessStatusCode();
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
 
         public async Task<IEnumerable<Tracking>> GetTrackingsByThreadId(object id)
         {
