@@ -13,8 +13,13 @@
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Thread">@context.ThreadId</MudTd>
-        <MudTd DataLabel="Thread">@context.Id</MudTd>
+        <MudTd>@context.ThreadId</MudTd>
+        <MudTd>
+            <a href="tracking/@context.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Small"/>
+                @context.Id
+            </a>
+        </MudTd>
         <MudTd DataLabel="Thread">@context.Status</MudTd>
         <MudTd DataLabel="Thread">@context.ToFromName</MudTd>
         <MudTd DataLabel="Thread">@context.ProjectName</MudTd>
@@ -22,7 +27,7 @@
         <MudTd DataLabel="Thread">@context.Subject</MudTd>
         <MudTd DataLabel="Thread">@context.SentOrReceived.ToShortDateString()</MudTd>
         <MudTd DataLabel="Thread">@context.CorrespondenceType</MudTd>
-        
+
     </RowTemplate>
     <PagerContent>
         <MudTablePager />

@@ -136,7 +136,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-        // PUT api/<TrackingThreadController>/5
+        // PUT <TrackingThreadController>/5
         [HttpPut]
         public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> Update([FromBody] TrackingThread trackingThread)
         {

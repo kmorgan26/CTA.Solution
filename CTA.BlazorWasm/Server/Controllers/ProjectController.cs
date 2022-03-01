@@ -104,7 +104,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-        // PUT api/<ProjectController>/5
+        // PUT <ProjectController>/5
         [HttpPut]
         public async Task<ActionResult<ApiEntityResponse<Project>>> Update([FromBody] Project project)
         {
