@@ -14,7 +14,7 @@ namespace CTA.BlazorWasm.Shared.Models
         public string Name { get; set; } = null!;
         public int CorrespondenceSubTypeId { get; set; }
 
-        public virtual CorrespondenceSubType CorrespondenceSubType { get; set; } = null!;
+        public virtual CorrespondenceSubType? CorrespondenceSubType { get; set; } = null!;
         public virtual ICollection<Tracking> Trackings { get; set; }
     }
 }

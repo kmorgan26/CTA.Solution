@@ -15,7 +15,7 @@ namespace CTA.BlazorWasm.Shared.Models
         public int ProjectId { get; set; }
         public bool? IsActive { get; set; }
 
-        public virtual Project Project { get; set; } = null!;
+        public virtual Project? Project { get; set; } = null!;
         public virtual ICollection<Tracking> Trackings { get; set; }
     }
 }
