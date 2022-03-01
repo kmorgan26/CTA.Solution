@@ -2,13 +2,13 @@
 
 <FormFieldComponent LabelName="Status">
     <ControlToRender>
-        <select id="statusSelect" name="statusId" class="custom-select" @onchange="ChangeStatus" >
-            <option value=0>-----</option>
-            @foreach(var item in _statusVms)
+        <InputSelect id="statusSelect" class="form-control" @onchange="ChangeStatus" @bind-Value="SelectedStatusId">
+            <option value="0">-----</option>
+            @foreach (var item in _statusVms)
             {
                 <option value="@item.Id">@item.Name</option>
             }
-        </select>
+        </InputSelect>
     </ControlToRender>
 </FormFieldComponent>
 
@@ -17,14 +17,15 @@
     [Parameter]
     public EventCallback<int?> StatusIdChanged { get; set; }
 
-    private int? _selectedStatusId { get; set; }
+    [Parameter]
+    public int? SelectedStatusId { get; set; }
 
     private List<GenericListVm> _statusVms = new();
 
     private async Task ChangeStatus(ChangeEventArgs e)
     {
-        _selectedStatusId = Convert.ToInt32(e.Value);
-        await StatusIdChanged.InvokeAsync(_selectedStatusId);
+        SelectedStatusId = Convert.ToInt32(e.Value);
+        await StatusIdChanged.InvokeAsync(SelectedStatusId);
     }
     protected override async Task OnInitializedAsync()
     {
