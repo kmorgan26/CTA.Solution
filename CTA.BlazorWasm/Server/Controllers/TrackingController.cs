@@ -179,9 +179,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     result = result.Where(i => i.Comments!.Contains(filter.CommentsText));
 
                 var data = await Task.Run(() => result
-                    .OrderBy(i => i.ThreadId)
-                    .Take(filter.ItemsPerPage)
-                    );
+                    .OrderBy(i => i.ThreadId));
 
                 return Ok(new ApiListOfEntityResponse<Tracking>()
                 {

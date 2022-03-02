@@ -8,18 +8,6 @@ namespace CTA.BlazorWasm.Shared.Filters
 {
     public class TrackingFilter
     {
-        public int TotalItems { get; set; }
-        public int ItemsPerPage { get; set; } = 10;
-        public int CurrentPage { get; set; }
-        public int TotalPages
-        {
-            get
-            {
-                return (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage);
-            }
-        }
-
-
         public string? SubjectText { get; set; }
         public string? CommentsText { get; set; }
         public int ThreadId { get; set; } = 0;
