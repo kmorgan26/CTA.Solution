@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using LinqKit;
 using Newtonsoft.Json;
 using CTA.BlazorWasm.Shared.Services;
+using CTA.BlazorWasm.Shared.Responses;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,15 +26,16 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: <TrackingController>
         [HttpGet]
-        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
                 var result = await _trackingManager.GetAllAsync();
-                return Ok(new ApiListOfEntityResponse<Tracking>()
+
+                return Ok(new Response<List<Tracking>>
                 {
-                    Success = true,
-                    Data = result
+                    Data = result.ToList(),
+                    Success = true
                 });
             }
             catch (Exception)
@@ -45,7 +47,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET <TrackingController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetByTrackingId(int id)
+        public async Task<IActionResult> GetByTrackingId(int id)
         {
             try
             {
@@ -60,7 +62,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = true,
                         Data = result
@@ -68,7 +70,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Tracking Not Found" },
@@ -85,7 +87,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET <TrackingController>/project/5
         [HttpGet("thread/{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetByThreadId(int id)
+        public async Task<IActionResult> GetByThreadId(int id)
         {
             try
             {
@@ -98,7 +100,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 if (result != null)
                 {
-                    return Ok(new ApiListOfEntityResponse<Tracking>()
+                    return Ok(new Response<List<Tracking>>
                     {
                         Success = true,
                         Data = result
@@ -106,7 +108,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiListOfEntityResponse<Tracking>()
+                    return Ok(new Response<List<Tracking>>
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Trackings Not Found" },
@@ -122,12 +124,12 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // GET<TrackingController>/filter
-        [HttpGet("filter/{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Tracking>>> GetTrackingsFiltered(string id)
+        [HttpGet("filter/{encodedString}")]
+        public async Task<IActionResult> GetTrackingsFiltered(string encodedString)
         {
             try
             {
-                var jsonString = await SerializeAndEncode.EncodedStringToJson(id);
+                var jsonString = await SerializeAndEncode.EncodedStringToJson(encodedString);
 
                 var filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
 
@@ -181,10 +183,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 var data = await Task.Run(() => result
                     .OrderBy(i => i.ThreadId));
 
-                return Ok(new ApiListOfEntityResponse<Tracking>()
+                return Ok(new Response<List<Tracking>>
                 {
                     Success = true,
-                    Data = data
+                    Data = data.ToList()
                 });
             }
             catch (Exception)
@@ -195,7 +197,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST <TrackingController>
         [HttpPost]
-        public async Task<ActionResult<ApiEntityResponse<Tracking>>> PostAsync([FromBody] Tracking tracking)
+        public async Task<IActionResult> PostAsync([FromBody] Tracking tracking)
         {
             try
             {
@@ -204,7 +206,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = true,
                         Data = result
@@ -212,10 +214,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = false,
-                        ErrorMessage = new List<string>() { "Could not find the Tracking After Adding it. " },
+                        ErrorMessage = new List<string>() { "Could not find the Tracking after adding it. Man, it was just right here!" },
                         Data = new Tracking()
                     });
                 }
@@ -229,7 +231,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // PUT <TrackingController>/5
         [HttpPut]
-        public async Task<ActionResult<ApiEntityResponse<Tracking>>> Update([FromBody] Tracking tracking)
+        public async Task<IActionResult> Update([FromBody] Tracking tracking)
         {
             try
             {
@@ -237,7 +239,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = true,
                         Data = result
@@ -245,7 +247,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Tracking>()
+                    return Ok(new Response<Tracking>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Tracking after updating it" },
@@ -262,7 +264,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // DELETE <TrackingController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
