@@ -21,6 +21,8 @@ namespace CTA.BlazorWasm.Shared.Responses
         public int? PageSize { get; set; }
         public string? NextPage { get; set; }
         public string? PreviousPage { get; set; }
+        public bool Success { get; set; }
+        public List<string> ErrorMessage { get; set; } = new List<string>();
 
 
     }

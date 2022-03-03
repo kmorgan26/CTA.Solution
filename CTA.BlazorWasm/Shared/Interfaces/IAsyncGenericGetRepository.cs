@@ -9,9 +9,9 @@ namespace CTA.BlazorWasm.Shared.Interfaces
 {
     public interface IAsyncGenericGetRepository<TEntity> : IAsyncRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "");
+        //Task<IEnumerable<TEntity>> GetAsync(
+        //    Expression<Func<TEntity, bool>> filter = null,
+        //    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+        //    string includeProperties = "");
     }
 }

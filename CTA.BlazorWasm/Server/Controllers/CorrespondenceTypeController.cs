@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
+using CTA.BlazorWasm.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -18,12 +20,13 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: api/<CorrespondenceTypeController>
         [HttpGet]
-        public async Task<ActionResult<ApiListOfEntityResponse<CorrespondenceType>>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
                 var result = await _correspondenceTypeManager.GetAllAsync();
-                return Ok(new ApiListOfEntityResponse<CorrespondenceType>()
+
+                return Ok(new PagedResponse<CorrespondenceType>()
                 {
                     Success = true,
                     Data = result
@@ -38,15 +41,17 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET api/<CorrespondenceTypeController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<CorrespondenceType>>> GetByCorrespondenceTypeId(int id)
+        public async Task<IActionResult> GetByCorrespondenceTypeId(int id)
         {
             try
             {
-                var result = (await _correspondenceTypeManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+                var result = await _correspondenceTypeManager.dbSet
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = true,
                         Data = result
@@ -54,7 +59,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "CorrespondenceType Not Found" },
@@ -72,16 +77,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST api/<CorrespondenceTypeController>
         [HttpPost]
-        public async Task<ActionResult<ApiEntityResponse<CorrespondenceType>>> PostAsync([FromBody] CorrespondenceType correspondenceType)
+        public async Task<IActionResult> PostAsync([FromBody] CorrespondenceType correspondenceType)
         {
             try
             {
                 await _correspondenceTypeManager.AddAsync(correspondenceType);
-                var result = (await _correspondenceTypeManager.GetAsync(i => i.Id == correspondenceType.Id)).FirstOrDefault();
+
+                var result = await _correspondenceTypeManager.dbSet
+                    .Where(i => i.Id == correspondenceType.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = true,
                         Data = result
@@ -89,7 +97,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the CorrespondenceType After Adding it. " },
@@ -106,15 +114,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // PUT api/<CorrespondenceTypeController>/5
         [HttpPut]
-        public async Task<ActionResult<ApiEntityResponse<CorrespondenceType>>> Update([FromBody] CorrespondenceType correspondenceType)
+        public async Task<IActionResult> Update([FromBody] CorrespondenceType correspondenceType)
         {
             try
             {
                 await _correspondenceTypeManager.UpdateAsync(correspondenceType);
-                var result = (await _correspondenceTypeManager.GetAsync(i => i.Id == correspondenceType.Id)).FirstOrDefault();
+
+                var result = await _correspondenceTypeManager.dbSet
+                    .Where(i => i.Id == correspondenceType.Id)
+                    .FirstOrDefaultAsync();
+
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = true,
                         Data = result
@@ -122,7 +134,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<CorrespondenceType>()
+                    return Ok(new Response<CorrespondenceType>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the CorrespondenceType after updating it" },
@@ -143,7 +155,10 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var correspondenceTypeList = await _correspondenceTypeManager.GetAsync(i => i.Id == id);
+                var correspondenceTypeList = await _correspondenceTypeManager.dbSet
+                    .Where(i => i.Id == id)
+                    .ToListAsync();
+
                 if (correspondenceTypeList != null)
                 {
                     var correspondenceType = correspondenceTypeList.First();

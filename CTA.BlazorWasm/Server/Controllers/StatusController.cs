@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
+using CTA.BlazorWasm.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -16,14 +18,14 @@ namespace CTA.BlazorWasm.Server.Controllers
             _statusManager = statusManager;
         }
 
-        // GET: api/<StatusController>
+        // GET: <StatusController>
         [HttpGet]
-        public async Task<ActionResult<ApiListOfEntityResponse<Status>>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
                 var result = await _statusManager.GetAllAsync();
-                return Ok(new ApiListOfEntityResponse<Status>()
+                return base.Ok(new Shared.Responses.PagedResponse<Status>()
                 {
                     Success = true,
                     Data = result
@@ -36,17 +38,19 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-        // GET api/<StatusController>/5
+        // GET <StatusController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Status>>> GetByStatusId(int id)
+        public async Task<IActionResult> GetByStatusId(int id)
         {
             try
             {
-                var result = (await _statusManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+                var result = await _statusManager.dbSet
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = true,
                         Data = result
@@ -54,7 +58,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Status Not Found" },
@@ -72,16 +76,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST api/<StatusController>
         [HttpPost]
-        public async Task<ActionResult<ApiEntityResponse<Status>>> PostAsync([FromBody] Status status)
+        public async Task<IActionResult> PostAsync([FromBody] Status status)
         {
             try
             {
                 await _statusManager.AddAsync(status);
-                var result = (await _statusManager.GetAsync(i => i.Id == status.Id)).FirstOrDefault();
+
+                var result = await _statusManager.dbSet
+                    .Where(i => i.Id == status.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = true,
                         Data = result
@@ -89,7 +96,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Status After Adding it. " },
@@ -106,15 +113,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // PUT api/<StatusController>/5
         [HttpPut]
-        public async Task<ActionResult<ApiEntityResponse<Status>>> Update([FromBody] Status status)
+        public async Task<IActionResult> Update([FromBody] Status status)
         {
             try
             {
                 await _statusManager.UpdateAsync(status);
-                var result = (await _statusManager.GetAsync(i => i.Id == status.Id)).FirstOrDefault();
+
+                var result = await _statusManager.dbSet
+                    .Where(i => i.Id == status.Id)
+                    .FirstOrDefaultAsync();
+                
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = true,
                         Data = result
@@ -122,7 +133,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Status>()
+                    return Ok(new Response<Status>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Status after updating it" },
@@ -143,7 +154,10 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var statusList = await _statusManager.GetAsync(i => i.Id == id);
+                var statusList = await _statusManager.dbSet
+                    .Where(i => i.Id == id)
+                    .ToListAsync();
+
                 if (statusList != null)
                 {
                     var status = statusList.First();

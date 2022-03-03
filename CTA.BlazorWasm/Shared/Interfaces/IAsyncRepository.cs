@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CTA.BlazorWasm.Client.ViewModels.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CTA.BlazorWasm.Shared.Interfaces
     {
         Task<bool> DeleteAsync(TEntity entityToDelete);
         Task<bool> DeleteAsync(object id);
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetAllAsync(PaginationFilter? pagination = null);
         Task<TEntity> GetByIdAsync(object id);
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entityToUpdate);

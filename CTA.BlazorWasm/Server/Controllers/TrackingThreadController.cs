@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
+using CTA.BlazorWasm.Shared.Requests;
+using CTA.BlazorWasm.Client.Services;
+using CTA.BlazorWasm.Client.ViewModels.Shared;
+using CTA.BlazorWasm.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -18,16 +23,21 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: api/<TrackingThreadController>
         [HttpGet]
-        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetAsync()
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationQuery paginationQuery)
         {
             try
             {
-                var result = await _trackingThreadManager.GetAllAsync();
-                return Ok(new ApiListOfEntityResponse<TrackingThread>()
+                var paginationFilter = Mapping.Mapper.Map<PaginationFilter>(paginationQuery);
+
+                var result = await _trackingThreadManager.GetAllAsync(paginationFilter);
+
+                var paginationResponse = new PagedResponse<TrackingThread>
                 {
-                    Success = true,
-                    Data = result
-                });
+                    Data = result.ToList(),
+                    Success = true
+                };
+
+                return Ok(paginationResponse);
             }
             catch (Exception)
             {
@@ -38,23 +48,27 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET <TrackingController>/project/5
         [HttpGet("project/{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetByProjectId(int id)
+        public async Task<IActionResult> GetByProjectId(int id)
         {
             try
             {
-                var result = (await _trackingThreadManager.GetAsync(x => x.ProjectId == id));
+                var result = await _trackingThreadManager.dbSet
+                    .Where(x => x.ProjectId == id)
+                    .AsNoTracking()
+                    .ToListAsync();
+                    
 
                 if (result != null)
                 {
-                    return Ok(new ApiListOfEntityResponse<TrackingThread>()
+                    return Ok(new PagedResponse<TrackingThread>()
                     {
                         Success = true,
-                        Data = result
+                        Data = result.ToList()
                     });
                 }
                 else
                 {
-                    return Ok(new ApiListOfEntityResponse<Tracking>()
+                    return Ok(new PagedResponse<TrackingThread>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Threads Not Found" },
@@ -71,15 +85,17 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET api/<TrackingThreadController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<TrackingThread>>> GetByTrackingThreadId(int id)
+        public async Task<IActionResult> GetByTrackingThreadId(int id)
         {
             try
             {
-                var result = (await _trackingThreadManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+                var result = await _trackingThreadManager.dbSet
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = true,
                         Data = result
@@ -87,10 +103,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = false,
-                        ErrorMessage = new List<string>() { "TrackingThread Not Found" },
+                        ErrorMessage = new List<string>() { "Thread Not Found" },
                         Data = null
                     });
                 }
@@ -104,16 +120,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST api/<TrackingThreadController>
         [HttpPost]
-        public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> PostAsync([FromBody] TrackingThread trackingThread)
+        public async Task<IActionResult> PostAsync([FromBody] TrackingThread trackingThread)
         {
             try
             {
                 await _trackingThreadManager.AddAsync(trackingThread);
-                var result = (await _trackingThreadManager.GetAsync(i => i.Id == trackingThread.Id)).FirstOrDefault();
+
+                var result = await _trackingThreadManager.dbSet
+                    .Where(i => i.Id == trackingThread.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = true,
                         Data = result
@@ -121,10 +140,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = false,
-                        ErrorMessage = new List<string>() { "Could not find the TrackingThread After Adding it. " },
+                        ErrorMessage = new List<string>() { "Could not find the Thread After Adding it. " },
                         Data = null
                     });
                 }
@@ -138,15 +157,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // PUT <TrackingThreadController>/5
         [HttpPut]
-        public async Task<ActionResult<ApiEntityResponse<TrackingThread>>> Update([FromBody] TrackingThread trackingThread)
+        public async Task<IActionResult> Update([FromBody] TrackingThread trackingThread)
         {
             try
             {
                 await _trackingThreadManager.UpdateAsync(trackingThread);
-                var result = (await _trackingThreadManager.GetAsync(i => i.Id == trackingThread.Id)).FirstOrDefault();
+                
+                var result = await _trackingThreadManager.dbSet
+                    .Where(i => i.Id == trackingThread.Id)
+                    .FirstOrDefaultAsync();
+                
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = true,
                         Data = result
@@ -154,10 +177,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<TrackingThread>()
+                    return Ok(new Response<TrackingThread>()
                     {
                         Success = false,
-                        ErrorMessage = new List<string>() { "Could not find the TrackingThread after updating it" },
+                        ErrorMessage = new List<string>() { "Could not find the Thread after updating it" },
                         Data = null
                     });
                 }
@@ -171,11 +194,14 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // DELETE api/<TrackingThreadController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
-                var trackingThreadList = await _trackingThreadManager.GetAsync(i => i.Id == id);
+                var trackingThreadList = await _trackingThreadManager.dbSet
+                    .Where(i => i.Id == id)
+                    .ToListAsync();
+                
                 if (trackingThreadList != null)
                 {
                     var trackingThread = trackingThreadList.First();

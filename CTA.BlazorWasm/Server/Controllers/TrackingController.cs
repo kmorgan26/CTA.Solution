@@ -8,6 +8,9 @@ using LinqKit;
 using Newtonsoft.Json;
 using CTA.BlazorWasm.Shared.Services;
 using CTA.BlazorWasm.Shared.Responses;
+using CTA.BlazorWasm.Shared.Requests;
+using CTA.BlazorWasm.Client.Services;
+using CTA.BlazorWasm.Client.ViewModels.Shared;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,17 +29,21 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: <TrackingController>
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationQuery paginationQuery)
         {
             try
             {
-                var result = await _trackingManager.GetAllAsync();
+                var paginationFilter = Mapping.Mapper.Map<PaginationFilter>(paginationQuery);
+                
+                var result = await _trackingManager.GetAllAsync(paginationFilter);
 
-                return Ok(new Response<List<Tracking>>
+                var paginationResponse = new PagedResponse<Tracking>
                 {
                     Data = result.ToList(),
                     Success = true
-                });
+                };
+
+                return Ok(paginationResponse);
             }
             catch (Exception)
             {
@@ -100,15 +107,17 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 if (result != null)
                 {
-                    return Ok(new Response<List<Tracking>>
+                    var paginatedResponse = new Shared.Responses.PagedResponse<Tracking>
                     {
                         Success = true,
                         Data = result
-                    });
+                    };
+
+                    return Ok(paginatedResponse);
                 }
                 else
                 {
-                    return Ok(new Response<List<Tracking>>
+                    return base.Ok(new Shared.Responses.PagedResponse<Tracking>
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Trackings Not Found" },
@@ -183,11 +192,13 @@ namespace CTA.BlazorWasm.Server.Controllers
                 var data = await Task.Run(() => result
                     .OrderBy(i => i.ThreadId));
 
-                return Ok(new Response<List<Tracking>>
+                var paginationResponse = new Shared.Responses.PagedResponse<Tracking>
                 {
                     Success = true,
                     Data = data.ToList()
-                });
+                };
+
+                return Ok(paginationResponse);
             }
             catch (Exception)
             {
@@ -202,7 +213,10 @@ namespace CTA.BlazorWasm.Server.Controllers
             try
             {
                 await _trackingManager.AddAsync(tracking);
-                var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
+
+                var result = await _trackingManager.dbSet
+                    .Where(i => i.Id == tracking.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
@@ -217,7 +231,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     return Ok(new Response<Tracking>()
                     {
                         Success = false,
-                        ErrorMessage = new List<string>() { "Could not find the Tracking after adding it. Man, it was just right here!" },
+                        ErrorMessage = new List<string>() { "Could not find the Tracking after adding it. Man, I JUST had it! Where did it go?" },
                         Data = new Tracking()
                     });
                 }
@@ -236,7 +250,11 @@ namespace CTA.BlazorWasm.Server.Controllers
             try
             {
                 await _trackingManager.UpdateAsync(tracking);
-                var result = (await _trackingManager.GetAsync(i => i.Id == tracking.Id)).FirstOrDefault();
+                
+                var result = await _trackingManager.dbSet
+                    .Where(i => i.Id == tracking.Id)
+                    .FirstOrDefaultAsync();
+
                 if (result != null)
                 {
                     return Ok(new Response<Tracking>()
@@ -268,7 +286,10 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var trackingList = await _trackingManager.GetAsync(i => i.Id == id);
+                var trackingList = await _trackingManager.dbSet
+                    .Where(i => i.Id == id)
+                    .ToListAsync();
+
                 if (trackingList != null)
                 {
                     var tracking = trackingList.First();

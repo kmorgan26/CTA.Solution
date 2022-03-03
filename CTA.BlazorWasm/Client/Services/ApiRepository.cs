@@ -1,5 +1,7 @@
-﻿using CTA.BlazorWasm.Shared.Interfaces;
+﻿using CTA.BlazorWasm.Client.ViewModels.Shared;
+using CTA.BlazorWasm.Shared.Interfaces;
 using CTA.BlazorWasm.Shared.Models;
+using CTA.BlazorWasm.Shared.Responses;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
@@ -19,18 +21,38 @@ namespace CTA.BlazorWasm.Client.Services
             primaryKeyName = _primaryKeyName;
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync(PaginationFilter? paginationFilter = null)
         {
             try
             {
                 var result = await http.GetAsync(controllerName);
                 result.EnsureSuccessStatusCode();
+                
                 string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<TEntity>>(responseBody);
-                if (response!.Success)
-                    return response.Data;
-                else
-                    return new List<TEntity>();
+
+                if (paginationFilter == null)
+                {
+                    var response = JsonConvert.DeserializeObject<PagedResponse<TEntity>>(responseBody);
+                    
+                    if (paginationFilter == null)
+                    {
+                        if (response.Success)
+                            return response.Data.ToList();
+                        else
+                            return new List<TEntity>();
+                    }
+                }
+                
+                var skip = (paginationFilter.PageNumber -1 ) * paginationFilter.PageSize;
+
+                var filtered = responseBody
+                    .Take(paginationFilter.PageSize)
+                    .Skip(skip)
+                    .ToList();
+
+                var pagedResponse = JsonConvert.DeserializeObject<PagedResponse<TEntity>>(responseBody);
+                return pagedResponse.Data.ToList();
+
             }
             catch (Exception)
             {
@@ -48,7 +70,8 @@ namespace CTA.BlazorWasm.Client.Services
                 var result = await http.GetAsync(url);
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiEntityResponse<TEntity>>(responseBody);
+                var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
+                
                 if (response!.Success)
                     return response.Data;
                 else
@@ -67,7 +90,7 @@ namespace CTA.BlazorWasm.Client.Services
                 var result = await http.PostAsJsonAsync(controllerName, entity);
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiEntityResponse<TEntity>>(responseBody);
+                var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
                 if (response!.Success)
                     return response.Data;
                 else
@@ -87,7 +110,7 @@ namespace CTA.BlazorWasm.Client.Services
                 var result = await http.PutAsJsonAsync(controllerName, entityToUpdate);
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiEntityResponse<TEntity>>(responseBody);
+                var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
                 if (response!.Success)
                     return response.Data;
                 else

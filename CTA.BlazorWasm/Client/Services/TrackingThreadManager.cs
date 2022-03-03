@@ -1,4 +1,5 @@
 ﻿using CTA.BlazorWasm.Shared.Models;
+using CTA.BlazorWasm.Shared.Responses;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
@@ -23,7 +24,7 @@ namespace CTA.BlazorWasm.Client.Services
                 var result = await http.GetAsync(url);
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ApiListOfEntityResponse<TrackingThread>>(responseBody);
+                var response = JsonConvert.DeserializeObject<PagedResponse<TrackingThread>>(responseBody);
                 if (response!.Success)
                     return response.Data;
                 else

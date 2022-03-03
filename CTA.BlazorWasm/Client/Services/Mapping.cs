@@ -5,7 +5,7 @@ using CTA.BlazorWasm.Client.ViewModels.Project;
 using CTA.BlazorWasm.Client.ViewModels.Tracking;
 using CTA.BlazorWasm.Client.ViewModels.Threads;
 using CTA.BlazorWasm.Shared.Models;
-
+using CTA.BlazorWasm.Shared.Requests;
 
 namespace CTA.BlazorWasm.Client.Services
 {
@@ -29,6 +29,8 @@ namespace CTA.BlazorWasm.Client.Services
     {
         public MappingProfile()
         {
+            CreateMap<PaginationQuery, PaginationFilter>();
+
             CreateMap<CorrespondenceType, GenericListVm>().ReverseMap();
 
             CreateMap<Project, ProjectListVm>().ReverseMap();

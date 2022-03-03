@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
+using CTA.BlazorWasm.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -18,12 +20,13 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET: api/<ProjectController>
         [HttpGet]
-        public async Task<ActionResult<ApiListOfEntityResponse<Project>>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
                 var result = await _projectManager.GetAllAsync();
-                return Ok(new ApiListOfEntityResponse<Project>()
+
+                return base.Ok(new Shared.Responses.PagedResponse<Project>()
                 {
                     Success = true,
                     Data = result
@@ -38,15 +41,17 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // GET api/<ProjectController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiListOfEntityResponse<Project>>> GetByProjectId(int id)
+        public async Task<IActionResult> GetByProjectId(int id)
         {
             try
             {
-                var result = (await _projectManager.GetAsync(x => x.Id == id)).FirstOrDefault();
+                var result = await _projectManager.dbSet
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = true,
                         Data = result
@@ -54,7 +59,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Project Not Found" },
@@ -72,16 +77,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // POST api/<ProjectController>
         [HttpPost]
-        public async Task<ActionResult<ApiEntityResponse<Project>>> PostAsync([FromBody] Project project)
+        public async Task<IActionResult> PostAsync([FromBody] Project project)
         {
             try
             {
                 await _projectManager.AddAsync(project);
-                var result = (await _projectManager.GetAsync(i => i.Id == project.Id)).FirstOrDefault();
+
+                var result = await _projectManager.dbSet
+                    .Where(i => i.Id == project.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = true,
                         Data = result
@@ -89,7 +97,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Project After Adding it. " },
@@ -106,15 +114,19 @@ namespace CTA.BlazorWasm.Server.Controllers
 
         // PUT <ProjectController>/5
         [HttpPut]
-        public async Task<ActionResult<ApiEntityResponse<Project>>> Update([FromBody] Project project)
+        public async Task<IActionResult> Update([FromBody] Project project)
         {
             try
             {
                 await _projectManager.UpdateAsync(project);
-                var result = (await _projectManager.GetAsync(i => i.Id == project.Id)).FirstOrDefault();
+
+                var result = await _projectManager.dbSet
+                    .Where(i => i.Id == project.Id)
+                    .FirstOrDefaultAsync();
+
                 if (result != null)
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = true,
                         Data = result
@@ -122,7 +134,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                 }
                 else
                 {
-                    return Ok(new ApiEntityResponse<Project>()
+                    return Ok(new Response<Project>()
                     {
                         Success = false,
                         ErrorMessage = new List<string>() { "Could not find the Project after updating it" },
@@ -143,7 +155,10 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             try
             {
-                var projectList = await _projectManager.GetAsync(i => i.Id == id);
+                var projectList = await _projectManager.dbSet
+                    .Where(i => i.Id == id)
+                    .ToListAsync();
+
                 if (projectList != null)
                 {
                     var project = projectList.First();
