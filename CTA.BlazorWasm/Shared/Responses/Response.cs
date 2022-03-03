@@ -15,7 +15,7 @@ namespace CTA.BlazorWasm.Shared.Responses
             Data = response;
         }
 
-        public TEntity Data { get; set; }
+        public TEntity? Data { get; set; }
         public bool Success { get; set; }
         public List<string> ErrorMessage { get; set; } = new List<string>();
 
