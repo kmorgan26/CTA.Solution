@@ -36,7 +36,7 @@ namespace CTA.BlazorWasm.Client.Services
             }
         }
 
-        public async Task<IEnumerable<Tracking>> GetTrackingsFiltered(string encodedFilter)
+        public async Task<PagedResponse<Tracking>> GetTrackingsFiltered(string encodedFilter)
         {
             try
             {
@@ -47,9 +47,9 @@ namespace CTA.BlazorWasm.Client.Services
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<PagedResponse<Tracking>>(responseBody);
                 if (response!.Success)
-                    return response.Data;
+                    return response;
                 else
-                    return new List<Tracking>();
+                    return new PagedResponse<Tracking>();
             }
             catch (Exception)
             {

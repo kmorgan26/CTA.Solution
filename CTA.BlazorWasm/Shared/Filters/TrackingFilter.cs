@@ -12,7 +12,7 @@ namespace CTA.BlazorWasm.Shared.Filters
         public int? StatusId { get; set; }
         public int? CorrTypeId { get; set; }
         public int? PocId { get; set; }
-        public int ThreadId { get; set; } = 0;
+        public int? ThreadId { get; set; }
         public string? SubjectText { get; set; }
         public string? CommentsText { get; set; }
         public DateTime? StartDate { get; set; }

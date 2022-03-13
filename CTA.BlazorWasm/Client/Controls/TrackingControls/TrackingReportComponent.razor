@@ -1,6 +1,15 @@
 ﻿@inject TrackingManager trackingManager
 
-<MudTable Items="@trackingReportVms" Hover="true" Striped="true" Dense="true">
+<MudTable ServerData="@(new Func<TableState, Task<TableData<TrackingReportVm>>>(LoadTrackings))" @ref="table"
+          CurrentPage = "@appStateComponent.PagedResponse.PageNumber"
+          RowsPerPage = "@appStateComponent.PagedResponse.PageSize"
+          Hover="true" 
+          Breakpoint = "Breakpoint.Sm"
+          Striped="true" 
+          Dense="true"
+          Elevation = "3"
+          TotalItems="@appStateComponent.PagedResponse.TotalRecords">
+
     <HeaderContent>
         <MudTh>Thread</MudTh>
         <MudTh>Tracking #</MudTh>
@@ -16,7 +25,7 @@
         <MudTd>@context.ThreadId</MudTd>
         <MudTd>
             <a href="tracking/@context.Id">
-                <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Small"/>
+                <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Small" />
                 @context.Id
             </a>
         </MudTd>
@@ -30,22 +39,39 @@
 
     </RowTemplate>
     <PagerContent>
-        <MudTablePager />
+        <MudTablePager RowsPerPageString="Trackings per page" />
+
     </PagerContent>
 </MudTable>
 
 @code {
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     [Parameter]
     public string EncodedString { get; set; } = string.Empty;
 
-    private List<TrackingReportVm> trackingReportVms = new();
+    private MudTable<TrackingReportVm> table;
 
-    private TrackingFilter filter = new();
-
-    protected override async Task OnParametersSetAsync()
+    public async Task<TableData<TrackingReportVm>> LoadTrackings(TableState state)
     {
+        appStateComponent.PaginationQuery.PageSize = state.PageSize;
+        appStateComponent.PaginationQuery.PageNumber = state.Page + 1;
+
         var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
-        trackingReportVms = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
+
+
+        return new TableData<TrackingReportVm>()
+        {
+            Items = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data),
+            TotalItems = appStateComponent.PagedResponse.TotalRecords,
+        };
     }
+
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
+    //    appStateComponent.PagedResponse.Data = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings);
+    //}
 }

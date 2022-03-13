@@ -11,6 +11,7 @@ using CTA.BlazorWasm.Shared.Responses;
 using CTA.BlazorWasm.Shared.Requests;
 using CTA.BlazorWasm.Client.Services;
 using CTA.BlazorWasm.Client.ViewModels.Shared;
+using CTA.BlazorWasm.Client.Controls.GenericControls;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -140,7 +141,9 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 var jsonString = await SerializeAndEncode.EncodedStringToJson(encodedString);
 
-                var filter = System.Text.Json.JsonSerializer.Deserialize<TrackingFilter>(jsonString);
+                var paginationRequest = System.Text.Json.JsonSerializer.Deserialize<PaginationQuery>(jsonString);
+
+                var filter = paginationRequest.TrackingFilter;
 
                 var result = _trackingManager.dbSet
                     .Include(i => i.CorrespondenceType)
@@ -153,17 +156,20 @@ namespace CTA.BlazorWasm.Server.Controllers
                     .AsNoTracking()
                     .AsExpandable();
 
-                if (filter.StatusId != null)
+                if (filter.StatusId != null && filter.StatusId != 0)
                     result = result.Where(i => i.StatusId == filter.StatusId);
 
-                if (filter.ToFromId != null)
+                if (filter.ToFromId != null && filter.ToFromId != 0)
                     result = result.Where(i => i.ToFromId == filter.ToFromId);
 
-                if (filter.CorrTypeId != null)
+                if (filter.CorrTypeId != null && filter.CorrTypeId != 0)
                     result = result.Where(i => i.CorrespondenceTypeId == filter.CorrTypeId);
 
-                if (filter.PocId != null)
+                if (filter.PocId != null && filter.PocId != 0)
                     result = result.Where(i => i.PocId == filter.PocId);
+                
+                if (filter.ThreadId != null && filter.ThreadId != 0)
+                    result = result.Where(i => i.ThreadId == filter.ThreadId);
 
                 if (filter.TypeIds != null)
                     result = result.Where(i => filter.TypeIds.Contains(i.CorrespondenceType.CorrespondenceSubTypeId));
@@ -180,9 +186,6 @@ namespace CTA.BlazorWasm.Server.Controllers
                 if (filter.StartDate != null && filter.EndDate != null)
                     result = result.Where(i => i.SentOrReceived >= filter.StartDate && i.SentOrReceived <= filter.EndDate);
 
-                if (filter.ThreadId != 0)
-                    result = result.Where(i => i.ThreadId == filter.ThreadId);
-
                 if (filter.SubjectText != null)
                     result = result.Where(i => i.Subject.Contains(filter.SubjectText));
 
@@ -190,12 +193,19 @@ namespace CTA.BlazorWasm.Server.Controllers
                     result = result.Where(i => i.Comments!.Contains(filter.CommentsText));
 
                 var data = await Task.Run(() => result
-                    .OrderBy(i => i.ThreadId));
+                    .OrderBy(i => i.ThreadId)
+                    .Skip(paginationRequest.PageNumber * paginationRequest.PageSize)
+                    .Take(paginationRequest.PageSize)
+                    
+                    );
 
                 var paginationResponse = new Shared.Responses.PagedResponse<Tracking>
                 {
                     Success = true,
-                    Data = data.ToList()
+                    Data = data.ToList(),
+                    TotalRecords = result.Count(),
+                    PageNumber = paginationRequest.PageNumber,
+                    PageSize = paginationRequest.PageSize,
                 };
 
                 return Ok(paginationResponse);

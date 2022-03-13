@@ -1,0 +1,57 @@
+﻿<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private PaginationQuery paginationQuery = new();
+    public PaginationQuery PaginationQuery
+    {
+        get
+        {
+            return paginationQuery;
+        }
+        set
+        {
+            paginationQuery = value;
+            StateHasChanged();
+        }
+    }
+
+    private TrackingFilter trackingFilter = new();
+    public TrackingFilter TrackingFilter
+    {
+        get
+        {
+            return trackingFilter;
+        }
+        set
+        {
+            trackingFilter = value;
+            StateHasChanged();
+        }
+    }
+
+    private PagedResponse<TrackingReportVm> pagedResponse = new();
+    public PagedResponse<TrackingReportVm> PagedResponse
+    {
+        get
+        {
+            return pagedResponse;
+        }
+        set
+        {
+            pagedResponse = value;
+            StateHasChanged();
+        }
+    }
+
+    public void AddTrackingFilterToRequest()
+    {
+        this.PaginationQuery.TrackingFilter = this.TrackingFilter;
+    }
+
+}

@@ -11,7 +11,7 @@ else
     <span class="badge badge-danger" @onclick="ToggleHideControls">hide</span>
     <div class="border border-secondary mb-2 rounded p-3">
 
-        <EditForm Model="@_trackingFilter" OnValidSubmit="GetSearchResults">
+        <EditForm Model="@appStateComponent.TrackingFilter" OnValidSubmit="GetSearchResults">
 
             <div class="row">
 
@@ -19,7 +19,7 @@ else
 
                     <FormFieldComponent LabelName="From (Sent/Received)">
                         <ControlToRender>
-                            <InputDate @bind-Value="_trackingFilter.StartDate" />
+                            <InputDate @bind-Value="@appStateComponent.TrackingFilter.StartDate" />
                         </ControlToRender>
                     </FormFieldComponent>
 
@@ -29,7 +29,7 @@ else
 
                     <FormFieldComponent LabelName="To (Sent/Received)">
                         <ControlToRender>
-                            <InputDate @bind-Value="_trackingFilter.EndDate" />
+                            <InputDate @bind-Value="@appStateComponent.TrackingFilter.EndDate" />
                         </ControlToRender>
                     </FormFieldComponent>
 
@@ -62,14 +62,14 @@ else
                 <div class="col-md-4">
                     <FormFieldComponent LabelName="Subject">
                         <ControlToRender>
-                            <textarea class="form-control" id="subject" rows="3" @bind="@_trackingFilter.SubjectText"></textarea>
+                            <textarea class="form-control" id="subject" rows="3" @bind="@appStateComponent.TrackingFilter.SubjectText"></textarea>
                         </ControlToRender>
                     </FormFieldComponent>
                 </div>
                 <div class="col-md-4">
                     <FormFieldComponent LabelName="Comments">
                         <ControlToRender>
-                            <textarea class="form-control" id="comments" rows="3" @bind="@_trackingFilter.CommentsText"></textarea>
+                            <textarea class="form-control" id="comments" rows="3" @bind="@appStateComponent.TrackingFilter.CommentsText"></textarea>
                         </ControlToRender>
                     </FormFieldComponent>
                 </div>
@@ -85,20 +85,21 @@ else
 
 @code {
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     [Parameter]
-    public EventCallback<string> OnValidSubmit { get; set; }
+    public EventCallback<bool> OnValidSubmit { get; set; }
 
     private string? encodedString { get; set; }
 
     private async Task GetSearchResults()
     {
-        encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(_trackingFilter);
+        //encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.TrackingFilter);
 
-        await OnValidSubmit.InvokeAsync(encodedString);
+        await OnValidSubmit.InvokeAsync(true);
     }
-
-    private TrackingFilter _trackingFilter { get; set; } = new();
-
+    
     private bool _hideControls { get; set; }
 
     void ToggleHideControls()
@@ -107,18 +108,18 @@ else
     }
     void UpdateStatus(int? id)
     {
-        _trackingFilter.StatusId = id;
+        appStateComponent.TrackingFilter.StatusId = id;
     }
     void UpdateCorrType(int? id)
     {
-        _trackingFilter.CorrTypeId = id;
+        appStateComponent.TrackingFilter.CorrTypeId = id;
     }
     void UpdatePoc(int? id)
     {
-        _trackingFilter.PocId = id;
+        appStateComponent.TrackingFilter.PocId = id;
     }
     void UpdateTofrom(int? id)
     {
-        _trackingFilter.ToFromId = id;
+        appStateComponent.TrackingFilter.ToFromId = id;
     }
 }

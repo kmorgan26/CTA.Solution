@@ -15,10 +15,14 @@
 
 @code {
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     private string encodedString { get; set; } = string.Empty;
 
-    private void UpdateString(string _encodedString)
+    private async Task UpdateString(bool searchSubmitted)
     {
-        encodedString = _encodedString;
+        appStateComponent.AddTrackingFilterToRequest();
+        encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.PaginationQuery);
     }
 }
