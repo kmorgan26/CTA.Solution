@@ -6,11 +6,11 @@
     Search
 </h3>
 
-<SearchComponent OnValidSubmit="UpdateString"></SearchComponent>
+<SearchComponent OnValidSubmit="DrawTable"></SearchComponent>
 
-@if (encodedString != string.Empty)
+@if (_filtersSet == true)
 {
-    <TrackingReportComponent EncodedString="@encodedString"></TrackingReportComponent>
+    <TrackingTableComponent></TrackingTableComponent>
 }
 
 @code {
@@ -18,11 +18,10 @@
     [CascadingParameter]
     public AppStateComponent? appStateComponent { get; set; }
 
-    private string encodedString { get; set; } = string.Empty;
+    private bool _filtersSet { get; set; } = false;
 
-    private async Task UpdateString(bool searchSubmitted)
+    void DrawTable()
     {
-        appStateComponent.AddTrackingFilterToRequest();
-        encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.PaginationQuery);
+        _filtersSet = true;
     }
 }

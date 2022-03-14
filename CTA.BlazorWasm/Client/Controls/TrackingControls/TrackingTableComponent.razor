@@ -1,0 +1,77 @@
+﻿@inject TrackingManager trackingManager
+
+<TableComponent Items="TableData" Context="tracking">
+    <TableHeader>
+        <th>Thread</th>
+        <th>Tracking #</th>
+        <th>Status</th>
+        <th>To/From</th>
+        <th>Project</th>
+        <th>Topic</th>
+        <th>Subject</th>
+        <th>Sent/Rec</th>
+        <th>Type</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@tracking.ThreadId</td>
+        <td>
+            <a href="tracking/@tracking.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Small" />
+                @tracking.Id
+            </a>
+        </td>
+        <td DataLabel="Thread">@tracking.Status</td>
+        <td DataLabel="Thread">@tracking.ToFromName</td>
+        <td DataLabel="Thread">@tracking.ProjectName</td>
+        <td DataLabel="Thread">@tracking.TopicName</td>
+        <td DataLabel="Thread">@tracking.Subject</td>
+        <td DataLabel="Thread">@tracking.SentOrReceived.ToShortDateString()</td>
+        <td DataLabel="Thread">@tracking.CorrespondenceType</td>
+    </RowTemplate>
+    <TableFooter>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" onclick="@Pageup">Next</a></li>
+            </ul>
+        </nav>
+        Total Records: @appStateComponent.PagedResponse.TotalRecords
+    </TableFooter>
+
+</TableComponent>
+
+@code {
+
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
+    [Parameter]
+    public string EncodedString { get; set; } = string.Empty;
+
+    public List<TrackingReportVm> TableData { get; set; } = new();
+
+    private async Task Pageup()
+    {
+        appStateComponent.PaginationQuery.PageNumber++;
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        appStateComponent.AddTrackingFilterToRequest();
+
+        EncodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.PaginationQuery);
+
+        var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
+        
+        appStateComponent.PagedResponse.TotalRecords = trackings.TotalRecords;
+
+        TableData = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+}

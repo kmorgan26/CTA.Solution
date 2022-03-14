@@ -194,10 +194,10 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 var data = await Task.Run(() => result
                     .OrderBy(i => i.ThreadId)
-                    .Skip(paginationRequest.PageNumber * paginationRequest.PageSize)
-                    .Take(paginationRequest.PageSize)
-                    
+                    .Skip((paginationRequest.PageNumber  -1) * paginationRequest.PageSize)
+                    .Take(paginationRequest.PageSize)                    
                     );
+                
 
                 var paginationResponse = new Shared.Responses.PagedResponse<Tracking>
                 {

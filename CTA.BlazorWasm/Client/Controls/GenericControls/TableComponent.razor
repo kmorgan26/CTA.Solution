@@ -1,0 +1,40 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@typeparam TItem
+
+<table class="table table-bordered table-striped mb-5">
+    <thead class="bg-light">
+        <tr>
+            @TableHeader
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Items)
+        {
+            if (RowTemplate is not null)
+            {
+                <tr>
+                    @RowTemplate(item)
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        @TableFooter
+    </tfoot>
+</table>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? RowTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment? TableFooter { get; set; }
+
+    [Parameter, AllowNull]
+    public IEnumerable<TItem> Items { get; set; }
+
+}

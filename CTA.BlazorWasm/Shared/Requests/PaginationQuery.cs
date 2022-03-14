@@ -22,7 +22,7 @@ namespace CTA.BlazorWasm.Shared.Requests
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
-        public TrackingFilter TrackingFilter { get; set; }
+        public TrackingFilter? TrackingFilter { get; set; }
 
     }
 }

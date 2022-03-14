@@ -91,12 +91,8 @@ else
     [Parameter]
     public EventCallback<bool> OnValidSubmit { get; set; }
 
-    private string? encodedString { get; set; }
-
     private async Task GetSearchResults()
     {
-        //encodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.TrackingFilter);
-
         await OnValidSubmit.InvokeAsync(true);
     }
     
