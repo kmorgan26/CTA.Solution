@@ -1,0 +1,71 @@
+﻿<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        @foreach(var link in links)
+        {
+            <li @onclick="@(() => SelectedPageInternal(link))"
+                style="cursor: pointer;"
+                class = "page-item @(link.Enabled ? null : "disabled") @(link.Active ? "active" : null)">
+                <span class="page-link" href="#">@link.Text</span>
+            </li>
+        }
+    </ul>
+</nav>
+
+@code {
+
+    [Parameter] 
+    public int CurrentPage { get; set; }
+
+    [Parameter]
+    public int TotalPages { get; set; }
+
+    [Parameter]
+    public int Radius { get; set; }
+
+    [Parameter]
+    public EventCallback<int> SelectedPage { get; set; }
+
+    List<LinkModel> links;
+
+    protected override void OnParametersSet()
+    {
+        LoadPages();
+    }
+
+    private async Task SelectedPageInternal(LinkModel link)
+    {
+        if(link.PageNumber == CurrentPage)
+        {
+
+            return;
+        }
+        if (!link.Enabled)
+        {
+            return;
+        }
+        CurrentPage = link.PageNumber;
+        await SelectedPage.InvokeAsync(link.PageNumber);
+
+    }
+    private void LoadPages()
+    {
+        links = new List<LinkModel>();
+        var isPreviousPageLinkEnabled = CurrentPage != 1;
+        var previousPage = CurrentPage - 1;
+        links.Add(new LinkModel(previousPage, isPreviousPageLinkEnabled, "Previous"));
+
+        for (int i = 1; i <= TotalPages; i++)
+        {
+            if (i >= CurrentPage - Radius && i <= CurrentPage + Radius)
+            {
+                links.Add(new LinkModel(i) { Active = CurrentPage == i });
+            }
+        }
+
+        var isNextPageLinkEnabled = CurrentPage != TotalPages;
+        var nextPage = CurrentPage + 1;
+        links.Add(new LinkModel(nextPage, isNextPageLinkEnabled, "Next"));
+
+    }
+    
+}

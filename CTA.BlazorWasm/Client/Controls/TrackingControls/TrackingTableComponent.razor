@@ -29,15 +29,12 @@
         <td DataLabel="Thread">@tracking.CorrespondenceType</td>
     </RowTemplate>
     <TableFooter>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" onclick="@Pageup">Next</a></li>
-            </ul>
-        </nav>
+        <PaginationComponent 
+            TotalPages="appStateComponent.PagedResponse.TotalRecords" 
+            CurrentPage="appStateComponent.PaginationQuery.PageNumber"
+            Radius="2" SelectedPage="SelectedPage">
+
+        </PaginationComponent>
         Total Records: @appStateComponent.PagedResponse.TotalRecords
     </TableFooter>
 
@@ -53,9 +50,21 @@
 
     public List<TrackingReportVm> TableData { get; set; } = new();
 
+    private int totalPageQuantity;
+
+    private async Task SelectedPage(int page)
+    {
+        appStateComponent.PaginationQuery.PageNumber = page;
+        LoadData();
+    }
     private async Task Pageup()
     {
         appStateComponent.PaginationQuery.PageNumber++;
+        await LoadData();
+    }
+    private async Task PageDown()
+    {
+        appStateComponent.PaginationQuery.PageNumber--;
         await LoadData();
     }
     private async Task LoadData()
