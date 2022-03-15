@@ -193,7 +193,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     result = result.Where(i => i.Comments!.Contains(filter.CommentsText));
 
                 var data = await Task.Run(() => result
-                    .OrderBy(i => i.ThreadId)
+                    .OrderBy(i => i.Id)
                     .Skip((paginationRequest.PageNumber  -1) * paginationRequest.PageSize)
                     .Take(paginationRequest.PageSize)                    
                     );

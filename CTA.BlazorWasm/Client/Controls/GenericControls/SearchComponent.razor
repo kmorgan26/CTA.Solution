@@ -93,6 +93,7 @@ else
 
     private async Task GetSearchResults()
     {
+        appStateComponent.RequestedDateTime = DateTime.Now;
         await OnValidSubmit.InvokeAsync(true);
     }
     

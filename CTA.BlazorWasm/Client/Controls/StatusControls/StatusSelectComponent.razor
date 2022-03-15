@@ -21,6 +21,9 @@
     [Parameter]
     public int? SelectedStatusId { get; set; }
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     private List<GenericListVm> _statusVms = new();
 
     private async Task ChangeStatus(int? value)
@@ -32,5 +35,13 @@
     {
         var statuss = await statusManager.GetAllAsync();
         _statusVms = Mapping.Mapper.Map<List<GenericListVm>>(statuss);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            SelectedStatusId = appStateComponent.PaginationQuery.TrackingFilter.StatusId != null ? appStateComponent.PaginationQuery.TrackingFilter.StatusId : 0;
+        }
+        catch { }
     }
 }

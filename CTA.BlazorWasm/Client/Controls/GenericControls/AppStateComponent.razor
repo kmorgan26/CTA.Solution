@@ -49,6 +49,21 @@
         }
     }
 
+    private DateTime requestedDateTime;
+    public DateTime RequestedDateTime
+    {
+        get
+        {
+            return requestedDateTime;
+        }
+        set
+        {
+            requestedDateTime = value;
+            StateHasChanged();
+        }
+    }
+
+
     public void AddTrackingFilterToRequest()
     {
         this.PaginationQuery.TrackingFilter = this.TrackingFilter;

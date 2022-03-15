@@ -74,10 +74,11 @@
         EncodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.PaginationQuery);
 
         var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
-        
+
         appStateComponent.PagedResponse.TotalRecords = trackings.TotalRecords;
 
         TableData = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data);
+        StateHasChanged();
     }
     protected override async Task OnParametersSetAsync()
     {

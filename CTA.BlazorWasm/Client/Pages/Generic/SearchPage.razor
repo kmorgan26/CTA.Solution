@@ -24,4 +24,12 @@
     {
         _filtersSet = true;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(appStateComponent.RequestedDateTime.Date == DateTime.Today.Date)
+        {
+            _filtersSet = true;
+        }
+    }
 }
