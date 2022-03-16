@@ -41,9 +41,13 @@
     {
         try
         {
-            SelectedCorrTypeId = 
-                appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId != null 
-                    ? appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId : 0;
+            if(appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
+            {
+                await Task.Delay(0);
+                SelectedCorrTypeId = 
+                    appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId != null ? 
+                    appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId : 0;
+            }
         }
         catch { }
     }
