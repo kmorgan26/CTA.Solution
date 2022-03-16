@@ -25,12 +25,12 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<PagedResponse<TrackingThread>>(responseBody);
-                if (response!.Success)
+                if (response is not null && response.Data is not null && response.Success)
                     return response.Data;
                 else
                     return new List<TrackingThread>();
             }
-            catch (Exception)
+            catch
             {
                 return null;
             }
