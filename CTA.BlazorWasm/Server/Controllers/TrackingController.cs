@@ -143,7 +143,12 @@ namespace CTA.BlazorWasm.Server.Controllers
 
                 var paginationRequest = System.Text.Json.JsonSerializer.Deserialize<PaginationQuery>(jsonString);
 
-                var filter = paginationRequest.TrackingFilter;
+                var filter = new TrackingFilter();
+
+                if (paginationRequest is not null && paginationRequest.TrackingFilter is not null)
+                {
+                    filter = paginationRequest.TrackingFilter;
+                }
 
                 var result = _trackingManager.dbSet
                     .Include(i => i.CorrespondenceType)
@@ -192,24 +197,26 @@ namespace CTA.BlazorWasm.Server.Controllers
                 if (filter.CommentsText != null)
                     result = result.Where(i => i.Comments!.Contains(filter.CommentsText));
 
-                var data = await Task.Run(() => result
-                    .OrderBy(i => i.Id)
-                    .Skip((paginationRequest.PageNumber  -1) * paginationRequest.PageSize)
-                    .Take(paginationRequest.PageSize)                    
-                    );
-                
-
-                var paginationResponse = new Shared.Responses.PagedResponse<Tracking>
+                if(paginationRequest is not null)
                 {
-                    Success = true,
-                    Data = data.ToList(),
-                    TotalRecords = result.Count(),
-                    TotalPages = result.Count() / paginationRequest.PageSize, 
-                    PageNumber = paginationRequest.PageNumber,
-                    PageSize = paginationRequest.PageSize,
-                };
+                    var data = await Task.Run(() => result
+                    .OrderBy(i => i.Id)
+                    .Skip((paginationRequest.PageNumber - 1) * paginationRequest.PageSize)
+                    .Take(paginationRequest.PageSize)
+                    );
 
-                return Ok(paginationResponse);
+                    var paginationResponse = new PagedResponse<Tracking>
+                    {
+                        Success = true,
+                        Data = data.ToList(),
+                        TotalRecords = result.Count(),
+                        TotalPages = result.Count() / paginationRequest.PageSize,
+                        PageNumber = paginationRequest.PageNumber,
+                        PageSize = paginationRequest.PageSize,
+                    };
+                    return Ok(paginationResponse);
+                }
+                return StatusCode(500);
             }
             catch (Exception)
             {
