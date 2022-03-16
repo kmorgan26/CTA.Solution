@@ -42,11 +42,14 @@
     {
         try
         {
-            SelectedPocId  = 
+            if(appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
+            {
+                await Task.Delay(0);
+                SelectedPocId  = 
                 appStateComponent.PaginationQuery.TrackingFilter.PocId != null 
                     ? appStateComponent.PaginationQuery.TrackingFilter.PocId : 0;
+            }
         }
         catch { }
     }
-    
 }
