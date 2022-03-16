@@ -36,7 +36,7 @@ namespace CTA.BlazorWasm.Client.Services
                     
                     if (paginationFilter == null)
                     {
-                        if (response.Success)
+                        if (response is not null && response.Data is not null && response.Success)
                             return response.Data.ToList();
                         else
                             return new List<TEntity>();
@@ -51,14 +51,17 @@ namespace CTA.BlazorWasm.Client.Services
                     .ToList();
 
                 var pagedResponse = JsonConvert.DeserializeObject<PagedResponse<TEntity>>(responseBody);
-                return pagedResponse.Data.ToList();
+
+                if (pagedResponse is not null && pagedResponse.Data is not null)
+                    return pagedResponse.Data.ToList();
+                else
+                    return new List<TEntity>();
 
             }
             catch (Exception)
             {
                 return new List<TEntity>();
             }
-            
         }
 
         public async Task<TEntity> GetByIdAsync(object id)
@@ -72,12 +75,12 @@ namespace CTA.BlazorWasm.Client.Services
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
                 
-                if (response!.Success)
+                if (response is not null && response.Data is not null && response.Success)
                     return response.Data;
                 else
                     return null;
             }
-            catch (Exception)
+            catch
             {
                 return null;
             }
@@ -91,14 +94,14 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
-                if (response!.Success)
+
+                if ( response is not null && response.Data is not null && response.Success)
                     return response.Data;
                 else
                     return null;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.ToString());
                 return null;
             }
         }
@@ -111,14 +114,13 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<Response<TEntity>>(responseBody);
-                if (response!.Success)
+                if ( response is not null && response.Data is not null && response.Success)
                     return response.Data;
                 else
                     return null;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.ToString());
                 return null;
             }
         }
@@ -127,20 +129,19 @@ namespace CTA.BlazorWasm.Client.Services
         {
             try
             {
-                var value = entityToDelete.GetType()
+                    var value = entityToDelete.GetType()
                     .GetProperty(primaryKeyName)
                     .GetValue(entityToDelete, null)
                     .ToString();
-                var arg = WebUtility.HtmlEncode(value);
-                var url = controllerName + "/" + arg;
-                var result = await http.DeleteAsync(url);
-                result.EnsureSuccessStatusCode();
-                return true;
+                    var arg = WebUtility.HtmlEncode(value);
+                    var url = controllerName + "/" + arg;
+                    var result = await http.DeleteAsync(url);
+                    result.EnsureSuccessStatusCode();
+                    return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
-                throw;
             }
         }
 
