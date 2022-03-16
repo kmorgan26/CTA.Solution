@@ -3,7 +3,7 @@
 <FormFieldComponent LabelName="Status">
     <ControlToRender>
         <InputSelect ValueExpression="@(()=> SelectedStatusId)" id="statusSelect" DisplayName="Status" class="form-control" Value="SelectedStatusId"
-            ValueChanged="@((int? value) => ChangeStatus(value))">
+                     ValueChanged="@((int? value) => ChangeStatus(value))">
             <option value="0">-----</option>
             @foreach (var item in _statusVms)
             {
@@ -38,10 +38,12 @@
     }
     protected override async Task OnParametersSetAsync()
     {
-        try
+        if (appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
         {
-            SelectedStatusId = appStateComponent.PaginationQuery.TrackingFilter.StatusId != null ? appStateComponent.PaginationQuery.TrackingFilter.StatusId : 0;
+            await Task.Delay(0);
+            SelectedStatusId = 
+                appStateComponent.PaginationQuery.TrackingFilter.StatusId != null ? 
+                appStateComponent.PaginationQuery.TrackingFilter.StatusId : 0;
         }
-        catch { }
     }
 }

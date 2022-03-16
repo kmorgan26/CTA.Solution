@@ -3,9 +3,9 @@
 <FormFieldComponent LabelName="Correspondence Type">
     <ControlToRender>
         <InputSelect ValueExpression="@(()=> SelectedCorrTypeId)" id="corrSelect" DisplayName="Correspondence Type" class="form-control" Value="SelectedCorrTypeId"
-            ValueChanged="@((int? value) => ChangeCorrType(value))">
+                     ValueChanged="@((int? value) => ChangeCorrType(value))">
             <option value="0">-----</option>
-            @foreach(var item in _corrTypeVms)
+            @foreach (var item in _corrTypeVms)
             {
                 <option value="@item.Id">@item.Name</option>
             }
@@ -39,16 +39,12 @@
     }
     protected override async Task OnParametersSetAsync()
     {
-        try
+        if (appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
         {
-            if(appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
-            {
-                await Task.Delay(0);
-                SelectedCorrTypeId = 
-                    appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId != null ? 
-                    appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId : 0;
-            }
+            await Task.Delay(0);
+            SelectedCorrTypeId =
+                appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId != null ?
+                appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId : 0;
         }
-        catch { }
     }
 }
