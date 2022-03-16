@@ -21,6 +21,9 @@
     [Parameter]
     public int? SelectedPocId { get; set; }
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     private List<GenericListVm> _pocVms = new();
 
     private async Task ChangePoc(int? value)
@@ -34,4 +37,16 @@
         var pocs = await pocManager.GetAllAsync();
         _pocVms = Mapping.Mapper.Map<List<GenericListVm>>(pocs);
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            SelectedPocId  = 
+                appStateComponent.PaginationQuery.TrackingFilter.PocId != null 
+                    ? appStateComponent.PaginationQuery.TrackingFilter.PocId : 0;
+        }
+        catch { }
+    }
+    
 }

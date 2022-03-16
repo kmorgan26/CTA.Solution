@@ -21,6 +21,9 @@
     [Parameter]
     public int? SelectedCorrTypeId { get; set; }
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     private List<GenericListVm> _corrTypeVms = new();
 
     private async Task ChangeCorrType(int? value)
@@ -33,5 +36,15 @@
     {
         var corrTypes = await manager.GetAllAsync();
         _corrTypeVms = Mapping.Mapper.Map<List<GenericListVm>>(corrTypes);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            SelectedCorrTypeId = 
+                appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId != null 
+                    ? appStateComponent.PaginationQuery.TrackingFilter.CorrTypeId : 0;
+        }
+        catch { }
     }
 }

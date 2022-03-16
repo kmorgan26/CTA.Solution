@@ -21,6 +21,9 @@
     [Parameter]
     public int? SelectedTofromId { get; set; }
 
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     private List<GenericListVm> _toFromVms = new();
 
     private async Task ChangeTofrom(int? value)
@@ -33,5 +36,15 @@
     {
         var toFroms = await toFromManager.GetAllAsync();
         _toFromVms = Mapping.Mapper.Map<List<GenericListVm>>(toFroms);
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            SelectedTofromId  = 
+                appStateComponent.PaginationQuery.TrackingFilter.ToFromId != null 
+                    ? appStateComponent.PaginationQuery.TrackingFilter.ToFromId : 0;
+        }
+        catch { }
     }
 }

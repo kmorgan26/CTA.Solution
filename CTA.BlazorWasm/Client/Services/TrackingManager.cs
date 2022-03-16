@@ -25,7 +25,7 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<PagedResponse<Tracking>>(responseBody);
-                if (response!.Success)
+                if (response is not null && response.Success &&  response.Data is not null)
                     return response.Data;
                 else
                     return new List<Tracking>();
@@ -46,7 +46,7 @@ namespace CTA.BlazorWasm.Client.Services
                 result.EnsureSuccessStatusCode();
                 string responseBody = await result.Content.ReadAsStringAsync();
                 var response = JsonConvert.DeserializeObject<PagedResponse<Tracking>>(responseBody);
-                if (response!.Success)
+                if (response is not null && response.Success)
                     return response;
                 else
                     return new PagedResponse<Tracking>();

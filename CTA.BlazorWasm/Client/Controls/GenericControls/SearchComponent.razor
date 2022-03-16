@@ -1,5 +1,4 @@
-﻿
-@if (_hideControls)
+﻿@if (_hideControls)
 {
     <div class="mb-0">
         <span class="badge badge-success mb-3" @onclick="ToggleHideControls">show</span>
@@ -11,7 +10,7 @@ else
     <span class="badge badge-danger" @onclick="ToggleHideControls">hide</span>
     <div class="border border-secondary mb-2 rounded p-3">
 
-        <EditForm Model="@appStateComponent.TrackingFilter" OnValidSubmit="GetSearchResults">
+        <EditForm Model="@appStateComponent!.TrackingFilter" OnValidSubmit="GetSearchResults">
 
             <div class="row">
 
@@ -93,11 +92,14 @@ else
 
     private async Task GetSearchResults()
     {
-        appStateComponent.RequestedDateTime = DateTime.Now;
-        appStateComponent = new();
-        await OnValidSubmit.InvokeAsync(true);
+        if (appStateComponent is not null)
+        {
+            appStateComponent.RequestedDateTime = DateTime.Now;
+            appStateComponent = new();
+            await OnValidSubmit.InvokeAsync(true);
+        }
     }
-    
+
     private bool _hideControls { get; set; }
 
     void ToggleHideControls()
@@ -106,18 +108,22 @@ else
     }
     void UpdateStatus(int? id)
     {
-        appStateComponent.TrackingFilter.StatusId = id;
+        if (appStateComponent is not null)
+            appStateComponent.TrackingFilter.StatusId = id;
     }
     void UpdateCorrType(int? id)
     {
-        appStateComponent.TrackingFilter.CorrTypeId = id;
+        if (appStateComponent is not null)
+            appStateComponent.TrackingFilter.CorrTypeId = id;
     }
     void UpdatePoc(int? id)
     {
-        appStateComponent.TrackingFilter.PocId = id;
+        if (appStateComponent is not null)
+            appStateComponent.TrackingFilter.PocId = id;
     }
     void UpdateTofrom(int? id)
     {
-        appStateComponent.TrackingFilter.ToFromId = id;
+        if (appStateComponent is not null)
+            appStateComponent.TrackingFilter.ToFromId = id;
     }
 }

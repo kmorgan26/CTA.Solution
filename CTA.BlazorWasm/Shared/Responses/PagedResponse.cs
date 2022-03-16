@@ -26,6 +26,5 @@ namespace CTA.BlazorWasm.Shared.Responses
         public bool Success { get; set; }
         public List<string> ErrorMessage { get; set; } = new List<string>();
 
-
     }
 }
