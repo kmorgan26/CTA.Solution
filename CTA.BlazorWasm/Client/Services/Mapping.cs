@@ -48,7 +48,7 @@ namespace CTA.BlazorWasm.Client.Services
             CreateMap<AddTrackingVm, Tracking>().ReverseMap();
             CreateMap<TrackingThread, TrackingThreadVm>()
                 .ForMember(dest => dest.ProjectName,
-                    opts => opts.MapFrom(src => src.Project.Name));
+                    opts => opts.MapFrom(src => src.Project!.Name));
 
             CreateMap<EditTrackingVm, Tracking>().ReverseMap();
             CreateMap<Tracking, GenericListVm>().ReverseMap();
@@ -56,39 +56,38 @@ namespace CTA.BlazorWasm.Client.Services
 
             CreateMap<Tracking, TrackingRowVm>()
                 .ForMember(dest => dest.Status,
-                    opts => opts.MapFrom(src => src.Status.Name))
+                    opts => opts.MapFrom(src => src.Status!.Name))
                 .ForMember(dest => dest.ToFrom,
-                    opts => opts.MapFrom(src => src.ToFrom.Name));
+                    opts => opts.MapFrom(src => src.ToFrom!.Name));
 
             CreateMap<Tracking, TrackingVm>()
                 .ForMember(dest => dest.Status,
-                    opts => opts.MapFrom(src => src.Status.Name))
+                    opts => opts.MapFrom(src => src.Status!.Name))
                 .ForMember(dest => dest.ToFrom,
-                    opts => opts.MapFrom(src => src.ToFrom.Name))
+                    opts => opts.MapFrom(src => src.ToFrom!.Name))
                 .ForMember(dest => dest.CorrespondenceType,
-                    opts => opts.MapFrom(src => src.CorrespondenceType.Name))
+                    opts => opts.MapFrom(src => src.CorrespondenceType!.Name))
                 .ForMember(dest => dest.Topic,
-                    opts => opts.MapFrom(src => src.Thread.Name))
+                    opts => opts.MapFrom(src => src.Thread!.Name))
 
                 .ForMember(dest => dest.Poc,
-                    opts => opts.MapFrom(src => src.Poc.Name));
+                    opts => opts.MapFrom(src => src.Poc!.Name));
 
             CreateMap<Tracking, TrackingReportVm>()
                 .ForMember(dest => dest.Status,
-                    opts => opts.MapFrom(src => src.Status.Name))
+                    opts => opts.MapFrom(src => src.Status!.Name))
                 .ForMember(dest => dest.ToFromName,
-                    opts => opts.MapFrom(src => src.ToFrom.Name))
+                    opts => opts.MapFrom(src => src.ToFrom!.Name))
                 .ForMember(dest => dest.CorrespondenceType,
-                    opts => opts.MapFrom(src => src.CorrespondenceType.Name))
+                    opts => opts.MapFrom(src => src.CorrespondenceType!.Name))
                 .ForMember(dest => dest.Poc,
-                    opts => opts.MapFrom(src => src.Poc.Name))
+                    opts => opts.MapFrom(src => src.Poc!.Name))
                 .ForMember(dest => dest.ProjectName,
-                    opts => opts.MapFrom(src => src.Thread.Project.Name))
+                    opts => opts.MapFrom(src => src.Thread!.Project!.Name))
                 .ForMember(dest => dest.TopicName,
-                    opts => opts.MapFrom(src => src.Thread.Name))
+                    opts => opts.MapFrom(src => src.Thread!.Name))
                 .ForMember(dest => dest.ProjectName,
-                    opts => opts.MapFrom(src => src.Thread.Project.Name))
-                ;
+                    opts => opts.MapFrom(src => src.Thread!.Project!.Name));
         }
     }
 }
