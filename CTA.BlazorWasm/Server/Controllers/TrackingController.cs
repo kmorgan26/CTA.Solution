@@ -204,6 +204,7 @@ namespace CTA.BlazorWasm.Server.Controllers
                     Success = true,
                     Data = data.ToList(),
                     TotalRecords = result.Count(),
+                    TotalPages = result.Count() / paginationRequest.PageSize, 
                     PageNumber = paginationRequest.PageNumber,
                     PageSize = paginationRequest.PageSize,
                 };

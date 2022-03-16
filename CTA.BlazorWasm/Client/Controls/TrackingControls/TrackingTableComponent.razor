@@ -30,12 +30,15 @@
     </RowTemplate>
     <TableFooter>
         <PaginationComponent 
-            TotalPages="appStateComponent.PagedResponse.TotalRecords" 
+            TotalPages="appStateComponent.PagedResponse.TotalPages" 
             CurrentPage="appStateComponent.PaginationQuery.PageNumber"
             Radius="2" SelectedPage="SelectedPage">
 
         </PaginationComponent>
-        Total Records: @appStateComponent.PagedResponse.TotalRecords
+        <span class="align-content-end">
+            Total Records: @appStateComponent.PagedResponse.TotalRecords
+        </span>
+        
     </TableFooter>
 
 </TableComponent>
@@ -49,8 +52,6 @@
     public string EncodedString { get; set; } = string.Empty;
 
     public List<TrackingReportVm> TableData { get; set; } = new();
-
-    private int totalPageQuantity;
 
     private async Task SelectedPage(int page)
     {

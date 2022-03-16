@@ -1,6 +1,6 @@
 ﻿@inject TrackingManager trackingManager
 
-<MudTable ServerData="@(new Func<TableState, Task<TableData<TrackingReportVm>>>(LoadTrackings))" @ref="table"
+<MudTable Items="TableData"
           CurrentPage = "@appStateComponent.PagedResponse.PageNumber"
           RowsPerPage = "@appStateComponent.PagedResponse.PageSize"
           Hover="true" 
@@ -38,10 +38,17 @@
         <MudTd DataLabel="Thread">@context.CorrespondenceType</MudTd>
 
     </RowTemplate>
-    <PagerContent>
-        <MudTablePager RowsPerPageString="Trackings per page" />
+    <FooterContent>
+        <PaginationComponent 
+            TotalPages="appStateComponent.PagedResponse.TotalPages" 
+            CurrentPage="appStateComponent.PaginationQuery.PageNumber"
+            Radius="2" SelectedPage="SelectedPage">
 
-    </PagerContent>
+        </PaginationComponent>
+        <span class="align-content-end">
+            Total Records: @appStateComponent.PagedResponse.TotalRecords
+        </span>
+    </FooterContent>
 </MudTable>
 
 @code {
@@ -52,22 +59,57 @@
     [Parameter]
     public string EncodedString { get; set; } = string.Empty;
 
-    private MudTable<TrackingReportVm> table;
+    //private MudTable<TrackingReportVm> table;
 
-    public async Task<TableData<TrackingReportVm>> LoadTrackings(TableState state)
+    public List<TrackingReportVm> TableData { get; set; } = new();
+
+    private async Task SelectedPage(int page)
     {
-        appStateComponent.PaginationQuery.PageSize = state.PageSize;
-        appStateComponent.PaginationQuery.PageNumber = state.Page + 1;
+        appStateComponent.PaginationQuery.PageNumber = page;
+        LoadData();
+    }
+    private async Task Pageup()
+    {
+        appStateComponent.PaginationQuery.PageNumber++;
+        await LoadData();
+    }
+    private async Task PageDown()
+    {
+        appStateComponent.PaginationQuery.PageNumber--;
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        appStateComponent.AddTrackingFilterToRequest();
+
+        EncodedString = await SerializeAndEncode.ObjectToJsonAndEncode(@appStateComponent.PaginationQuery);
 
         var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
 
+        appStateComponent.PagedResponse.TotalRecords = trackings.TotalRecords;
 
-        return new TableData<TrackingReportVm>()
-        {
-            Items = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data),
-            TotalItems = appStateComponent.PagedResponse.TotalRecords,
-        };
+        TableData = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data);
+        StateHasChanged();
     }
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    //public async Task<TableData<TrackingReportVm>> LoadTrackings(TableState state)
+    //{
+    //    appStateComponent.PaginationQuery.PageSize = state.PageSize;
+    //    appStateComponent.PaginationQuery.PageNumber = state.Page + 1;
+
+    //    var trackings = await trackingManager.GetTrackingsFiltered(EncodedString);
+
+
+    //    return new TableData<TrackingReportVm>()
+    //    {
+    //        Items = Mapping.Mapper.Map<List<TrackingReportVm>>(trackings.Data),
+    //        TotalItems = appStateComponent.PagedResponse.TotalRecords,
+    //    };
+    //}
 
     //protected override async Task OnParametersSetAsync()
     //{

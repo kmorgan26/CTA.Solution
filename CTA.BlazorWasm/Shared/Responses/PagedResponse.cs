@@ -17,6 +17,7 @@ namespace CTA.BlazorWasm.Shared.Responses
 
         public IEnumerable<TEntity>? Data { get; set; }
 
+        public int TotalPages { get; set; } = 0;
         public int TotalRecords { get; set; } = 0;
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
