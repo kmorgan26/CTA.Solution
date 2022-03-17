@@ -9,10 +9,9 @@
           Dense="true"
           Elevation="3"
           TotalItems="@appStateComponent.PagedResponse.TotalRecords">
-
     <HeaderContent>
-        <MudTh>Thread</MudTh>
         <MudTh>Tracking #</MudTh>
+        <MudTh>Thread</MudTh>
         <MudTh>Status</MudTh>
         <MudTh>To/From</MudTh>
         <MudTh>Project</MudTh>
@@ -22,13 +21,13 @@
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd>@context.ThreadId</MudTd>
         <MudTd>
             <a href="tracking/@context.Id">
                 <MudIcon Icon="@Icons.Material.Filled.Link" Size="Size.Small" />
                 @context.Id
             </a>
         </MudTd>
+        <MudTd>@context.ThreadId</MudTd>
         <MudTd DataLabel="Thread">@context.Status</MudTd>
         <MudTd DataLabel="Thread">@context.ToFromName</MudTd>
         <MudTd DataLabel="Thread">@context.ProjectName</MudTd>
@@ -38,19 +37,20 @@
         <MudTd DataLabel="Thread">@context.CorrespondenceType</MudTd>
 
     </RowTemplate>
-    <FooterContent>
+    <PagerContent>
         <PaginationComponent TotalPages="appStateComponent.PagedResponse.TotalPages"
                              CurrentPage="appStateComponent.PaginationQuery.PageNumber"
                              Radius="2" SelectedPage="SelectedPage">
 
         </PaginationComponent>
-        <span class="align-content-end">
+
+    </PagerContent>
+    
+</MudTable>
+<span class="align-content-end">
             Total Records: @appStateComponent.PagedResponse.TotalRecords
             Total Pages: @appStateComponent.PagedResponse.TotalPages
         </span>
-    </FooterContent>
-</MudTable>
-
 @code {
 
     [CascadingParameter]
