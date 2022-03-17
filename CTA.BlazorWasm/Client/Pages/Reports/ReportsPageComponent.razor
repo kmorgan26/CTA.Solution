@@ -6,26 +6,30 @@
     Reports
 </h3>
 
-    <MudPaper Width="600px" Class="mb-4">
-        <MudList Clickable="true" @bind-SelectedItem="selectedItem" @bind-SelectedValue="selectedValue">
-            <MudListSubheader>
-            </MudListSubheader>
-            <MudListItem Text="GDIT and Government Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="1" />
-            <MudListItem Text="GDIT and Sub-Contractors Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="2" />
-            <MudDivider />
-            <MudListItem Text="GDIT and Government Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="3" />
-            <MudListItem Text="GDIT and Sub-Contractors Contract Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="4" />
-        </MudList>
-    </MudPaper>
+<MudPaper Width="600px" Class="mb-4">
+    <MudList Clickable="true" @bind-SelectedItem="selectedItem" @bind-SelectedValue="selectedValue">
+        <MudListSubheader>
+        </MudListSubheader>
+        <MudListItem Text="GDIT and Government Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="1" />
+        <MudListItem Text="GDIT and Sub-Contractors Open Contract Letters" Icon="@Icons.Material.Filled.Brightness1" Value="2" />
+        <MudDivider />
+        <MudListItem Text="GDIT and Government Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="3" />
+        <MudListItem Text="GDIT and Sub-Contractors Contract Open RFPs" Icon="@Icons.Material.Filled.Brightness1" Value="4" />
+    </MudList>
+</MudPaper>
 
-    <div class="col">
-        @if (selectedValue != null)
-        {
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GetReportAsync">SUBMIT</MudButton>
-        }
-    </div>
+<div class="col">
+    @if (selectedValue != null)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GetReportAsync">SUBMIT</MudButton>
+    }
+</div>
 
 @code {
+
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
     MudListItem selectedItem = new();
     object? selectedValue = new();
 
@@ -35,8 +39,13 @@
 
     private async Task GetReportAsync()
     {
-        var reportFilter = await ReportService.GetReportFilter(selectedValue!.ToString()!);
-        SerializedParameter = await SerializeAndEncode.ObjectToJsonAndEncode(reportFilter);
-        _navigation.NavigateTo("/report/" + SerializedParameter);
+        if (selectedValue is not null && appStateComponent is not null)
+        {
+            appStateComponent.TrackingFilter = await ReportService.GetReportFilter(selectedValue.ToString()!);
+            appStateComponent.AddTrackingFilterToRequest();
+
+            SerializedParameter = await SerializeAndEncode.ObjectToJsonAndEncode(appStateComponent.PaginationQuery);
+            _navigation.NavigateTo("/report/" + SerializedParameter);
+        }
     }
 }

@@ -3,25 +3,25 @@
 
 <div class="row">
     <div class="col-md-6 col-sm-12">
-        @if (TrackingVm != null)
+        @if (appStateComponent is not null && appStateComponent.EditTrackingVm is not null)
         {
-            <EditForm Model="@TrackingVm" OnValidSubmit="@UpdateTracking">
+            <EditForm Model="@appStateComponent.EditTrackingVm" OnValidSubmit="@UpdateTracking">
 
                 <FormFieldComponent LabelName="Subject">
                     <ControlToRender>
-                        <MudTextField @bind-Value="@TrackingVm.Subject" Variant="Variant.Outlined" Lines="2"></MudTextField>
+                        <MudTextField @bind-Value="@appStateComponent.EditTrackingVm.Subject" Variant="Variant.Outlined" Lines="2"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 
                 <div class="row">
                     <div class="col col-sm-12 col-md-4">
-                        <ToFromSelectComponent TofromIdChanged="UpdateTofrom" SelectedTofromId="@TrackingVm.ToFromId"></ToFromSelectComponent>
+                        <ToFromSelectComponent TofromIdChanged="UpdateTofrom" SelectedTofromId="@appStateComponent.EditTrackingVm.ToFromId"></ToFromSelectComponent>
                     </div>
                     <div class="col col-sm-12 col-md-4">
-                        <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType" SelectedCorrTypeId="@TrackingVm.CorrespondenceTypeId"></CorrTypeSelectComponent>
+                        <CorrTypeSelectComponent CorrTypeIdChanged="UpdateCorrType" SelectedCorrTypeId="@appStateComponent.EditTrackingVm.CorrespondenceTypeId"></CorrTypeSelectComponent>
                     </div>
                     <div class="col col-sm-12 col-md-4">
-                        <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@TrackingVm.PocId"></PocSelectComponent>
+                        <PocSelectComponent PocIdChanged="UpdatePoc" SelectedPocId="@appStateComponent.EditTrackingVm.PocId"></PocSelectComponent>
                     </div>
                 </div>
 
@@ -29,28 +29,28 @@
                     <div class="col col-sm-12 col-md-4">
                         <FormFieldComponent LabelName="Sent/Received">
                             <ControlToRender>
-                                <InputDate @bind-Value="TrackingVm.SentOrReceived" />
+                                <InputDate @bind-Value="appStateComponent.EditTrackingVm.SentOrReceived" />
                             </ControlToRender>
                         </FormFieldComponent>
                     </div>
                     <div class="col col-sm-12 col-md-4">
-                        <StatusSelectComponent StatusIdChanged="UpdateStatus" SelectedStatusId="@TrackingVm.StatusId"></StatusSelectComponent>
+                        <StatusSelectComponent StatusIdChanged="UpdateStatus" SelectedStatusId="@appStateComponent.EditTrackingVm.StatusId"></StatusSelectComponent>
                     </div>
                 </div>
 
                 <FormFieldComponent LabelName="Comments">
                     <ControlToRender>
-                        <MudTextField @bind-Value="@TrackingVm.Comments" Variant="Variant.Outlined" Lines="4"></MudTextField>
+                        <MudTextField @bind-Value="@appStateComponent.EditTrackingVm.Comments" Variant="Variant.Outlined" Lines="4"></MudTextField>
                     </ControlToRender>
                 </FormFieldComponent>
 
                 <FormFieldComponent LabelName="Document Path">
                     <ControlToRender>
-                        <InputText class="form-control" @bind-Value="TrackingVm.DocumentPath" />
+                        <InputText class="form-control" @bind-Value="appStateComponent.EditTrackingVm.DocumentPath" />
                     </ControlToRender>
                 </FormFieldComponent>
 
-                <input type="hidden" @bind-value="TrackingVm.ThreadId" />
+                <input type="hidden" @bind-value="appStateComponent.EditTrackingVm.ThreadId" />
 
                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Size="Size.Small">Update</MudButton>
                 <MudButton Link=@($"/tracking/{TrackingId}") Variant="Variant.Filled" Color="Color.Error" Size="Size.Small">Cancel</MudButton>
@@ -65,34 +65,55 @@
     [Parameter]
     public int TrackingId { get; set; }
 
-    public EditTrackingVm TrackingVm { get; set; } = new();
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
+
+    //public EditTrackingVm TrackingVm { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var tracking = await trackingManager.GetByIdAsync(TrackingId);
-        TrackingVm = Mapping.Mapper.Map<EditTrackingVm>(tracking);
+        if (appStateComponent is not null)
+        {
+            var tracking = await trackingManager.GetByIdAsync(TrackingId);
+            appStateComponent.EditTrackingVm = Mapping.Mapper.Map<EditTrackingVm>(tracking);
+        }
     }
     protected async Task UpdateTracking()
     {
-        var tracking = Mapping.Mapper.Map<Tracking>(TrackingVm);
-        await trackingManager.UpdateAsync(tracking);
-        _nav.NavigateTo("/tracking/" + @TrackingId.ToString());
+        if (appStateComponent is not null)
+        {
+            var tracking = Mapping.Mapper.Map<Tracking>(appStateComponent.EditTrackingVm);
+            await trackingManager.UpdateAsync(tracking);
+            _nav.NavigateTo("/tracking/" + @TrackingId.ToString());
+        }
     }
 
     void UpdateStatus(int? id)
     {
-        TrackingVm.StatusId = Convert.ToInt32(id);
+        if (appStateComponent is not null)
+        { 
+            appStateComponent.EditTrackingVm.StatusId = Convert.ToInt32(id);
+        }
     }
     void UpdateCorrType(int? id)
     {
-        TrackingVm.CorrespondenceTypeId = Convert.ToInt32(id);
+        if (appStateComponent is not null)
+        {
+            appStateComponent.EditTrackingVm.CorrespondenceTypeId = Convert.ToInt32(id);
+        }
     }
     void UpdatePoc(int? id)
     {
-        TrackingVm.PocId = Convert.ToInt32(id);
+        if (appStateComponent is not null)
+        {
+            appStateComponent.EditTrackingVm.PocId = Convert.ToInt32(id);
+        }
     }
     void UpdateTofrom(int? id)
     {
-        TrackingVm.ToFromId = Convert.ToInt32(id);
+        if (appStateComponent is not null)
+        {
+            appStateComponent.EditTrackingVm.ToFromId = Convert.ToInt32(id);
+        }
     }
 }

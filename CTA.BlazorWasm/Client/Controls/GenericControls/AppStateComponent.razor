@@ -3,7 +3,7 @@
 </CascadingValue>
 
 @code {
-    
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -62,7 +62,21 @@
             StateHasChanged();
         }
     }
-    
+
+    private EditTrackingVm editTrackingVm;
+    public EditTrackingVm EditTrackingVm
+    {
+        get
+        {
+            return editTrackingVm;
+        }
+        set
+        {
+            editTrackingVm = value;
+            StateHasChanged();
+        }
+    }
+
     public void AddTrackingFilterToRequest()
     {
         this.PaginationQuery.TrackingFilter = this.TrackingFilter;

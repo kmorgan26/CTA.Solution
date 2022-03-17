@@ -40,12 +40,10 @@
     <PagerContent>
         <PaginationComponent TotalPages="appStateComponent.PagedResponse.TotalPages"
                              CurrentPage="appStateComponent.PaginationQuery.PageNumber"
+                             TotalRecords="appStateComponent.PagedResponse.TotalRecords"
                              Radius="2" SelectedPage="SelectedPage">
-
         </PaginationComponent>
-
     </PagerContent>
-    
 </MudTable>
 <span class="align-content-end">
             Total Records: @appStateComponent.PagedResponse.TotalRecords
