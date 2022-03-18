@@ -39,12 +39,12 @@
     }
     protected override async Task OnParametersSetAsync()
     {
-        if (appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
+        if (appStateComponent is not null && appStateComponent.ToFromId is not null)
         {
             await Task.Delay(0);
             SelectedTofromId =
-            appStateComponent.PaginationQuery.TrackingFilter.ToFromId != null
-                ? appStateComponent.PaginationQuery.TrackingFilter.ToFromId : 0;
+            appStateComponent.ToFromId != null
+                ? appStateComponent.ToFromId : 0;
         }        
     }
 }

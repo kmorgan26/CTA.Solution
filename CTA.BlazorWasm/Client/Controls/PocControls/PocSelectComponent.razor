@@ -42,12 +42,12 @@
     {
         try
         {
-            if(appStateComponent is not null && appStateComponent.PaginationQuery.TrackingFilter is not null)
+            if(appStateComponent is not null && appStateComponent.PocId is not null)
             {
                 await Task.Delay(0);
                 SelectedPocId  = 
-                appStateComponent.PaginationQuery.TrackingFilter.PocId != null 
-                    ? appStateComponent.PaginationQuery.TrackingFilter.PocId : 0;
+                appStateComponent.PocId != null 
+                    ? appStateComponent.PocId : 0;
             }
         }
         catch { }

@@ -109,21 +109,36 @@ else
     void UpdateStatus(int? id)
     {
         if (appStateComponent is not null)
+        {
+            appStateComponent.StatusId = id;
             appStateComponent.TrackingFilter.StatusId = id;
+        }
+
     }
     void UpdateCorrType(int? id)
     {
         if (appStateComponent is not null)
+        {
+            appStateComponent.CorrespondenceTypeId = id;
             appStateComponent.TrackingFilter.CorrTypeId = id;
+        }
     }
     void UpdatePoc(int? id)
     {
         if (appStateComponent is not null)
+        {
+            appStateComponent.PocId = id;
             appStateComponent.TrackingFilter.PocId = id;
+        }
+
     }
     void UpdateTofrom(int? id)
     {
         if (appStateComponent is not null)
+        {
+            appStateComponent.ToFromId = id;
             appStateComponent.TrackingFilter.ToFromId = id;
+        }
+        
     }
 }

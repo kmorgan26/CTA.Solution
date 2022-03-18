@@ -15,21 +15,10 @@
 
 @code {
 
-    [CascadingParameter]
-    public AppStateComponent? appStateComponent { get; set; }
-
     private bool _filtersSet { get; set; } = false;
 
     void DrawTable()
     {
         _filtersSet = true;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        if(appStateComponent is not null && appStateComponent.RequestedDateTime.Date == DateTime.Today.Date)
-        {
-            await Task.Run(() => _filtersSet = true);
-        }
     }
 }

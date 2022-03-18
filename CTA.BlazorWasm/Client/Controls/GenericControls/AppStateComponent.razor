@@ -63,7 +63,7 @@
         }
     }
 
-    private EditTrackingVm editTrackingVm;
+    private EditTrackingVm editTrackingVm = new();
     public EditTrackingVm EditTrackingVm
     {
         get
@@ -73,6 +73,76 @@
         set
         {
             editTrackingVm = value;
+            StateHasChanged();
+        }
+    }
+
+    private int? pocId;
+    public int? PocId
+    {
+        get
+        {
+            return pocId;
+        }
+        set
+        {
+            pocId = value;
+            StateHasChanged();
+        }
+    }
+
+    private int? correspondenceTypeId;
+    public int? CorrespondenceTypeId
+    {
+        get
+        {
+            return correspondenceTypeId;
+        }
+        set
+        {
+            correspondenceTypeId = value;
+            StateHasChanged();
+        }
+    }
+
+    private int? statusId;
+    public int? StatusId
+    {
+        get
+        {
+            return statusId;
+        }
+        set
+        {
+            statusId = value;
+            StateHasChanged();
+        }
+    }
+
+    private int? toFromId;
+    public int? ToFromId
+    {
+        get
+        {
+            return toFromId;
+        }
+        set
+        {
+            toFromId = value;
+            StateHasChanged();
+        }
+    }
+
+    private bool? isSet;
+    public bool? IsSet
+    {
+        get
+        {
+            return isSet;
+        }
+        set
+        {
+            isSet = value;
             StateHasChanged();
         }
     }
