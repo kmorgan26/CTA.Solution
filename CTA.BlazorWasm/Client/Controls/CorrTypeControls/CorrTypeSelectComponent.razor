@@ -31,7 +31,7 @@
         if (appStateComponent is not null)
         {
             SelectedCorrTypeId = Convert.ToInt32(value);
-            appStateComponent.IsSet = false;
+            appStateComponent.AppStateReset();
             await CorrTypeIdChanged.InvokeAsync(SelectedCorrTypeId);
         }
     }

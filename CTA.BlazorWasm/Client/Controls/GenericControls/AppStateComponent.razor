@@ -151,4 +151,10 @@
     {
         this.PaginationQuery.TrackingFilter = this.TrackingFilter;
     }
+    public void AppStateReset()
+    {
+        this.PaginationQuery.PageNumber = 1;
+        this.IsSet = false;
+        StateHasChanged();
+    }
 }
