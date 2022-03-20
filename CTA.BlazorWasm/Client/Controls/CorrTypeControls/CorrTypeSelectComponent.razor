@@ -28,8 +28,12 @@
 
     private async Task ChangeCorrType(int? value)
     {
-        SelectedCorrTypeId = Convert.ToInt32(value);
-        await CorrTypeIdChanged.InvokeAsync(SelectedCorrTypeId);
+        if (appStateComponent is not null)
+        {
+            SelectedCorrTypeId = Convert.ToInt32(value);
+            appStateComponent.IsSet = false;
+            await CorrTypeIdChanged.InvokeAsync(SelectedCorrTypeId);
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -43,7 +47,7 @@
         {
             await Task.Delay(0);
             SelectedCorrTypeId =
-                appStateComponent.CorrespondenceTypeId != null 
+                appStateComponent.CorrespondenceTypeId != null
                     ? appStateComponent.CorrespondenceTypeId : 0;
         }
     }

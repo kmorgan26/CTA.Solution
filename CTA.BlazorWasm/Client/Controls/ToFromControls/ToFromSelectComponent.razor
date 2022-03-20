@@ -28,8 +28,12 @@
 
     private async Task ChangeTofrom(int? value)
     {
-        SelectedTofromId = Convert.ToInt32(value);
-        await TofromIdChanged.InvokeAsync(SelectedTofromId);
+        if (appStateComponent is not null)
+        {
+            SelectedTofromId = Convert.ToInt32(value);
+            appStateComponent.IsSet = false;
+            await TofromIdChanged.InvokeAsync(SelectedTofromId);
+        }
     }
 
     protected override async Task OnInitializedAsync()

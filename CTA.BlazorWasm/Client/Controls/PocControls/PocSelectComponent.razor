@@ -3,7 +3,7 @@
 <FormFieldComponent LabelName="POC">
     <ControlToRender>
         <InputSelect ValueExpression="@(()=> SelectedPocId)" id="pocSelect" DisplayName="POC" class="form-control" Value="SelectedPocId"
-            ValueChanged="@((int? value) => ChangePoc(value))">
+                     ValueChanged="@((int? value) => ChangePoc(value))">
             <option value=0>-----</option>
             @foreach (var item in _pocVms)
             {
@@ -28,8 +28,12 @@
 
     private async Task ChangePoc(int? value)
     {
-        SelectedPocId = Convert.ToInt32(value);
-        await PocIdChanged.InvokeAsync(SelectedPocId);
+        if (appStateComponent is not null)
+        {
+            SelectedPocId = Convert.ToInt32(value);
+            appStateComponent.IsSet = false;
+            await PocIdChanged.InvokeAsync(SelectedPocId);
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -42,11 +46,11 @@
     {
         try
         {
-            if(appStateComponent is not null && appStateComponent.PocId is not null)
+            if (appStateComponent is not null && appStateComponent.PocId is not null)
             {
                 await Task.Delay(0);
-                SelectedPocId  = 
-                appStateComponent.PocId != null 
+                SelectedPocId =
+                appStateComponent.PocId != null
                     ? appStateComponent.PocId : 0;
             }
         }

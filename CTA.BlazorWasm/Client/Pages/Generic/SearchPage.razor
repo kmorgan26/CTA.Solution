@@ -8,17 +8,19 @@
 
 <SearchComponent OnValidSubmit="DrawTable"></SearchComponent>
 
-@if (_filtersSet == true)
+@if (appStateComponent is not null && appStateComponent.IsSet == true)
 {
     <TrackingReportComponent></TrackingReportComponent>
 }
 
 @code {
 
-    private bool _filtersSet { get; set; } = false;
+    [CascadingParameter]
+    public AppStateComponent? appStateComponent { get; set; }
 
     void DrawTable()
     {
-        _filtersSet = true;
+        if(appStateComponent is not null)
+            appStateComponent.IsSet = true;
     }
 }

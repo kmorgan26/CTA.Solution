@@ -28,8 +28,12 @@
 
     private async Task ChangeStatus(int? value)
     {
-        SelectedStatusId = Convert.ToInt32(value);
-        await StatusIdChanged.InvokeAsync(SelectedStatusId);
+        if (appStateComponent is not null)
+        {
+            SelectedStatusId = Convert.ToInt32(value);
+            appStateComponent.IsSet = false;
+            await StatusIdChanged.InvokeAsync(SelectedStatusId);
+        }
     }
     protected override async Task OnInitializedAsync()
     {
