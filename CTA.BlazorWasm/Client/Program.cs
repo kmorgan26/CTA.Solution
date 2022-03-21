@@ -1,5 +1,7 @@
+using Blazored.LocalStorage;
 using CTA.BlazorWasm.Client;
 using CTA.BlazorWasm.Client.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
@@ -25,6 +27,10 @@ public class Program
         builder.Services.AddScoped<TrackingManager>();
         builder.Services.AddScoped<TrackingThreadManager>();
 
+        builder.Services.AddBlazoredLocalStorage();
+        builder.Services.AddAuthorizationCore();
+        builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
         var host = builder.Build();
 
         await host.RunAsync();
