@@ -1,4 +1,19 @@
 ﻿@page "/"
-@attribute [Authorize]
+@inject NavigationManager navManager
 
 <LandingPageComponent></LandingPageComponent>
+
+@code{
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated == false)
+        {
+            navManager.NavigateTo("/login");
+        }
+    }
+}

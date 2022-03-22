@@ -1,44 +1,45 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">CTA.BlazorWasm</a>
+        <a class="navbar-brand" href="">Contracts Tracker</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <MudIcon Icon="@Icons.Material.Filled.Home" Class="m-3" />Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="reports">
-                <MudIcon Icon="@Icons.Material.Filled.List" Class="m-3" />Reports
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="search">
-                <MudIcon Icon="@Icons.Material.Filled.ManageSearch" Class="m-3" />Search
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="projects">
-                <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Class="m-3" />Projects
-            </NavLink>
-        </div>
 
-        <hr />
-        <AuthorizeView>
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <AuthorizeView>
+        <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <MudIcon Icon="@Icons.Material.Filled.Home" Class="m-3" />Home
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="reports">
+                    <MudIcon Icon="@Icons.Material.Filled.List" Class="m-3" />Reports
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="search">
+                    <MudIcon Icon="@Icons.Material.Filled.ManageSearch" Class="m-3" />Search
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="projects">
+                    <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Class="m-3" />Projects
+                </NavLink>
+            </div>
+
+            <hr />
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="admin">
                     <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="m-3" />Admin
                 </NavLink>
             </div>
-        </AuthorizeView>
-    </nav>
+        </nav>
+    </AuthorizeView>
 </div>
 
 @code {
