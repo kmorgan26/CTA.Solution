@@ -34,6 +34,9 @@ namespace CTA.BlazorWasm.Server.Controllers
                 return Ok(new RegisterResult { Successful = false, Errors = errors });
 
             }
+            await _userManager.AddToRoleAsync(newUser, "Guest");
+
+
 
             return Ok(new RegisterResult { Successful = true });
         }
