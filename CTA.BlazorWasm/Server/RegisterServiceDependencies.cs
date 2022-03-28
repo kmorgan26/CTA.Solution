@@ -23,7 +23,7 @@ namespace CTA.BlazorWasm.Server
                 options => 
                     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>()
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityFstssDbContext>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

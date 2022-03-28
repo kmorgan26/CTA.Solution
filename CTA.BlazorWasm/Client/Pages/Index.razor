@@ -1,7 +1,17 @@
 ﻿@page "/"
 @inject NavigationManager navManager
 
-<LandingPageComponent></LandingPageComponent>
+
+
+<AuthorizeView>
+    <Authorized>
+        <LandingPageComponent></LandingPageComponent>
+        <span>You're authorized as @context.User.Identity.Name</span>
+    </Authorized>
+    <NotAuthorized>
+        Sorry. Not in the correct role.
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }

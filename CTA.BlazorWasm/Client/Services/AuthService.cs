@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +39,9 @@ namespace CTA.BlazorWasm.Client.Services
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
-            var response = await _httpClient.PostAsync("api/Login",
-                new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
+
+            var response = await _httpClient.PostAsJsonAsync("api/Login", loginModel);
+
             var loginResult = JsonSerializer.Deserialize<LoginResult>(
                 await response.Content.ReadAsStringAsync(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -52,6 +52,7 @@ namespace CTA.BlazorWasm.Client.Services
             }
 
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
+
             ((ApiAuthenticationStateProvider)_authenticationStateProvider)
                 .MarkUserAsAuthenticated(loginModel.Email);
             _httpClient.DefaultRequestHeaders.Authorization =
