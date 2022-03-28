@@ -35,6 +35,11 @@
 
 @code {
 
+    //[Parameter]
+    //[SupplyParameterFromQuery]
+    //public string ReturnUrl { get; set; }
+
+
     private LoginModel loginModel = new LoginModel();
     private bool ShowErrors;
     private string Error = "";
@@ -48,6 +53,7 @@
         if (result.Successful)
         {
             NavigationManager.NavigateTo("/");
+            //NavigationManager.NavigateTo(ReturnUrl);
         }
         else
         {

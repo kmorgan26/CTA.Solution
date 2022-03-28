@@ -40,7 +40,7 @@ namespace CTA.BlazorWasm.Client.Services
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
 
-            var response = await _httpClient.PostAsJsonAsync("api/Login", loginModel);
+            var response = await _httpClient.PostAsync("api/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
 
             var loginResult = JsonSerializer.Deserialize<LoginResult>(
                 await response.Content.ReadAsStringAsync(),

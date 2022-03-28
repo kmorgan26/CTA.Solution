@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
+
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using CTA.BlazorWasm.Shared;
 using CTA.BlazorWasm.Shared.Models;
 
 namespace CTA.BlazorWasm.Server.Controllers
@@ -37,8 +32,8 @@ namespace CTA.BlazorWasm.Server.Controllers
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, login.Email)
-        };
+                new Claim(ClaimTypes.Name, login.Email)
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
