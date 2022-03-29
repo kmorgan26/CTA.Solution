@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles ="admin, poweruser")]
     [Route("[controller]")]
     [ApiController]
     public class PocController : ControllerBase

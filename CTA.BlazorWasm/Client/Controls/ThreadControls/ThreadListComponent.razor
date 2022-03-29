@@ -6,7 +6,7 @@
     Thread List for: <ProjectNameComponent ProjectId="@ProjectId"></ProjectNameComponent>
 </h3>
 
-<AuthorizeView Roles="cta.poweruser">
+<AuthorizeView Roles="poweruser">
     <div class="row mb-4">
         <div class="col col-md-6 col-sm-12">
             <a class="btn btn-success btn-sm" href=@($"threads/create/{ProjectId}") role="button">New</a>
@@ -30,7 +30,7 @@
             </a>
         </MudTd>
         <MudTd DataLable="SELECT">
-            <AuthorizeView Roles="cta.poweruser">
+            <AuthorizeView Roles="poweruser">
                 <a href="/thread/edit/@thread.Id" role="button">
                     <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>
                 </a>

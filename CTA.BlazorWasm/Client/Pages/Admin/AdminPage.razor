@@ -1,8 +1,7 @@
 ﻿@page "/admin"
 
-<AuthorizeView>
+<AuthorizeView Roles="admin, poweruser">
     <Authorized>
-
         <h3>
             <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Large" Class="m-3" />
             Admin Page

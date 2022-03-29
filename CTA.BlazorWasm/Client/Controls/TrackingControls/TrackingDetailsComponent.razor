@@ -64,8 +64,10 @@
         </div>
     }
 </div>
+<AuthorizeView Roles="poweruser">
+    <MudButton Link=@($"/tracking/edit/{TrackingId}") Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small">Edit</MudButton>
+</AuthorizeView>
 
-<MudButton Link=@($"/tracking/edit/{TrackingId}") Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small">Edit</MudButton>
 
 @code {
 

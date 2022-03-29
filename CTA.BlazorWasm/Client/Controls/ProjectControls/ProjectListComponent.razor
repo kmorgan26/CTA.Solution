@@ -1,6 +1,6 @@
 ﻿@inject ProjectManager projectManager
 
-<AuthorizeView Roles="cta.poweruser">
+<AuthorizeView Roles="poweruser">
     <div class="row mb-4">
         <div class="col col-md-6 col-sm-12">
             <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" Link="/projects/create">New</MudButton>
@@ -25,7 +25,7 @@
             </a>
         </MudTd>
         <MudTd DataLable="SELECT">
-            <AuthorizeView Roles="cta.poweruser">
+            <AuthorizeView Roles="poweruser">
                 <a href="/project/edit/@project.Id" role="button">
                     <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>
                 </a>
