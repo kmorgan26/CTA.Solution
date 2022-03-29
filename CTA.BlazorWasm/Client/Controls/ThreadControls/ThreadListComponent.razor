@@ -6,13 +6,15 @@
     Thread List for: <ProjectNameComponent ProjectId="@ProjectId"></ProjectNameComponent>
 </h3>
 
-<div class="row mb-4">
-    <div class="col col-md-6 col-sm-12">
-        <a class="btn btn-success btn-sm" href=@($"threads/create/{ProjectId}") role="button">New</a>
+<AuthorizeView Roles="cta.poweruser">
+    <div class="row mb-4">
+        <div class="col col-md-6 col-sm-12">
+            <a class="btn btn-success btn-sm" href=@($"threads/create/{ProjectId}") role="button">New</a>
+        </div>
     </div>
-</div>
+</AuthorizeView>
 
-<MudTable Items="@threadList" Hover="true" Striped="true" Dense="true">
+<MudTable Items="@threadList" Hover="true" Striped="true" Dense="true" Context="thread">
     <HeaderContent>
         <MudTh>Thread #</MudTh>
         <MudTh>Topic</MudTh>
@@ -20,17 +22,19 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Topic">@context.Name</MudTd>
+        <MudTd DataLabel="Id">@thread.Id</MudTd>
+        <MudTd DataLabel="Topic">@thread.Name</MudTd>
         <MudTd DataLable="SELECT">
-            <a href="/thread/@context.Id">
-                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+            <a href="/thread/@thread.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>
             </a>
         </MudTd>
         <MudTd DataLable="SELECT">
-            <a href="/thread/edit/@context.Id" role="button">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>    
-            </a>
+            <AuthorizeView Roles="cta.poweruser">
+                <a href="/thread/edit/@thread.Id" role="button">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>
+                </a>
+            </AuthorizeView>
         </MudTd>
     </RowTemplate>
     <PagerContent>

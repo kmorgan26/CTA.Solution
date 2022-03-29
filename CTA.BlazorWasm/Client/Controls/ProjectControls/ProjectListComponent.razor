@@ -1,12 +1,15 @@
 ﻿@inject ProjectManager projectManager
 
-<div class="row mb-4">
-    <div class="col col-md-6 col-sm-12">
-        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" Link="/projects/create">New</MudButton>
+<AuthorizeView Roles="cta.poweruser">
+    <div class="row mb-4">
+        <div class="col col-md-6 col-sm-12">
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" Link="/projects/create">New</MudButton>
+        </div>
     </div>
-</div>
+</AuthorizeView>
 
-<MudTable Items="@projectList" Hover="true" Striped="true" Dense="true">
+
+<MudTable Items="@projectList" Hover="true" Striped="true" Dense="true" Context="project">
     <HeaderContent>
         <MudTh>Thread #</MudTh>
         <MudTh>Topic</MudTh>
@@ -14,17 +17,19 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Thread">@context.Id</MudTd>
-        <MudTd DataLabel="Thread">@context.Name</MudTd>
+        <MudTd DataLabel="Thread">@project.Id</MudTd>
+        <MudTd DataLabel="Thread">@project.Name</MudTd>
         <MudTd DataLable="SELECT">
-            <a href="/project/@context.Id">
-                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+            <a href="/project/@project.Id">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>
             </a>
         </MudTd>
         <MudTd DataLable="SELECT">
-            <a href="/project/edit/@context.Id" role="button">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>    
-            </a>
+            <AuthorizeView Roles="cta.poweruser">
+                <a href="/project/edit/@project.Id" role="button">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Warning"></MudIcon>
+                </a>
+            </AuthorizeView>
         </MudTd>
     </RowTemplate>
     <PagerContent>

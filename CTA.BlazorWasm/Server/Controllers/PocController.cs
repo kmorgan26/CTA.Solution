@@ -4,9 +4,11 @@ using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using CTA.BlazorWasm.Shared.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
+    [Authorize(Roles ="admin")]
     [Route("[controller]")]
     [ApiController]
     public class PocController : ControllerBase
