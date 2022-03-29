@@ -5,11 +5,13 @@
     Tracking List for: <TrackingNameComponent ThreadId="@ThreadId"></TrackingNameComponent>
 </h3>
 
-<div class="row mb-4">
-    <div class="col col-md-6 col-sm-12">
-        <a class="btn btn-success btn-sm" href=@($"/trackings/create/{@ThreadId}") role="button">New</a>
+<AuthorizeView Roles="cta.poweruser">
+    <div class="row mb-4">
+        <div class="col col-md-6 col-sm-12">
+            <a class="btn btn-success btn-sm" href=@($"/trackings/create/{@ThreadId}") role="button">New</a>
+        </div>
     </div>
-</div>
+</AuthorizeView>
 
 <MudTable Items="@trackingList" Hover="true" Striped="true" Dense="true">
     <HeaderContent>
@@ -28,7 +30,7 @@
         <MudTd DataLabel="Topic">@context.SentOrReceived.ToShortDateString()</MudTd>
         <MudTd DataLable="SELECT">
             <a href="/tracking/@context.Id">
-                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>    
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info"></MudIcon>
             </a>
         </MudTd>
     </RowTemplate>
