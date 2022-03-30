@@ -4,6 +4,7 @@ using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
 using CTA.BlazorWasm.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -75,6 +76,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
 
         // POST api/<StatusController>
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Status status)
         {
@@ -112,6 +114,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // PUT api/<StatusController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Status status)
         {
@@ -149,6 +152,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // DELETE api/<StatusController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {

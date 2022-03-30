@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
-    [Authorize(Roles ="admin, poweruser")]
+    
     [Route("[controller]")]
     [ApiController]
     public class PocController : ControllerBase
@@ -76,7 +76,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             }
         }
 
-
+        [Authorize(Roles = "admin, poweruser")]
         // POST api/<PocController>
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Poc poc)
@@ -114,6 +114,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // PUT api/<PocController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Poc poc)
         {
@@ -151,6 +152,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // DELETE api/<PocController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

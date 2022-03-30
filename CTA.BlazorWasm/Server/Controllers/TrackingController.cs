@@ -12,6 +12,7 @@ using CTA.BlazorWasm.Shared.Requests;
 using CTA.BlazorWasm.Client.Services;
 using CTA.BlazorWasm.Client.ViewModels.Shared;
 using CTA.BlazorWasm.Client.Controls.GenericControls;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -225,6 +226,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // POST <TrackingController>
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Tracking tracking)
         {
@@ -262,6 +264,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // PUT <TrackingController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Tracking tracking)
         {
@@ -299,6 +302,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // DELETE <TrackingController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

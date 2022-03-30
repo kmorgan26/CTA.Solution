@@ -7,6 +7,7 @@ using CTA.BlazorWasm.Client.Services;
 using CTA.BlazorWasm.Client.ViewModels.Shared;
 using CTA.BlazorWasm.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -119,6 +120,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // POST api/<TrackingThreadController>
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] TrackingThread trackingThread)
         {
@@ -156,6 +158,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // PUT <TrackingThreadController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] TrackingThread trackingThread)
         {
@@ -193,6 +196,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         // DELETE api/<TrackingThreadController>/5
+        [Authorize(Roles = "admin, poweruser")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
