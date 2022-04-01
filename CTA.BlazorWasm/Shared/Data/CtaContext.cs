@@ -30,8 +30,8 @@ namespace CTA.BlazorWasm.Shared.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=beast;database=contractsdatabase;trusted_connection=true;");
-                //optionsBuilder.UseSqlServer("Server=F5010-9Y7HZH3-L;database=contractsdatabase;trusted_connection=true;");
+                //optionsBuilder.UseSqlServer("Server=beast;database=contractsdatabase;trusted_connection=true;");
+                optionsBuilder.UseSqlServer("Server=F5010-9Y7HZH3-L;database=contractsdatabase;trusted_connection=true;");
             }
         }
 
