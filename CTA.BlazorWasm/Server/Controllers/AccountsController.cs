@@ -23,7 +23,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RegisterModel model)
         {
-            var newUser = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var newUser = new IdentityUser { UserName = model.Email, Email = model.Email, EmailConfirmed = false };
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
 

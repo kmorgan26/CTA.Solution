@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using CTA.BlazorWasm.Server.Services;
+using CTA.BlazorWasm.Client.Services;
 
 namespace CTA.BlazorWasm.Server
 {
@@ -51,6 +54,9 @@ namespace CTA.BlazorWasm.Server
             builder.Services.AddTransient<RepositoryEF<ToFrom, CtaContext>>();
             builder.Services.AddTransient<RepositoryEF<Tracking, CtaContext>>();
             builder.Services.AddTransient<RepositoryEF<TrackingThread, CtaContext>>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddControllers()
