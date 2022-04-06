@@ -37,7 +37,7 @@ namespace CTA.BlazorWasm.Client.Services
         }
         public async Task<PasswordResetConfirmation> ResetPassword(PasswordResetModel resetModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/accounts", resetModel);
+            var response = await _httpClient.PostAsJsonAsync("api/accounts/forgot-password", resetModel);
             return await response.Content.ReadFromJsonAsync<PasswordResetConfirmation>();
         }
 

@@ -40,5 +40,26 @@ namespace CTA.BlazorWasm.Server.Controllers
 
             return Ok(new RegisterResult { Successful = true });
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] PasswordResetModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Email);
+
+            if (user is null)
+            {
+                return Ok(new PasswordResetConfirmation { Successful = false });
+            }
+
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, model.NewPassword);
+
+            if (!passwordChangeResult.Succeeded)
+            {
+                return Ok(new PasswordResetConfirmation { Successful = false });
+            }
+
+            return Ok(new PasswordResetConfirmation { Successful = true });
+        }
     }
 }
