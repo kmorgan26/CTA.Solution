@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using CTA.BlazorWasm.Shared;
 using CTA.BlazorWasm.Shared.Models;
+using CTA.BlazorWasm.Server.Services;
+using CTA.BlazorWasm.Shared.Models.SMTPModels;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -14,10 +16,12 @@ namespace CTA.BlazorWasm.Server.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ISmtpEmailSender _smtpEmailSender;
 
-        public AccountsController(UserManager<IdentityUser> userManager)
+        public AccountsController(UserManager<IdentityUser> userManager, ISmtpEmailSender smtpEmailSender)
         {
             _userManager = userManager;
+            _smtpEmailSender = smtpEmailSender;
         }
 
         [HttpPost]
@@ -59,6 +63,9 @@ namespace CTA.BlazorWasm.Server.Controllers
                 return Ok(new PasswordResetConfirmation { Successful = false });
             }
 
+            var message = new Message(new string[] { "kmorgan26@gmail.com" }, "Password Reset", "Your CTA Password was reset", new FormFileCollection());
+            await _smtpEmailSender.SendEmailAsync(message);
+            
             return Ok(new PasswordResetConfirmation { Successful = true });
         }
     }

@@ -11,6 +11,9 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using CTA.BlazorWasm.Server.Services;
 using CTA.BlazorWasm.Client.Services;
+using System.Configuration;
+using CTA.BlazorWasm.Shared.Models.SMTPModels;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace CTA.BlazorWasm.Server
 {
@@ -44,6 +47,16 @@ namespace CTA.BlazorWasm.Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]))
                     };
                 });
+
+            var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<ISmtpEmailSender, SmtpEmailSender>();
+
+            builder.Services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
 
             builder.Services.AddTransient<RepositoryEF<CorrespondenceType, CtaContext>>();
             builder.Services.AddTransient<RepositoryEF<CorrespondenceSubType, CtaContext>>();
