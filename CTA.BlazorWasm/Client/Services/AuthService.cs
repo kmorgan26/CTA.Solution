@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using CTA.BlazorWasm.Shared;
 using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Client;
+using CTA.BlazorWasm.Shared.Models.UserAccount;
 
 namespace CTA.BlazorWasm.Client.Services
 {
@@ -35,9 +36,9 @@ namespace CTA.BlazorWasm.Client.Services
             var response = await _httpClient.PostAsJsonAsync("api/accounts", registerModel);
             return await response.Content.ReadFromJsonAsync<RegisterResult>();
         }
-        public async Task<PasswordResetConfirmation> ResetPassword(PasswordResetModel resetModel)
+        public async Task<PasswordResetConfirmation> ResetPassword(PasswordResetRequest resetRequest)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/accounts/forgot-password", resetModel);
+            var response = await _httpClient.PostAsJsonAsync("api/accounts/reset-password", resetRequest);
             return await response.Content.ReadFromJsonAsync<PasswordResetConfirmation>();
         }
 

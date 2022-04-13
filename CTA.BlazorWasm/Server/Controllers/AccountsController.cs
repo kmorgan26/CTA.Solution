@@ -8,6 +8,10 @@ using CTA.BlazorWasm.Shared;
 using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Server.Services;
 using CTA.BlazorWasm.Shared.Models.SMTPModels;
+using CTA.BlazorWasm.Shared.Models.UserAccount;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace CTA.BlazorWasm.Server.Controllers
 {
@@ -45,25 +49,31 @@ namespace CTA.BlazorWasm.Server.Controllers
             return Ok(new RegisterResult { Successful = true });
         }
 
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] PasswordResetModel model)
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] PasswordResetRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);
 
-            if (user is null)
+            if (user is null) //add the confirmation as well
             {
                 return Ok(new PasswordResetConfirmation { Successful = false });
             }
 
             string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, model.NewPassword);
+            resetToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
 
-            if (!passwordChangeResult.Succeeded)
-            {
-                return Ok(new PasswordResetConfirmation { Successful = false });
-            }
+            var callbackUrl = Url.Page(
+                "/Account/ResetPassword",
+                pageHandler: null,
+                values: new { area = "Identity", code = resetToken},
+                protocol: Request.Scheme);
 
-            var message = new Message(new string[] { "kmorgan26@gmail.com" }, "Password Reset", "Your CTA Password was reset", new FormFileCollection());
+            var message = new Message(
+                new string[] { model.Email }, 
+                "Password Reset", 
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", 
+                    new FormFileCollection());
+            
             await _smtpEmailSender.SendEmailAsync(message);
             
             return Ok(new PasswordResetConfirmation { Successful = true });

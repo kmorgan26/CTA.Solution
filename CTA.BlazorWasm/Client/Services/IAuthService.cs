@@ -1,7 +1,5 @@
-﻿
-
-
-using CTA.BlazorWasm.Shared.Models;
+﻿using CTA.BlazorWasm.Shared.Models;
+using CTA.BlazorWasm.Shared.Models.UserAccount;
 
 namespace CTA.BlazorWasm.Client.Services
 {
@@ -10,6 +8,6 @@ namespace CTA.BlazorWasm.Client.Services
         Task<LoginResult> Login(LoginModel loginModel);
         Task Logout();
         Task<RegisterResult> Register(RegisterModel registerModel);
-        Task<PasswordResetConfirmation> ResetPassword(PasswordResetModel resetModel);
+        Task<PasswordResetConfirmation> ResetPassword(PasswordResetRequest resetRequest);
     }
 }
