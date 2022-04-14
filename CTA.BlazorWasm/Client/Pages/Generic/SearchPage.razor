@@ -23,4 +23,14 @@
         if(appStateComponent is not null)
             appStateComponent.IsSet = true;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(appStateComponent is not null && appStateComponent.TrackingFilter is not null)
+        {
+            await Task.Run(() =>  appStateComponent.TrackingFilter.PocIds = null);
+            await Task.Run(() =>  appStateComponent.TrackingFilter.StatusIds = null);
+            await Task.Run(() =>  appStateComponent.TrackingFilter.ToFromIds = null);
+        }
+    }
 }
