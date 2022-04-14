@@ -1,14 +1,15 @@
 ﻿@page "/profile"
 
-<h3>Profile Page</h3>
+<h3>User Profile</h3>
 
-Here is the profile page.
+<hr />
 
-<br/>
+<p class="m-3">
+    <AuthorizeView>
+        <strong>Username:</strong> @context.User.Identity.Name
+    </AuthorizeView>
+</p>
 
-<a href="/password/reset" class="btn btn-primary">Reset Password</a>
-
-@code{
-
-
-}
+<p class="m-3">
+    Click to <MudLink Href="/password/change">Change Password?</MudLink>
+</p>
