@@ -13,16 +13,13 @@ namespace CTA.BlazorWasm.Shared.Models.SMTPModels
         public string Subject { get; set; }
         public string Content { get; set; }
 
-        public IFormFileCollection Attachments { get; set; }
-
-        public Message(IEnumerable<string> to, string subject, string content, IFormFileCollection attachments)
+        public Message(IEnumerable<string> to, string subject, string content)
         {
             To = new List<MailboxAddress>();
 
             To.AddRange(to.Select(x => new MailboxAddress(x,x)));
             Subject = subject;
             Content = content;
-            Attachments = attachments;
         }
     }
 }

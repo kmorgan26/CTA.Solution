@@ -42,8 +42,25 @@ namespace CTA.BlazorWasm.Server.Controllers
                 return Ok(new RegisterResult { Successful = false, Errors = errors });
 
             }
-            await _userManager.AddToRoleAsync(newUser, "Guest");
+            //User was created
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
+            var callbackUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = newUser.Id, code = code },
+                protocol: Request.Scheme);
+
+            var message = new Message(
+                new string[] { model.Email },
+                "Email Verification",
+                 $"Please verify your email address by <a href='{HtmlEncoder.Default.Encode(code)};>clicking here</a>."
+                );
+
+            await _userManager.AddToRoleAsync(newUser, "Guest");
+            
+            await _smtpEmailSender.SendEmailAsync(message);
 
 
             return Ok(new RegisterResult { Successful = true });
@@ -71,8 +88,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             var message = new Message(
                 new string[] { model.Email }, 
                 "Password Reset", 
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.", 
-                    new FormFileCollection());
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             
             await _smtpEmailSender.SendEmailAsync(message);
             
