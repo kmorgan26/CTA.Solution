@@ -55,8 +55,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             var message = new Message(
                 new string[] { model.Email },
                 "Email Verification",
-                 $"Please verify your email address by <a href='{HtmlEncoder.Default.Encode(code)};>clicking here</a>."
-                );
+                 $"Please verify your email address by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             await _userManager.AddToRoleAsync(newUser, "Guest");
             
