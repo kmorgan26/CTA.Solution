@@ -1,0 +1,54 @@
+﻿@page "/email/confirmation"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h3>Resend EmailConfirmation</h3>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Errors.ToArray()</p>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Please enter your email address and a confirmation link will be sent to your email.</h5>
+
+        <EditForm Model="_email" OnValidSubmit="ResendConfirmation">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <InputText Id="email" class="form-control" @bind-Value="_email" />
+                <ValidationMessage For="@(() => _email)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    string? _email;
+    private bool ShowErrors;
+    private IEnumerable<string>? Errors;
+
+    private async Task ResendConfirmation()
+    {
+        var result = await AuthService.ResendEmail(_email);
+
+        if(result.Successful)
+        {
+            NavigationManager.NavigateTo("/confirmation/success");
+        }
+        else
+        {
+            Errors = result.Errors;
+            ShowErrors = true;
+        }
+    }
+
+}

@@ -88,6 +88,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             
             return Ok(new PasswordResetConfirmation { Successful = true });
         }
+
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeRequest model)
         {
@@ -102,6 +103,7 @@ namespace CTA.BlazorWasm.Server.Controllers
 
             return Ok(new PasswordChangeConfirmation { Successful = true });
         }
+
         [HttpPost("confirm-email")]
         public async Task<IActionResult> ConfirmEmailAddress([FromBody] ConfirmEmailRequest confirmEmailRequest)
         {
@@ -120,6 +122,26 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 return Ok(new EmailConfirmationResponse { Successful = false });
             }
+
+            return Ok(new EmailConfirmationResponse { Successful = true });
+        }
+
+        [HttpPost("resend-confirmation")]
+        public async Task<IActionResult> ResendConfirmationEmail([FromBody] string email)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            var urlPart = _configuration["BaseUrl"];
+            var callbackUrl = $"{urlPart}/confirm/email/?id={email}&code={code}";
+
+            var message = new Message(
+                new string[] { email },
+                "Email Verification",
+                 $"Please verify your email address by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+            await _smtpEmailSender.SendEmailAsync(message);
 
             return Ok(new EmailConfirmationResponse { Successful = true });
         }
