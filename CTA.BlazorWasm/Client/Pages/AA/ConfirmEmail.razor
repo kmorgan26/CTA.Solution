@@ -1,0 +1,37 @@
+﻿@page "/confirm/email"
+@inject NavigationManager NavManager
+@inject IAuthService AuthService
+
+<h3>ConfirmEmail</h3>
+
+<p>
+    @confirmed
+</p>
+
+@code {
+
+    private ConfirmEmailRequest request;
+    string code = string.Empty;
+    string id = string.Empty;
+    string confirmed = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+
+        NavManager.TryGetQueryString<string>("code", out code);
+        NavManager.TryGetQueryString<string>("id", out id);
+
+        request.Code = code;
+        request.Email = id;
+
+        var result = await AuthService.ConfirmEmail(request);
+
+        if (result.Successful)
+        {
+            confirmed = "Your email address has been confirmed";
+        }
+        
+    }
+
+}

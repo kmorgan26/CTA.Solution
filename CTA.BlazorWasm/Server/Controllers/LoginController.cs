@@ -28,10 +28,14 @@ namespace CTA.BlazorWasm.Server.Controllers
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
 
-            if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            if (!result.Succeeded) 
+                return BadRequest(new LoginResult { Successful = false, Error = "Invalid Login Attempt." });
 
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+            if (!user.EmailConfirmed)
+                return BadRequest(new LoginResult { Successful = false, Error = "Your email is not confirmed" });
 
             var claims = new List<Claim>();
 
@@ -41,7 +45,6 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
