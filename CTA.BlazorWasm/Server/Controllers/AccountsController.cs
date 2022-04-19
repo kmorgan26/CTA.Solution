@@ -21,11 +21,13 @@ namespace CTA.BlazorWasm.Server.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ISmtpEmailSender _smtpEmailSender;
+        private readonly IConfiguration _configuration;
 
-        public AccountsController(UserManager<IdentityUser> userManager, ISmtpEmailSender smtpEmailSender)
+        public AccountsController(UserManager<IdentityUser> userManager, ISmtpEmailSender smtpEmailSender, IConfiguration configuration)
         {
             _userManager = userManager;
             _smtpEmailSender = smtpEmailSender;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -78,11 +80,14 @@ namespace CTA.BlazorWasm.Server.Controllers
             string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             resetToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
 
-            var callbackUrl = Url.Page(
-                "/Account/ResetPassword",
-                pageHandler: null,
-                values: new { area = "Identity", code = resetToken},
-                protocol: Request.Scheme);
+            var urlPart = _configuration["BaseUrl"];
+            var callbackUrl = $"{urlPart}/Password/Reset?code={resetToken}"; 
+
+            //var callbackUrl = Url.Page(
+            //    "/Account/ResetPassword",
+            //    pageHandler: null,
+            //    values: new { area = "Identity", code = resetToken },
+            //    protocol: Request.Scheme);
 
             var message = new Message(
                 new string[] { model.Email }, 
@@ -92,6 +97,20 @@ namespace CTA.BlazorWasm.Server.Controllers
             await _smtpEmailSender.SendEmailAsync(message);
             
             return Ok(new PasswordResetConfirmation { Successful = true });
+        }
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeRequest model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Email);
+
+            if(user is null)
+            {
+                return Ok(new PasswordChangeConfirmation { Successful = false });
+            }
+            //TODO: Fix the password change. Old Password doesn't have to match currently
+            await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            return Ok(new PasswordChangeConfirmation { Successful = true });
         }
     }
 }

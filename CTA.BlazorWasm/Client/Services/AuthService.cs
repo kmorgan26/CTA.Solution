@@ -41,6 +41,11 @@ namespace CTA.BlazorWasm.Client.Services
             var response = await _httpClient.PostAsJsonAsync("api/accounts/reset-password", resetRequest);
             return await response.Content.ReadFromJsonAsync<PasswordResetConfirmation>();
         }
+        public async Task<PasswordChangeConfirmation> ChangePassword(PasswordChangeRequest changeRequest)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/accounts/change-password", changeRequest);
+            return await response.Content.ReadFromJsonAsync<PasswordChangeConfirmation>();
+        }
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
