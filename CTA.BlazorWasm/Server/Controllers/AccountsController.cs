@@ -94,7 +94,10 @@ namespace CTA.BlazorWasm.Server.Controllers
                 return Ok(new PasswordChangeConfirmation { Successful = false });
             }
             //TODO: Fix the password change. Old Password doesn't have to match currently
-            await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+                return Ok(new PasswordChangeConfirmation { Successful = false });
 
             return Ok(new PasswordChangeConfirmation { Successful = true });
         }
