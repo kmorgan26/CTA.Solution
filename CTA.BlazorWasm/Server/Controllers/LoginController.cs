@@ -46,6 +46,9 @@ namespace CTA.BlazorWasm.Server.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            if(claims.Count == 1)
+                return BadRequest(new LoginResult { Successful = false, Error = "Your account must be approved before logging in." });
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiry = DateTime.Now.AddDays(Convert.ToInt32(_configuration["JwtExpiryInDays"]));

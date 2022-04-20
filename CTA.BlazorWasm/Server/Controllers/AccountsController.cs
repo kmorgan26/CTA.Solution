@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using CTA.BlazorWasm.Shared;
 using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Server.Services;
 using CTA.BlazorWasm.Shared.Models.SMTPModels;
@@ -30,7 +25,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost] //register
         public async Task<IActionResult> Post([FromBody] RegisterModel model)
         {
             var newUser = new IdentityUser { UserName = model.Email, Email = model.Email, EmailConfirmed = false };
