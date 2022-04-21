@@ -15,6 +15,7 @@
     <Content Remove="Controls\StatusControls\StatusRadioComponent.razor" />
     <Content Remove="Controls\ToFromControls\ToFromRadioComponent.razor" />
     <Content Remove="Controls\TrackingControls\TrackingSearchComponent.razor" />
+    <Content Remove="Pages\AA\TestComponent.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +26,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="MudBlazor" Version="6.0.9" />
-    <PackageReference Include="MudBlazor.ThemeManager" Version="1.0.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SendGrid" Version="9.27.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -46,7 +46,11 @@ namespace CTA.BlazorWasm.Client.Services
             var response = await _httpClient.PostAsJsonAsync("api/accounts/change-password", changeRequest);
             return await response.Content.ReadFromJsonAsync<PasswordChangeConfirmation>();
         }
-
+        public async Task<PasswordChangeConfirmation> SetPassword(PasswordSetRequest passwordSetRequest)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/accounts/set-password", passwordSetRequest);
+            return await response.Content.ReadFromJsonAsync<PasswordChangeConfirmation>();
+        }
         public async Task<EmailConfirmationResponse> ConfirmEmail(EmailConfirmationRequest confirmEmailRequest)
         {
             var response = await _httpClient.PostAsJsonAsync("api/accounts/confirm-email", confirmEmailRequest);
@@ -87,7 +91,5 @@ namespace CTA.BlazorWasm.Client.Services
                 .MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
-
-        
     }
 }

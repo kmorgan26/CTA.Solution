@@ -9,6 +9,7 @@ namespace CTA.BlazorWasm.Client.Services
         Task Logout();
         Task<RegisterResult> Register(RegisterModel registerModel);
         Task<PasswordResetConfirmation> ResetPassword(PasswordResetRequest resetRequest);
+        Task<PasswordChangeConfirmation> SetPassword(PasswordSetRequest passwordSetRequest);
         Task<PasswordChangeConfirmation> ChangePassword(PasswordChangeRequest changeRequest);
         Task<EmailConfirmationResponse> ConfirmEmail(EmailConfirmationRequest confirmEmailRequest);
         Task<EmailConfirmationResponse> ResendEmail(ResendEmailRequest email);

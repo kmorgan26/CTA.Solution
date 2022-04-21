@@ -68,7 +68,6 @@ namespace CTA.BlazorWasm.Server
             builder.Services.AddTransient<RepositoryEF<Tracking, CtaContext>>();
             builder.Services.AddTransient<RepositoryEF<TrackingThread, CtaContext>>();
 
-            builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

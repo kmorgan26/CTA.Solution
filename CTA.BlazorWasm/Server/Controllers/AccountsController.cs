@@ -72,7 +72,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             resetToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
 
             var urlPart = _configuration["BaseUrl"];
-            var callbackUrl = $"{urlPart}/Password/Reset?code={resetToken}"; 
+            var callbackUrl = $"{urlPart}/Password/Set?code={resetToken}&id={model.Email}"; 
 
             var message = new Message(
                 new string[] { model.Email }, 
@@ -93,8 +93,27 @@ namespace CTA.BlazorWasm.Server.Controllers
             {
                 return Ok(new PasswordChangeConfirmation { Successful = false });
             }
-            //TODO: Fix the password change. Old Password doesn't have to match currently
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+                return Ok(new PasswordChangeConfirmation { Successful = false });
+
+            return Ok(new PasswordChangeConfirmation { Successful = true });
+        }
+        [HttpPost("set-password")]
+        public async Task<IActionResult> SetPassword([FromBody] PasswordSetRequest model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Email);
+            
+            Console.WriteLine(model.Email);
+
+            if (user is null)
+            {
+                return Ok(new PasswordChangeConfirmation { Successful = false });
+            }
+
+            await _userManager.RemovePasswordAsync(user);            
+            var result = await _userManager.AddPasswordAsync(user, model.Password);
 
             if (!result.Succeeded)
                 return Ok(new PasswordChangeConfirmation { Successful = false });
