@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CTA.BlazorWasm.Shared.Models.UserAccount
 {
-    public class ConfirmEmailRequest
+    public class EmailConfirmationRequest
     {
         [Required]
         [EmailAddress]

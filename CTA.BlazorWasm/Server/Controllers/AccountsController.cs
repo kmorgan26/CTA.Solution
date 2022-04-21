@@ -103,7 +103,7 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         [HttpPost("confirm-email")]
-        public async Task<IActionResult> ConfirmEmailAddress([FromBody] ConfirmEmailRequest confirmEmailRequest)
+        public async Task<IActionResult> ConfirmEmailAddress([FromBody] EmailConfirmationRequest confirmEmailRequest)
         {
             if (confirmEmailRequest.Email == null || confirmEmailRequest.Code == null)
                 return Ok(new EmailConfirmationResponse { Successful = false });
