@@ -52,9 +52,9 @@ namespace CTA.BlazorWasm.Client.Services
             var response = await _httpClient.PostAsJsonAsync("api/accounts/confirm-email", confirmEmailRequest);
             return await response.Content.ReadFromJsonAsync<EmailConfirmationResponse>();
         }
-        public async Task<EmailConfirmationResponse> ResendEmail(string email)
+        public async Task<EmailConfirmationResponse> ResendEmail(ResendEmailRequest emailRequest)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/accounts/resend-confirmation", email);
+            var response = await _httpClient.PostAsJsonAsync("api/accounts/resend-confirmation", emailRequest);
             return await response.Content.ReadFromJsonAsync<EmailConfirmationResponse>();
         }
 

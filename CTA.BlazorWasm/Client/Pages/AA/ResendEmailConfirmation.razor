@@ -15,14 +15,14 @@
     <div class="card-body">
         <h5 class="card-title">Please enter your email address and a confirmation link will be sent to your email.</h5>
 
-        <EditForm Model="_email" OnValidSubmit="ResendConfirmation">
+        <EditForm Model="_emailRequest" OnValidSubmit="ResendConfirmation">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
             <div class="form-group">
                 <label for="email">Email address</label>
-                <InputText Id="email" class="form-control" @bind-Value="_email" />
-                <ValidationMessage For="@(() => _email)" />
+                <InputText Id="email" class="form-control" @bind-Value="_emailRequest.Email" />
+                <ValidationMessage For="@(() => _emailRequest.Email)" />
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -32,13 +32,13 @@
 
 @code {
 
-    string? _email;
+    ResendEmailRequest _emailRequest = new();
     private bool ShowErrors;
     private IEnumerable<string>? Errors;
 
     private async Task ResendConfirmation()
     {
-        var result = await AuthService.ResendEmail(_email);
+        var result = await AuthService.ResendEmail(_emailRequest);
 
         if(result.Successful)
         {

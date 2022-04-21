@@ -11,6 +11,6 @@ namespace CTA.BlazorWasm.Client.Services
         Task<PasswordResetConfirmation> ResetPassword(PasswordResetRequest resetRequest);
         Task<PasswordChangeConfirmation> ChangePassword(PasswordChangeRequest changeRequest);
         Task<EmailConfirmationResponse> ConfirmEmail(ConfirmEmailRequest confirmEmailRequest);
-        Task<EmailConfirmationResponse> ResendEmail(string email);
+        Task<EmailConfirmationResponse> ResendEmail(ResendEmailRequest email);
     }
 }

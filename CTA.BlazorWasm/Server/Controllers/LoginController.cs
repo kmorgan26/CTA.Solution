@@ -35,7 +35,7 @@ namespace CTA.BlazorWasm.Server.Controllers
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
             if (!user.EmailConfirmed)
-                return BadRequest(new LoginResult { Successful = false, Error = "Your email is not confirmed" });
+                return BadRequest(new LoginResult { Successful = false, Error = "Your email is not confirmed. Click the link below to resend the email confirmation link" });
 
             var claims = new List<Claim>();
 

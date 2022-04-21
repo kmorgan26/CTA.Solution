@@ -125,17 +125,17 @@ namespace CTA.BlazorWasm.Server.Controllers
         }
 
         [HttpPost("resend-confirmation")]
-        public async Task<IActionResult> ResendConfirmationEmail([FromBody] string email)
+        public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendEmailRequest emailRequest)
         {
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await _userManager.FindByNameAsync(emailRequest.Email);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
             var urlPart = _configuration["BaseUrl"];
-            var callbackUrl = $"{urlPart}/confirm/email/?id={email}&code={code}";
+            var callbackUrl = $"{urlPart}/confirm/email/?id={emailRequest.Email}&code={code}";
 
             var message = new Message(
-                new string[] { email },
+                new string[] { emailRequest.Email },
                 "Email Verification",
                  $"Please verify your email address by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
