@@ -11,7 +11,7 @@
     </div>
 }
 
-<div class="card">
+<div class="card mb-2">
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
@@ -32,16 +32,15 @@
         </EditForm>
     </div>
 </div>
-<MudLink Href="/password/forgot">Forgot Password?</MudLink>
+
+<p class="mb-2">
+    <MudLink Href="/password/forgot">Forgot Password?</MudLink>
+</p>
+
 
 <MudLink Href="/password/forgot">Resend Email Confirmation</MudLink>
 
 @code {
-
-    //[Parameter]
-    //[SupplyParameterFromQuery]
-    //public string ReturnUrl { get; set; }
-
 
     private LoginModel loginModel = new LoginModel();
     private bool ShowErrors;
@@ -56,7 +55,6 @@
         if (result.Successful)
         {
             NavigationManager.NavigateTo("/");
-            //NavigationManager.NavigateTo(ReturnUrl);
         }
         else
         {
