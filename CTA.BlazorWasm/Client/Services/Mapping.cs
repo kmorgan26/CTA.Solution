@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CTA.BlazorWasm.Shared.Filters;
 using CTA.BlazorWasm.Client.ViewModels.Shared;
 using CTA.BlazorWasm.Client.ViewModels.Poc;
 using CTA.BlazorWasm.Client.ViewModels.Project;

@@ -1,4 +1,4 @@
-﻿using CTA.BlazorWasm.Client.ViewModels.Shared;
+﻿using CTA.BlazorWasm.Shared.Filters;
 using CTA.BlazorWasm.Shared.Interfaces;
 using CTA.BlazorWasm.Shared.Models;
 using CTA.BlazorWasm.Shared.Responses;
@@ -11,8 +11,8 @@ namespace CTA.BlazorWasm.Client.Services
     public class ApiRepository<TEntity> : IAsyncRepository<TEntity> where TEntity : class
     {
         private readonly HttpClient http;
-        private string controllerName;
-        private string primaryKeyName;
+        private readonly string controllerName;
+        private readonly string primaryKeyName;
 
         public ApiRepository(HttpClient _http, string _controllerName, string _primaryKeyName)
         {

@@ -4,7 +4,7 @@ using CTA.BlazorWasm.Server.Data;
 using CTA.BlazorWasm.Shared.Data;
 using CTA.BlazorWasm.Shared.Requests;
 using CTA.BlazorWasm.Client.Services;
-using CTA.BlazorWasm.Client.ViewModels.Shared;
+using CTA.BlazorWasm.Shared.Filters;
 using CTA.BlazorWasm.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;

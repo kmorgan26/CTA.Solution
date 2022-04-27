@@ -1,4 +1,4 @@
-﻿using CTA.BlazorWasm.Client.ViewModels.Shared;
+﻿using CTA.BlazorWasm.Shared.Filters;
 using CTA.BlazorWasm.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

@@ -1,4 +1,4 @@
-﻿namespace CTA.BlazorWasm.Client.ViewModels.Shared
+﻿namespace CTA.BlazorWasm.Shared.Filters
 {
     public class PaginationFilter
     {
